@@ -3,8 +3,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.ServiceDiscovery
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ServiceConfigExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static ServiceConfig GetServiceConfig(this IConfiguration configuration)
         {
             if (configuration == null)

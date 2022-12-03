@@ -2,15 +2,34 @@
 
 namespace Orders.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Order
     {
-        public Guid Id { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public OrderStates State { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTimeOffset Created { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTimeOffset Modified { get; set; }
 
-        public Guid ClientId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ClientId { get; set; }
     }
 }

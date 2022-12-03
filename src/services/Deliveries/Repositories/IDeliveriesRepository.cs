@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Deliveries.Models;
 
 namespace Deliveries.Repositories
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IDeliveriesRepository
     {
-        Task<IEnumerable<Delivery>> GetOrderDeliveries(Guid orderId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        IEnumerable<Delivery> GetOrderDeliveries(int orderId);
 
-        Task<Delivery> GetDelivery(Guid id);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Delivery GetDelivery(int id);
     }
 }

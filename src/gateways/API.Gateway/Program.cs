@@ -1,15 +1,27 @@
 ﻿using System.IO;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace API.Gateway
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             new WebHostBuilder()
@@ -25,8 +37,17 @@ namespace API.Gateway
                         .AddJsonFile("ocelot.json")
                         .AddEnvironmentVariables();
                 })
-                .ConfigureServices(s => {
+                .ConfigureServices(s =>
+                {
                     s.AddOcelot().AddConsul();
+                    s.AddMvc();
+                    s.AddSwaggerGen(c =>
+                    {
+                        c.SwaggerDoc("v1", new Info { Title = "GW", Version = "v1" });
+                        var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                        var xmlPath = Path.Combine(basePath, "APIGateway.xml");
+                        c.IncludeXmlComments(xmlPath);
+                    });
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
@@ -35,6 +56,11 @@ namespace API.Gateway
                 .UseIISIntegration()
                 .Configure(app =>
                 {
+                    app.UseMvc().UseSwagger().UseSwaggerUI(c =>
+                    {
+                        c.SwaggerEndpoint("/deliveries/docs/swagger.json", "Deliveries");
+                        c.SwaggerEndpoint("/orders/docs/swagger.json", "Orders");
+                    });
                     app.UseOcelot().Wait();
                 })
                 .Build()

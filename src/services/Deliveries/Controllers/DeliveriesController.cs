@@ -5,38 +5,54 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Deliveries.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     public class DeliveriesController : ControllerBase
     {
         private readonly IDeliveriesRepository _deliveriesRepository;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deliveriesRepository"></param>
         public DeliveriesController(IDeliveriesRepository deliveriesRepository)
         {
             _deliveriesRepository = deliveriesRepository ?? throw new ArgumentNullException(nameof(deliveriesRepository));
         }
 
-        [HttpGet("api/orders/{orderId:guid}/deliveries")]
-        public async Task<IActionResult> GetOrderDeliveries([FromRoute]Guid orderId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpGet("api/deliveries/list")]
+        public IActionResult GetOrderDeliveries(int orderId)
         {
-            if (orderId == Guid.Empty)
+            if (orderId == 0)
             {
                 throw new ArgumentException(nameof(orderId));
             }
-
-            var deliveries = await _deliveriesRepository.GetOrderDeliveries(orderId);
+            var deliveries = _deliveriesRepository.GetOrderDeliveries(orderId);
 
             return Ok(deliveries);
         }
 
-        [HttpGet("api/deliveries/{deliveryId:guid}")]
-        public async Task<IActionResult> GetById([FromRoute]Guid deliveryId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deliveryId"></param>
+        /// <returns></returns>
+        [HttpGet("api/deliveries/get")]
+        public IActionResult GetById(int deliveryId)
         {
-            if (deliveryId == Guid.Empty)
+            if (deliveryId == 0)
             {
                 throw new ArgumentException(nameof(deliveryId));
             }
 
-            var delivery = await _deliveriesRepository.GetDelivery(deliveryId);
+            var delivery = _deliveriesRepository.GetDelivery(deliveryId);
 
             return Ok(delivery);
         }

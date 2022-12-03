@@ -5,8 +5,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace Infrastructure.ServiceDiscovery
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ServiceDiscoveryExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="serviceConfig"></param>
         public static void RegisterConsulServices(this IServiceCollection services, ServiceConfig serviceConfig)
         {
             if (serviceConfig == null)
@@ -21,6 +29,11 @@ namespace Infrastructure.ServiceDiscovery
             services.AddSingleton<IConsulClient, ConsulClient>(p => consulClient);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceConfig"></param>
+        /// <returns></returns>
         private static ConsulClient CreateConsulClient(ServiceConfig serviceConfig)
         {
             return new ConsulClient(config =>

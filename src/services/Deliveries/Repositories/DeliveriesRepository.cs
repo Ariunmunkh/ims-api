@@ -5,18 +5,26 @@ using Deliveries.Models;
 
 namespace Deliveries.Repositories
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DeliveriesRepository : IDeliveriesRepository
     {
         private static readonly Random _random = new Random();
 
-        public async Task<IEnumerable<Delivery>> GetOrderDeliveries(Guid orderId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public IEnumerable<Delivery> GetOrderDeliveries(int orderId)
         {
             var numberOfDeliveries = _random.Next(0, 10);
             var deliveries = new List<Delivery>(numberOfDeliveries);
 
             for (var i = 0; i < numberOfDeliveries; i++)
             {
-                var deliveryId = Guid.NewGuid();
+                var deliveryId = DateTime.Now.Millisecond;
                 var delivery = CreateMockDelivery(orderId, deliveryId);
 
                 deliveries.Add(delivery);
@@ -25,14 +33,19 @@ namespace Deliveries.Repositories
             return deliveries;
         }
 
-        public async Task<Delivery> GetDelivery(Guid id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Delivery GetDelivery(int id)
         {
-            var delivery = CreateMockDelivery(Guid.NewGuid(), id);
+            var delivery = CreateMockDelivery(DateTime.Now.Millisecond, id);
 
             return delivery;
         }
 
-        private static Delivery CreateMockDelivery(Guid orderId, Guid deliveryId)
+        private static Delivery CreateMockDelivery(int orderId, int deliveryId)
         {
             return new Delivery
             {

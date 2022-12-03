@@ -5,18 +5,26 @@ using Orders.Models;
 
 namespace Orders.Repositories
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class OrdersRepository : IOrdersRepository
     {
         private static readonly Random _random = new Random();
 
-        public async Task<IEnumerable<Order>> GetClientOrders(Guid clientId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
+        public IEnumerable<Order> GetClientOrders(int clientId)
         {
             var numberOfOrders = _random.Next(0, 4);
             var orders = new List<Order>(numberOfOrders);
 
             for (var i = 0; i < numberOfOrders; i++)
             {
-                var orderId = Guid.NewGuid();
+                var orderId = DateTime.Now.Millisecond;
                 var order = CreateMockOrder(clientId, orderId);
 
                 orders.Add(order);
@@ -25,14 +33,19 @@ namespace Orders.Repositories
             return orders;
         }
 
-        public async Task<Order> GetOrder(Guid orderId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Order GetOrder(int orderId)
         {
-            var clientId = Guid.NewGuid();
+            var clientId = DateTime.Now.Millisecond;
 
             return CreateMockOrder(clientId, orderId);
         }
 
-        private static Order CreateMockOrder(Guid clientId, Guid orderId)
+        private static Order CreateMockOrder(int clientId, int orderId)
         {
             var createdAt = DateTimeOffset.UtcNow;
 

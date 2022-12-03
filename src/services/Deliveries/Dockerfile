@@ -2,6 +2,8 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
 WORKDIR /app
 EXPOSE 80
 
+ENV TZ="Asia/Ulaanbaatar"
+
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
 COPY ["src/services/Deliveries/Deliveries.csproj", "src/services/Deliveries/"]

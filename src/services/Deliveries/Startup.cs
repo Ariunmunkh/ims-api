@@ -1,5 +1,6 @@
 ﻿using Deliveries.Repositories;
 using Infrastructure.ServiceDiscovery;
+using Infrastructure.ESwagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,26 +10,45 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Deliveries
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
 
             services.AddSingleton<IDeliveriesRepository, DeliveriesRepository>();
 
+            services.ConfigureSwagger("Deliveries", "v1");
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -36,10 +56,19 @@ namespace Deliveries
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger(c => { });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Deliveries");
+            });
+
             app.UseMvc();
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
         private void ConfigureConsul(IServiceCollection services)
         {
             var serviceConfig = Configuration.GetServiceConfig();

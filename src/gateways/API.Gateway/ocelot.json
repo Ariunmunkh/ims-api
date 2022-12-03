@@ -1,18 +1,28 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamPathTemplate": "/api/orders/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "orders",
-      "UpstreamPathTemplate": "/api/ordering/{everything}",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamPathTemplate": "/api/orders/{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamPathTemplate": "/swagger/v1/swagger.json",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/orders/docs/swagger.json",
+      "ServiceName": "orders"
+    },
+    {
+      "DownstreamPathTemplate": "/api/deliveries/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "deliveries",
-      "UpstreamPathTemplate": "/api/logistics/{everything}",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamPathTemplate": "/api/deliveries/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/swagger/v1/swagger.json",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/deliveries/docs/swagger.json",
+      "ServiceName": "deliveries"
     }
   ],
   "GlobalConfiguration": {
