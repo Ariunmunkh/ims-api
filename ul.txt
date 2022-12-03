@@ -1,0 +1,19 @@
+ssh-keygen
+ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
+ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+ssh-copy-id -i ~/.ssh/id_rsa root@103.253.147.44
+p@ssW0rd
+
+export DOCKER_HOST=ssh://root@103.253.147.44
+
+cd C:/Users/ariunmunkh.e/Downloads/Compressed/ApiGateway-example
+
+docker-compose build serviceName
+docker-compose up -d serviceName
+
+docker stop 2d946ba0a560
+docker rmi -f 2d946ba0a560
+docker rm 2d946ba0a560
+docker images
+docker ps -a
