@@ -23,6 +23,18 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/deliveries/docs/swagger.json",
       "ServiceName": "deliveries"
+    },
+    {
+      "DownstreamPathTemplate": "/api/systems/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "systems",
+      "UpstreamPathTemplate": "/api/systems/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/swagger/v1/swagger.json",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/systems/docs/swagger.json",
+      "ServiceName": "systems"
     }
   ],
   "GlobalConfiguration": {

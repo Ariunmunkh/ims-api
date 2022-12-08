@@ -14,6 +14,13 @@ services:
       context: .
       dockerfile: src/services/Deliveries/Dockerfile
     container_name: deliveries
+    
+  systems:
+    image: systems:latest
+    build:
+      context: .
+      dockerfile: src/services/systems/Dockerfile
+    container_name: systems
 
   api.gateway:
     image: apigateway:latest
