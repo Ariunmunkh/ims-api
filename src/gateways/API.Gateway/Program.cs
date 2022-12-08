@@ -39,6 +39,15 @@ namespace API.Gateway
                 })
                 .ConfigureServices(s =>
                 {
+                    s.AddCors(options =>
+                    {
+                        options.AddPolicy("CorsPolicy",
+                            builder => builder.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader()
+                                .AllowCredentials());
+                    });
+
                     s.AddOcelot().AddConsul();
                     s.AddMvc();
                     s.AddSwaggerGen(c =>
@@ -56,6 +65,7 @@ namespace API.Gateway
                 .UseIISIntegration()
                 .Configure(app =>
                 {
+                    app.UseCors("CorsPolicy");
                     app.UseMvc().UseSwagger().UseSwaggerUI(c =>
                     {
                         c.SwaggerEndpoint("/deliveries/docs/swagger.json", "Deliveries");
