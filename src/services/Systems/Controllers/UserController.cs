@@ -13,7 +13,7 @@ namespace Systems.Controllers
     /// 
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/systems/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _UserRepository;
@@ -31,7 +31,7 @@ namespace Systems.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpPost("get_user_list")]
+        [HttpGet("get_user_list")]
         public IActionResult GetUserList()
         {
             return Ok(_UserRepository.GetUserList());
@@ -42,7 +42,7 @@ namespace Systems.Controllers
         /// </summary>
         /// <param name="userid"></param>
         /// <returns></returns>
-        [HttpPost("get_user")]
+        [HttpGet("get_user")]
         public IActionResult GetUser(int userid)
         {
             return Ok(_UserRepository.GetUser(userid));

@@ -4,7 +4,12 @@
       "DownstreamPathTemplate": "/api/orders/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "orders",
-      "UpstreamPathTemplate": "/api/orders/{everything}"
+      "UpstreamPathTemplate": "/api/orders/{everything}",
+      "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/swagger/v1/swagger.json",
@@ -16,7 +21,12 @@
       "DownstreamPathTemplate": "/api/deliveries/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "deliveries",
-      "UpstreamPathTemplate": "/api/deliveries/{everything}"
+      "UpstreamPathTemplate": "/api/deliveries/{everything}",
+      "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/swagger/v1/swagger.json",
@@ -28,7 +38,12 @@
       "DownstreamPathTemplate": "/api/systems/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "systems",
-      "UpstreamPathTemplate": "/api/systems/{everything}"
+      "UpstreamPathTemplate": "/api/systems/{everything}",
+      "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/swagger/v1/swagger.json",
