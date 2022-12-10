@@ -10,8 +10,8 @@ export DOCKER_HOST=ssh://root@103.253.147.44
 cd D:/PROJECTS_TFS/ul-api
 cd D:/PROJECTS_TFS/ul-ui
 
-docker-compose build serviceName
-docker-compose up -d serviceName
+docker-compose build
+docker-compose up -d
 
 docker stop 2d946ba0a560
 docker rmi -f 2d946ba0a560
