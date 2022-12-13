@@ -3,7 +3,7 @@
 namespace Systems.Models
 {
     /// <summary>
-    /// Хэрэлэгч
+    /// Хэрэглэгч
     /// </summary>
     public class tbluser
     {
@@ -32,5 +32,10 @@ namespace Systems.Models
         /// </summary>
         [JsonIgnore]
         public string encryptpass { get; set; }
+
+        /// <summary>
+        /// Хэрэглэгчийн төрөл
+        /// </summary>
+        public int roleid { get; set; }
     }
 }

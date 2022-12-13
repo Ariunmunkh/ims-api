@@ -34,7 +34,7 @@ namespace Systems.Repositories
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select userid, username, email, password, updated from tbluser order by username");
+            command.CommandText("select userid, username, email, password, roleid, updated from tbluser order by username");
             return connector.Execute(ref command, false);
 
         }
@@ -48,7 +48,7 @@ namespace Systems.Repositories
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select userid, username, email, updated from tbluser where userid = @userid");
+            command.CommandText("select userid, username, email, roleid, updated from tbluser where userid = @userid");
             command.AddParam("@userid", DbType.Int32, userid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
 
@@ -83,17 +83,19 @@ namespace Systems.Repositories
             }
 
             command.CommandText(string.Format(@"INSERT INTO tbluser
-  (userid, username, email, password)
+  (userid, username, email, password, roleid)
 values
-  (@userid, @username, @email, @password) 
+  (@userid, @username, @email, @password, @roleid) 
 ON DUPLICATE KEY UPDATE 
 username = @username, 
+roleid = @roleid, 
 email = @email, {0}
 updated = current_timestamp", updatepasssql));
             command.AddParam("@userid", DbType.Int32, tbluser.userid, ParameterDirection.Input);
             command.AddParam("@username", DbType.String, tbluser.username, ParameterDirection.Input);
             command.AddParam("@email", DbType.String, tbluser.email, ParameterDirection.Input);
             command.AddParam("@password", DbType.String, tbluser.encryptpass, ParameterDirection.Input);
+            command.AddParam("@roleid", DbType.String, tbluser.roleid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
         }
 
