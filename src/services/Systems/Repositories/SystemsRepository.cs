@@ -115,17 +115,20 @@ namespace Systems.Repositories
         {
             string username = string.Empty;
             string email = string.Empty;
+            string roleid = string.Empty;
 
             if (data.Rows.Count > 0)
             {
                 username = data.Rows[0]["username"].ToString();
                 email = data.Rows[0]["email"].ToString();
+                roleid = data.Rows[0]["roleid"].ToString();
             }
 
             var claims = new Claim[]
                 {
                     new Claim("username", username),
                     new Claim("email", email),
+                    new Claim("roleid", roleid),
                     new Claim(JwtRegisteredClaimNames.Sub, username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
