@@ -1,10 +1,10 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/orders/{everything}",
+      "DownstreamPathTemplate": "/api/households/{everything}",
       "DownstreamScheme": "http",
-      "ServiceName": "orders",
-      "UpstreamPathTemplate": "/api/orders/{everything}",
+      "ServiceName": "households",
+      "UpstreamPathTemplate": "/api/households/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": null,
@@ -14,8 +14,8 @@
     {
       "DownstreamPathTemplate": "/swagger/v1/swagger.json",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/orders/docs/swagger.json",
-      "ServiceName": "orders"
+      "UpstreamPathTemplate": "/households/docs/swagger.json",
+      "ServiceName": "households"
     },
     {
       "DownstreamPathTemplate": "/api/deliveries/{everything}",

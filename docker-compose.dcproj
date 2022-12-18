@@ -6,7 +6,7 @@
     <ProjectGuid>8a3ad389-1908-4cdc-8077-87fa639ddcbf</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/api/values</DockerServiceUrl>
-    <DockerServiceName>orders</DockerServiceName>
+    <DockerServiceName>households</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

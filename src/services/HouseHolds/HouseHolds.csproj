@@ -9,11 +9,11 @@
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.2\Orders.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.2\HouseHolds.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>bin\Release\netcoreapp2.2\Orders.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.2\HouseHolds.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\common\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\common\LConnection\LConnection.csproj" />
   </ItemGroup>
 
 </Project>

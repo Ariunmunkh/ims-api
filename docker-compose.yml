@@ -1,12 +1,12 @@
 version: '3.4'
 
 services:
-  orders:
-    image: orders:latest
+  households:
+    image: households:latest
     build:
       context: .
-      dockerfile: src/services/Orders/Dockerfile
-    container_name: orders
+      dockerfile: src/services/HouseHolds/Dockerfile
+    container_name: households
 
   deliveries:
     image: deliveries:latest

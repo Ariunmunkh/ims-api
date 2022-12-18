@@ -69,7 +69,7 @@ namespace API.Gateway
                     app.UseMvc().UseSwagger().UseSwaggerUI(c =>
                     {
                         c.SwaggerEndpoint("/deliveries/docs/swagger.json", "Deliveries");
-                        c.SwaggerEndpoint("/orders/docs/swagger.json", "Orders");
+                        c.SwaggerEndpoint("/households/docs/swagger.json", "HouseHolds");
                         c.SwaggerEndpoint("/systems/docs/swagger.json", "Systems");
                     });
                     app.UseOcelot().Wait();
