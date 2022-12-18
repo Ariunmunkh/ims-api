@@ -44,8 +44,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="householdid"></param>
         /// <returns></returns>
-        MResult GetHouseHoldMemberList();
+        MResult GetHouseHoldMemberList(int householdid);
 
         /// <summary>
         /// 

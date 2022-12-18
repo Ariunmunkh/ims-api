@@ -144,12 +144,14 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="householdid"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldMemberList()
+        public MResult GetHouseHoldMemberList(int householdid)
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select * from householdmember order by memberid");
+            command.CommandText("select * from householdmember where householdid = @householdid order by memberid");
+            command.AddParam("@householdid", DbType.Int32, householdid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
 
         }
@@ -243,7 +245,7 @@ updatedby=@updatedby");
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("delete from householdmember where householdmemberid = @memberid");
+            command.CommandText("delete from householdmember where memberid = @memberid");
             command.AddParam("@memberid", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref command, false);
 

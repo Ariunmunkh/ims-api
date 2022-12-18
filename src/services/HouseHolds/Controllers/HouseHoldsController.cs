@@ -79,11 +79,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="householdid"></param>
         /// <returns></returns>
         [HttpGet("get_householdmember_list")]
-        public IActionResult GetHouseHoldMemberList()
+        public IActionResult GetHouseHoldMemberList(int householdid)
         {
-            return Ok(_HouseHoldsRepository.GetHouseHoldMemberList());
+            return Ok(_HouseHoldsRepository.GetHouseHoldMemberList(householdid));
         }
 
         /// <summary>
