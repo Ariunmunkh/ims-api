@@ -33,7 +33,19 @@ namespace HouseHolds.Repositories
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select * from household order by householdid");
+            command.CommandText(@"SELECT 
+    householdid,
+    numberof,
+    name,
+    district,
+    section,
+    address,
+    phone,
+    coachid,
+    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    household
+order by householdid");
             return connector.Execute(ref command, false);
 
         }
@@ -46,7 +58,19 @@ namespace HouseHolds.Repositories
         public MResult GetHouseHold(int id)
         {
             MCommand command = connector.PopCommand();
-            command.CommandText("select * from household where householdid = @householdid");
+            command.CommandText(@"SELECT 
+    householdid,
+    numberof,
+    name,
+    district,
+    section,
+    address,
+    phone,
+    coachid,
+    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    household
+where householdid = @householdid");
             command.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref command, false);
         }
@@ -150,7 +174,25 @@ updatedby=@updatedby");
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select * from householdmember where householdid = @householdid order by memberid");
+            command.CommandText(@"SELECT 
+    memberid,
+    householdid,
+    name,
+    relative,
+    date_format(birthdate, '%Y-%m-%d') birthdate,
+    case
+        when gender = 0 then 'Эр'
+        else 'Эм'
+    end gender,
+    case
+        when istogether = 0 then 'Үгүй'
+        else 'Тийм'
+    end istogether,
+    date_format(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    householdmember 
+where householdid = @householdid
+order by memberid");
             command.AddParam("@householdid", DbType.Int32, householdid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
 
@@ -164,7 +206,18 @@ updatedby=@updatedby");
         public MResult GetHouseHoldMember(int id)
         {
             MCommand command = connector.PopCommand();
-            command.CommandText("select * from householdmember where memberid = @memberid");
+            command.CommandText(@"select
+    memberid,
+    householdid,
+    name,
+    relative,
+    date_format(birthdate, '%Y-%m-%d') birthdate,
+    gender,
+    istogether,
+    date_format(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    householdmember
+where memberid = @memberid");
             command.AddParam("@memberid", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref command, false);
         }

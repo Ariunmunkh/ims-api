@@ -35,7 +35,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80:80"
+      - "8080:80"
 
   consul:
     ports:
