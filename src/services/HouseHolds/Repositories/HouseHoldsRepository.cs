@@ -34,18 +34,28 @@ namespace HouseHolds.Repositories
 
             MCommand command = connector.PopCommand();
             command.CommandText(@"SELECT 
-    householdid,
-    numberof,
-    name,
-    district,
-    section,
-    address,
-    phone,
-    coachid,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    household.householdid,
+    (select count(1) from householdmember a where a.householdid = household.householdid) numberof,
+    (select max(a.name) from householdmember a 
+                     inner join relationship b 
+                        on b.relationshipid = a.relationshipid 
+                     where b.ishead = true 
+                       and a.householdid = household.householdid) name,
+    household.district,
+    district.name districtname,
+    household.section,
+    household.address,
+    household.phone,
+    household.coachid,
+    coach.name coachname,
+    DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     household
-order by householdid");
+left join district
+on district.districtid = household.district
+left join coach
+on coach.coachid = household.coachid
+order by household.updated desc");
             return connector.Execute(ref command, false);
 
         }
@@ -132,8 +142,8 @@ updatedby=@updatedby");
             command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             command.AddParam("@numberof", DbType.Int32, request.numberof, ParameterDirection.Input);
             command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@district", DbType.String, request.district, ParameterDirection.Input);
-            command.AddParam("@section", DbType.String, request.section, ParameterDirection.Input);
+            command.AddParam("@district", DbType.Int32, request.districtid, ParameterDirection.Input);
+            command.AddParam("@section", DbType.Int32, request.section, ParameterDirection.Input);
             command.AddParam("@address", DbType.String, request.address, ParameterDirection.Input);
             command.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
             command.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
@@ -153,10 +163,17 @@ updatedby=@updatedby");
         /// <returns></returns>
         public MResult DeleteHouseHold(int id)
         {
-
             MCommand command = connector.PopCommand();
-            command.CommandText("delete from household where householdid = @householdid");
+            command.CommandText("select count(1) too from householdmember where householdid = @householdid");
             command.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref command, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable data && data.Rows.Count > 0 && Convert.ToDecimal(data.Rows[0]["too"]) > 0)
+                return new MResult { rettype = 1, retmsg = "Өрхийн гишүүн бүртгэлд ашигласан тул устгах боломжгүй." };
+
+            command.CommandText("delete from household where householdid = @householdid");
             return connector.Execute(ref command, false);
 
         }
@@ -175,24 +192,30 @@ updatedby=@updatedby");
 
             MCommand command = connector.PopCommand();
             command.CommandText(@"SELECT 
-    memberid,
-    householdid,
-    name,
-    relative,
-    date_format(birthdate, '%Y-%m-%d') birthdate,
+    householdmember.memberid,
+    householdmember.householdid,
+    householdmember.name,
+    householdmember.relationshipid,
+    relationship.name relationshipname,
+    date_format(householdmember.birthdate, '%Y-%m-%d') birthdate,
     case
-        when gender = 0 then 'Эр'
-        else 'Эм'
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        else 'Эмэгтэй'
     end gender,
     case
-        when istogether = 0 then 'Үгүй'
+        when householdmember.istogether = 0 then 'Үгүй'
         else 'Тийм'
     end istogether,
-    date_format(updated, '%Y-%m-%d %H:%i:%s') updated
+    household.educationlevel,
+    household.employment,
+    household.health,
+    date_format(householdmember.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdmember 
-where householdid = @householdid
-order by memberid");
+left join relationship
+on relationship.relationshipid = householdmember.relationshipid
+where householdmember.householdid = @householdid
+order by householdmember.birthdate asc");
             command.AddParam("@householdid", DbType.Int32, householdid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
 
@@ -210,10 +233,13 @@ order by memberid");
     memberid,
     householdid,
     name,
-    relative,
+    relationshipid,
     date_format(birthdate, '%Y-%m-%d') birthdate,
     gender,
     istogether,
+    educationlevel,
+    employment,
+    health,
     date_format(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdmember
@@ -249,37 +275,49 @@ where memberid = @memberid");
 (memberid,
 householdid,
 name,
-relative,
+relationshipid,
 birthdate,
 gender,
 istogether,
-updatedby )
+educationlevel,
+employment,
+health,
+updatedby)
 values
 (@memberid,
 @householdid,
 @name,
-@relative,
+@relationshipid,
 @birthdate,
 @gender,
 @istogether,
+@educationlevel,
+@employment,
+@health,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 name=@name,
-relative=@relative,
+relationshipid=@relationshipid,
 birthdate=@birthdate,
 gender=@gender,
 istogether=@istogether,
+educationlevel=@educationlevel,
+employment=@employment,
+health=@health,
 updated=current_timestamp,
 updatedby=@updatedby");
 
             command.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
             command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@relative", DbType.String, request.relative, ParameterDirection.Input);
+            command.AddParam("@relationshipid", DbType.Int32, request.relationshipid, ParameterDirection.Input);
             command.AddParam("@birthdate", DbType.DateTime, request.birthdate, ParameterDirection.Input);
             command.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             command.AddParam("@istogether", DbType.Boolean, request.istogether, ParameterDirection.Input);
+            command.AddParam("@educationlevel", DbType.String, request.educationlevel, ParameterDirection.Input);
+            command.AddParam("@employment", DbType.String, request.employment, ParameterDirection.Input);
+            command.AddParam("@health", DbType.String, request.health, ParameterDirection.Input);
             command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref command, false);

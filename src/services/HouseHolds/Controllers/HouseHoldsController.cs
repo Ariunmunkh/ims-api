@@ -1,9 +1,5 @@
-﻿using Connection.Model;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HouseHolds.Models;
 using HouseHolds.Repositories;
 
@@ -13,7 +9,7 @@ namespace HouseHolds.Controllers
     /// 
     /// </summary>
     [ApiController]
-    [Route("api/households")]
+    [Route("api/record/households")]
     public class HouseHoldsController : ControllerBase
     {
         private readonly IHouseHoldsRepository _HouseHoldsRepository;
@@ -30,7 +26,7 @@ namespace HouseHolds.Controllers
         #region household
 
         /// <summary>
-        /// 
+        /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <returns></returns>
         [HttpGet("get_household_list")]
@@ -40,7 +36,7 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -51,7 +47,7 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -62,7 +58,7 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -77,7 +73,7 @@ namespace HouseHolds.Controllers
         #region householdmember
 
         /// <summary>
-        /// 
+        /// Өрхийн гишүүдийн мэдээлэл
         /// </summary>
         /// <param name="householdid"></param>
         /// <returns></returns>
@@ -88,7 +84,7 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Өрхийн гишүүдийн мэдээлэл
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -99,7 +95,7 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Өрхийн гишүүдийн мэдээлэл
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -110,7 +106,7 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Өрхийн гишүүдийн мэдээлэл
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

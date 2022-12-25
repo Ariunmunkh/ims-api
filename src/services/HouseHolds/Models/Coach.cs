@@ -1,10 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HouseHolds.Models
 {
+
+    /// <summary>
+    /// Сум, Дүүрэг
+    /// </summary>
+    public class district
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int districtid { get; set; }
+
+        /// <summary>
+        /// Нэр
+        /// </summary>
+        public string name { get; set; }
+    }
+
+    /// <summary>
+    /// өрхийн тэргүүнтэй ямар холбоотой вэ
+    /// </summary>
+    public class relationship
+    {
+        /// <summary>
+        /// дугаар
+        /// </summary>
+        public int relationshipid { get; set; }
+
+        /// <summary>
+        /// нэр
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// өрхийн тэргүүн эсэх
+        /// </summary>
+        public bool ishead { get; set; }
+    }
+
     /// <summary>
     /// Коуч
     /// </summary>
@@ -24,11 +59,6 @@ namespace HouseHolds.Models
         /// Утас
         /// </summary>
         public string phone { get; set; }
-
-        //Ажиллаж буй дунд шатны хорооны нэр 
-        //Хариуцсан хороод 
-        //Хариуцсан бүлгүүд 
-        //Хариуцсан өрхүүд
 
     }
 
@@ -52,8 +82,15 @@ namespace HouseHolds.Models
         /// </summary>
         public DateTime visitdate { get; set; }
 
-        //Айлчлалаар уулзсан өрхийн гишүүд 
-        //Айлчилсан хүний нэр 
+        /// <summary>
+        /// Айлчлалаар уулзсан өрхийн гишүүд 
+        /// </summary>
+        public int memberid { get; set; }
+
+        /// <summary>
+        /// Айлчилсан хүний нэр /Коучийн дугаар/
+        /// </summary>
+        public int coachid { get; set; }
 
         /// <summary>
         /// Тайлбар
@@ -66,54 +103,306 @@ namespace HouseHolds.Models
     //Харьяалагддаг бүлгийн нэр   
     //Нэгж хувьцааны үнэ
 
-    //    Хурлын ирцийн мэдээлэл
-    //Бүлгийн хурал зохион байгуулагдсан огноо    
-    //Бүлгийн хуралд оролцсон эсэх    
-    //Худалдан авсан хувьцааны тоо
+    /// <summary>
+    /// Хурлын ирцийн мэдээлэл
+    /// </summary>
+    public class meetingattendance
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
 
-    //    Зээлийн мэдээлэл
-    //Зээл авсан огноо 
-    //Бүлгээс зээлсэн мөнгөн дүн 
-    //Зээлийн зориулалт
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
 
-    //    Зээлийн эргэн төлөлтийн мэдээлэл
-    //Зээлийн эргэн төлөлт хийсэн огноо 
-    //Эргэн төлсөн мөнгөн дүн 
-    //Зээлийн үлдэгдэл
+        /// <summary>
+        /// Бүлгийн хурал зохион байгуулагдсан огноо
+        /// </summary>
+        public DateTime meetingdate { get; set; }
 
-    //    Сургалт, үйл ажиллагаа
-    //Огноо 
-    //Сургалт, үйл ажиллагаа зохион байгуулсан байгууллагын нэр 
-    //Сургалт, үйл ажиллагааны нэр    
-    //Сургалтын үргэжилсэн хугацаа 
-    //Сургалт, үйл ажиллагаанд хамрагдсан өрхийн гишүүний нэр
+        /// <summary>
+        /// Бүлгийн хуралд оролцсон эсэх
+        /// </summary>
+        public bool isjoin { get; set; }
 
-    //    Амьжиргаа сайжруулах үйл ажиллагааны мэдээлэл
-    //Амьжиргаа сайжруулах төлөвлөгөө боловсруулсан огноо 
-    //Өрхийн сонгосон аж ахуй 
-    //Харьяалагдах дэд салбар
+        /// <summary>
+        /// Худалдан авсан хувьцааны тоо
+        /// </summary>
+        public int quantity { get; set; }
+    }
 
-    //    Хөрөнгө оруулалтын мэдээлэл
-    //Хөрөнгө хүлээн авсан огноо 
-    //Хүлээн авсан хөрөнгийн нэр 
-    //Тоо ширхэг 
-    //Нэгжийн үнэ 
-    //Нийт үнэ 
-    //Тайлбар(марк, дугаар)
+    /// <summary>
+    /// Зээлийн мэдээлэл
+    /// </summary>
+    public class loan
+    {
+        /// <summary>
+        /// дугаар
+        /// </summary>
+        public int entryid { get; set; }
 
-    //    Бусад тусламж, дэмжлэг
-    //Тусламж, дэмжлэг хүлээн авсан огноо 
-    //Хүлээн авсан тусламж дэмжлэг    
-    //Тоо ширхэг  
-    //Нэгжийн үнэ 
-    //Нийт үнэ    
-    //Дэмжлэг олгосон байгууллагын нэр
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
 
-    //    Сургалт, үйл ажиллагаа
-    //Огноо 
-    //Холбон зуучилсан байгууллагын нэр 
-    //Холбон зуучилсан үйлчилгээний нэр 
-    //Үйлчилгээнд холбогдсон өрхийн гишүүний нэр
+        /// <summary>
+        /// Зээл авсан огноо 
+        /// </summary>
+        public DateTime loandate { get; set; }
+
+        /// <summary>
+        /// Бүлгээс зээлсэн мөнгөн дүн 
+        /// </summary>
+        public decimal amount { get; set; }
+
+        /// <summary>
+        /// Зээлийн зориулалт
+        /// </summary>
+        public string note { get; set; }
+    }
+
+    /// <summary>
+    /// Зээлийн эргэн төлөлтийн мэдээлэл
+    /// </summary>
+    public class loanrepayment
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
+
+        /// <summary>
+        /// Зээлийн эргэн төлөлт хийсэн огноо 
+        /// </summary>
+        public DateTime repaymentdate { get; set; }
+
+        /// <summary>
+        /// Эргэн төлсөн мөнгөн дүн 
+        /// </summary>
+        public decimal amount { get; set; }
+
+        /// <summary>
+        /// Зээлийн үлдэгдэл
+        /// </summary>
+        public decimal balance { get; set; }
+
+    }
+
+
+    /// <summary>
+    /// Сургалт, үйл ажиллагаа
+    /// </summary>
+    public class training
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
+
+        /// <summary>
+        /// Огноо
+        /// </summary>
+        public DateTime trainingdate { get; set; }
+
+        /// <summary>
+        /// Зохион байгуулагдсан сургалт, үйл ажиллагааны нэр
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// Сургалт, үйл ажиллагаа зохион байгуулсан байгууллагын нэр
+        /// </summary>
+        public string orgname { get; set; }
+
+        /// <summary>
+        /// Сургалтын үргэжилсэн хугацаа
+        /// </summary>
+        public int duration { get; set; }
+
+        /// <summary>
+        /// Өрхөөс уг сургалтад хамрагдсан эсэх
+        /// </summary>
+        public bool isjoin { get; set; }
+
+        /// <summary>
+        /// Сургалт, үйл ажиллагаанд хамрагдсан өрхийн гишүүний нэр
+        /// </summary>
+        public int memberid { get; set; }
+    }
+
+    /// <summary>
+    /// Амьжиргаа сайжруулах үйл ажиллагааны мэдээлэл
+    /// </summary>
+    public class improvement
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
+
+        /// <summary>
+        /// Амьжиргаа сайжруулах төлөвлөгөө боловсруулсан огноо
+        /// </summary>
+        public DateTime plandate { get; set; }
+
+        /// <summary>
+        /// Өрхийн сонгосон аж ахуй
+        /// </summary>
+        public string selectedfarm { get; set; }
+
+        /// <summary>
+        /// Харьяалагдах дэд салбар
+        /// </summary>
+        public string subbranch { get; set; }
+
+    }
+
+    /// <summary>
+    /// Хөрөнгө оруулалтын мэдээлэл
+    /// </summary>
+    public class investment
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
+
+        /// <summary>
+        /// Хөрөнгө хүлээн авсан огноо
+        /// </summary>
+        public DateTime investmentdate { get; set; }
+
+        /// <summary>
+        /// Хүлээн авсан хөрөнгийн нэр
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// Тоо ширхэг
+        /// </summary>
+        public decimal quantity { get; set; }
+
+        /// <summary>
+        /// Нэгжийн үнэ
+        /// </summary>
+        public decimal unitprice { get; set; }
+
+        /// <summary>
+        /// Нийт үнэ
+        /// </summary>
+        public decimal totalprice { get; set; }
+
+        /// <summary>
+        /// Тайлбар(марк, дугаар)
+        /// </summary>
+        public string note { get; set; }
+    }
+
+    /// <summary>
+    /// Бусад тусламж, дэмжлэг
+    /// </summary>
+    public class othersupport
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
+
+        /// <summary>
+        /// Тусламж, дэмжлэг хүлээн авсан огноо
+        /// </summary>
+        public DateTime supportdate { get; set; }
+
+        /// <summary>
+        /// Хүлээн авсан тусламж дэмжлэг
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// Тоо ширхэг
+        /// </summary>
+        public decimal quantity { get; set; }
+
+        /// <summary>
+        /// Нэгжийн үнэ
+        /// </summary>
+        public decimal unitprice { get; set; }
+
+        /// <summary>
+        /// Нийт үнэ
+        /// </summary>
+        public decimal totalprice { get; set; }
+
+        /// <summary>
+        /// Дэмжлэг олгосон байгууллагын нэр
+        /// </summary>
+        public string orgname { get; set; }
+    }
+
+    /// <summary>
+    /// Холбон зуучилсан үйл ажиллагаа
+    /// </summary>
+    public class mediatedactivity
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int entryid { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int householdid { get; set; }
+
+        /// <summary>
+        /// Огноо
+        /// </summary>
+        public DateTime mediateddate { get; set; }
+
+        /// <summary>
+        /// Холбон зуучилсан байгууллагын нэр
+        /// </summary>
+        public string orgname { get; set; }
+
+        /// <summary>
+        /// Холбон зуучилсан үйлчилгээний нэр
+        /// </summary>
+        public string servicename { get; set; }
+
+        /// <summary>
+        /// Үйлчилгээнд холбогдсон өрхийн гишүүний нэр
+        /// </summary>
+        public int memberid { get; set; }
+    }
 
     //    Дунд шатны хорооны ерөнхий мэдээлэл
     //Дунд шатны хорооны нэр 

@@ -1,10 +1,10 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/households/{everything}",
+      "DownstreamPathTemplate": "/api/record/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "households",
-      "UpstreamPathTemplate": "/api/households/{everything}",
+      "UpstreamPathTemplate": "/api/record/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": null,

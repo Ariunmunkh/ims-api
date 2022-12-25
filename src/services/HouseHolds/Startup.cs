@@ -38,6 +38,8 @@ namespace HouseHolds
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
+            services.AddTransient<IBaseRepository, BaseRepository>();
+            services.AddTransient<ICoachRepository, CoachRepository>();
             services.AddTransient<IHouseHoldsRepository, HouseHoldsRepository>();
             services.AddScoped(service => new DWConnector());
             services.ConfigureSwagger("HouseHolds", "v1");

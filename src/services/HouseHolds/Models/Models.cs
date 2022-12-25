@@ -2,7 +2,6 @@
 
 namespace HouseHolds.Models
 {
-
     /// <summary>
     /// Өрх
     /// </summary>
@@ -27,12 +26,12 @@ namespace HouseHolds.Models
         /// <summary>
         /// Дүүрэг
         /// </summary>
-        public string district { get; set; }
+        public int districtid { get; set; }
 
         /// <summary>
         /// Хороо
         /// </summary>
-        public string section { get; set; }
+        public int section { get; set; }
 
         /// <summary>
         /// Хаяг
@@ -74,7 +73,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Өрхийн тэргүүнтэй ямар хамааралтай болох
         /// </summary>
-        public string relative { get; set; }
+        public int relationshipid { get; set; }
 
         /// <summary>
         /// Нас
@@ -90,6 +89,21 @@ namespace HouseHolds.Models
         /// Одоо тантай хамт амьдарч байгаа юу?
         /// </summary>
         public bool istogether { get; set; }
+
+        /// <summary>
+        /// Боловсролын зэрэг
+        /// </summary>
+        public string educationlevel { get; set; }
+
+        /// <summary>
+        /// Хөдөлмөр эрхлэлтийн байдал
+        /// </summary>
+        public string employment { get; set; }
+
+        /// <summary>
+        /// Эрүүл мэндийн байдал
+        /// </summary>
+        public string health { get; set; }
 
     }
 
