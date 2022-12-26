@@ -206,9 +206,9 @@ updatedby=@updatedby");
         when householdmember.istogether = 0 then 'Үгүй'
         else 'Тийм'
     end istogether,
-    household.educationlevel,
-    household.employment,
-    household.health,
+    householdmember.educationlevel,
+    householdmember.employment,
+    householdmember.health,
     date_format(householdmember.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdmember 
