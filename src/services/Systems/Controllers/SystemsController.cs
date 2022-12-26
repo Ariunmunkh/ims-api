@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Data;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Systems.Repositories;
 using Systems.Models;
@@ -45,20 +42,6 @@ namespace Systems.Controllers
             {
                 return Unauthorized(result);
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("get_files")]
-        public IActionResult GetFileNames()
-        {
-            string path = Directory.GetCurrentDirectory();
-            string[] fileEntries = Directory.GetFiles(path);
-
-
-            return Ok(fileEntries);
         }
     }
 }

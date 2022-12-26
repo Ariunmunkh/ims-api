@@ -1,15 +1,12 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
-using Infrastructure;
 using LConnection.Model;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Systems.Models;
 
 namespace Systems.Repositories
@@ -116,12 +113,14 @@ namespace Systems.Repositories
             string username = string.Empty;
             string email = string.Empty;
             string roleid = string.Empty;
+            string coachid = string.Empty;
 
             if (data.Rows.Count > 0)
             {
                 username = data.Rows[0]["username"].ToString();
                 email = data.Rows[0]["email"].ToString();
                 roleid = data.Rows[0]["roleid"].ToString();
+                coachid = data.Rows[0]["coachid"].ToString();
             }
 
             var claims = new Claim[]
@@ -129,6 +128,7 @@ namespace Systems.Repositories
                     new Claim("username", username),
                     new Claim("email", email),
                     new Claim("roleid", roleid),
+                    new Claim("coachid", coachid),
                     new Claim(JwtRegisteredClaimNames.Sub, username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)

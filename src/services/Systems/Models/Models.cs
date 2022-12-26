@@ -34,8 +34,13 @@ namespace Systems.Models
         public string encryptpass { get; set; }
 
         /// <summary>
-        /// Хэрэглэгчийн төрөл
+        /// Хэрэглэгчийн үүрэг
         /// </summary>
         public int roleid { get; set; }
+
+        /// <summary>
+        /// Коуч
+        /// </summary>
+        public int coachid { get; set; }
     }
 }

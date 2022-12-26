@@ -1,7 +1,4 @@
 ﻿using Connection.Model;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Systems.Models;
 
 namespace Systems.Repositories

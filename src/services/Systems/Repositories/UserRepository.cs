@@ -3,9 +3,7 @@ using Connection.Model;
 using Infrastructure;
 using LConnection.Model;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 using Systems.Models;
 
 namespace Systems.Repositories
@@ -34,7 +32,20 @@ namespace Systems.Repositories
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select userid, username, email, password, roleid, updated from tbluser order by username");
+            command.CommandText(@"SELECT 
+    tbluser.userid,
+    tbluser.username,
+    tbluser.email,
+    tbluser.password,
+    tbluser.roleid,
+    tbluser.coachid,
+    coach.name coachname,
+    date_format(tbluser.updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    tbluser
+ LEFT JOIN coach 
+   ON coach.coachid = tbluser.coachid
+ORDER BY tbluser.username");
             return connector.Execute(ref command, false);
 
         }
@@ -48,7 +59,7 @@ namespace Systems.Repositories
         {
 
             MCommand command = connector.PopCommand();
-            command.CommandText("select userid, username, email, roleid, updated from tbluser where userid = @userid");
+            command.CommandText("select userid, username, email, roleid, coachid, updated from tbluser where userid = @userid");
             command.AddParam("@userid", DbType.Int32, userid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
 
@@ -83,19 +94,21 @@ namespace Systems.Repositories
             }
 
             command.CommandText(string.Format(@"INSERT INTO tbluser
-  (userid, username, email, password, roleid)
+  (userid, username, email, password, roleid, coachid)
 values
-  (@userid, @username, @email, @password, @roleid) 
+  (@userid, @username, @email, @password, @roleid, @coachid) 
 ON DUPLICATE KEY UPDATE 
 username = @username, 
 roleid = @roleid, 
+coachid = @coachid, 
 email = @email, {0}
 updated = current_timestamp", updatepasssql));
             command.AddParam("@userid", DbType.Int32, tbluser.userid, ParameterDirection.Input);
             command.AddParam("@username", DbType.String, tbluser.username, ParameterDirection.Input);
             command.AddParam("@email", DbType.String, tbluser.email, ParameterDirection.Input);
             command.AddParam("@password", DbType.String, tbluser.encryptpass, ParameterDirection.Input);
-            command.AddParam("@roleid", DbType.String, tbluser.roleid, ParameterDirection.Input);
+            command.AddParam("@roleid", DbType.Int32, tbluser.roleid, ParameterDirection.Input);
+            command.AddParam("@coachid", DbType.Int32, tbluser.coachid, ParameterDirection.Input);
             return connector.Execute(ref command, false);
         }
 
