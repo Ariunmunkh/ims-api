@@ -156,7 +156,7 @@ updatedby=@updatedby");
     DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     memberid,
     coachid,
-    note
+    note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdvisit
@@ -178,7 +178,7 @@ order by updated desc");
     DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     memberid,
     coachid,
-    note
+    note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdvisit
