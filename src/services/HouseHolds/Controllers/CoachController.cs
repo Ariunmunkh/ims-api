@@ -75,17 +75,18 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Өрхийн айлчлалын мэдээлэл
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_householdvisit_list")]
-        public IActionResult GetHouseholdVisitList()
+        public IActionResult GetHouseholdVisitList(int id)
         {
-            return Ok(_CoachRepository.GetHouseholdVisitList());
+            return Ok(_CoachRepository.GetHouseholdVisitList(id));
         }
 
         /// <summary>
         /// Өрхийн айлчлалын мэдээлэл
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">visitid</param>
         /// <returns></returns>
         [HttpGet("get_householdvisit")]
         public IActionResult GetHouseholdVisit(int id)
@@ -122,11 +123,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Хурлын ирцийн мэдээлэл
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_meetingattendance_list")]
-        public IActionResult GetmeetingattendanceList()
+        public IActionResult GetmeetingattendanceList(int id)
         {
-            return Ok(_CoachRepository.GetmeetingattendanceList());
+            return Ok(_CoachRepository.GetmeetingattendanceList(id));
         }
 
         /// <summary>
@@ -169,11 +171,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Зээлийн мэдээлэл
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_loan_list")]
-        public IActionResult GetloanList()
+        public IActionResult GetloanList(int id)
         {
-            return Ok(_CoachRepository.GetloanList());
+            return Ok(_CoachRepository.GetloanList(id));
         }
 
         /// <summary>
@@ -216,11 +219,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Зээлийн эргэн төлөлтийн мэдээлэл
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_loanrepayment_list")]
-        public IActionResult GetloanrepaymentList()
+        public IActionResult GetloanrepaymentList(int id)
         {
-            return Ok(_CoachRepository.GetloanrepaymentList());
+            return Ok(_CoachRepository.GetloanrepaymentList(id));
         }
 
         /// <summary>
@@ -263,11 +267,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Сургалт, үйл ажиллагаа
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_training_list")]
-        public IActionResult GettrainingList()
+        public IActionResult GettrainingList(int id)
         {
-            return Ok(_CoachRepository.GettrainingList());
+            return Ok(_CoachRepository.GettrainingList(id));
         }
 
         /// <summary>
@@ -310,11 +315,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Амьжиргаа сайжруулах үйл ажиллагааны мэдээлэл
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_improvement_list")]
-        public IActionResult GetimprovementList()
+        public IActionResult GetimprovementList(int id)
         {
-            return Ok(_CoachRepository.GetimprovementList());
+            return Ok(_CoachRepository.GetimprovementList(id));
         }
 
         /// <summary>
@@ -357,11 +363,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Хөрөнгө оруулалтын мэдээлэл
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_investment_list")]
-        public IActionResult GetinvestmentList()
+        public IActionResult GetinvestmentList(int id)
         {
-            return Ok(_CoachRepository.GetinvestmentList());
+            return Ok(_CoachRepository.GetinvestmentList(id));
         }
 
         /// <summary>
@@ -404,11 +411,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Бусад тусламж, дэмжлэг
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_othersupport_list")]
-        public IActionResult GetothersupportList()
+        public IActionResult GetothersupportList(int id)
         {
-            return Ok(_CoachRepository.GetothersupportList());
+            return Ok(_CoachRepository.GetothersupportList(id));
         }
 
         /// <summary>
@@ -451,11 +459,12 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Холбон зуучилсан үйл ажиллагаа
         /// </summary>
+        /// <param name="id">householdid</param>
         /// <returns></returns>
         [HttpGet("get_mediatedactivity_list")]
-        public IActionResult GetmediatedactivityList()
+        public IActionResult GetmediatedactivityList(int id)
         {
-            return Ok(_CoachRepository.GetmediatedactivityList());
+            return Ok(_CoachRepository.GetmediatedactivityList(id));
         }
 
         /// <summary>

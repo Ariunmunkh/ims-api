@@ -32,15 +32,15 @@ namespace HouseHolds.Repositories
         public MResult GetDistrictList()
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     districtid,
     name,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     district
 order by updated desc");
-            return connector.Execute(ref command, false);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -51,16 +51,16 @@ order by updated desc");
         /// <returns></returns>
         public MResult GetDistrict(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     districtid,
     name,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     district
 where districtid = @districtid");
-            command.AddParam("@districtid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@districtid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -71,13 +71,13 @@ where districtid = @districtid");
         public MResult SetDistrict(district request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.districtid == 0)
             {
-                command.CommandText(@"select coalesce(max(districtid),0)+1 newid from district");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(districtid),0)+1 newid from district");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -86,7 +86,7 @@ where districtid = @districtid");
                 }
             }
 
-            command.CommandText(@"insert into district
+            cmd.CommandText(@"insert into district
 (districtid,
 name,
 updatedby)
@@ -99,11 +99,11 @@ name=@name,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
-            command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -118,18 +118,18 @@ updatedby=@updatedby");
         public MResult DeleteDistrict(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("select count(1) too from household where district = @districtid");
-            command.AddParam("@districtid", DbType.Int32, id, ParameterDirection.Input);
-            MResult result = connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("select count(1) too from household where district = @districtid");
+            cmd.AddParam("@districtid", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
             if (result.retdata is DataTable data && data.Rows.Count > 0 && Convert.ToDecimal(data.Rows[0]["too"]) > 0)
                 return new MResult { rettype = 1, retmsg = "Өрхийн бүртгэлд ашигласан тул устгах боломжгүй." };
 
-            command.CommandText("delete from district where districtid = @districtid");
-            return connector.Execute(ref command, false);
+            cmd.CommandText("delete from district where districtid = @districtid");
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -145,8 +145,8 @@ updatedby=@updatedby");
         public MResult GetRelationshipList()
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     relationshipid,
     name,
     case
@@ -157,7 +157,7 @@ updatedby=@updatedby");
 FROM
     relationship
 order by updated desc");
-            return connector.Execute(ref command, false);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -168,8 +168,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult GetRelationship(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     relationshipid,
     name,
     ishead,
@@ -177,8 +177,8 @@ order by updated desc");
 FROM
     relationship
 where relationshipid = @relationshipid");
-            command.AddParam("@relationshipid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@relationshipid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -189,13 +189,13 @@ where relationshipid = @relationshipid");
         public MResult SetRelationship(relationship request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.relationshipid == 0)
             {
-                command.CommandText(@"select coalesce(max(relationshipid),0)+1 newid from relationship");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(relationshipid),0)+1 newid from relationship");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -204,7 +204,7 @@ where relationshipid = @relationshipid");
                 }
             }
 
-            command.CommandText(@"insert into relationship
+            cmd.CommandText(@"insert into relationship
 (relationshipid,
 name,
 ishead,
@@ -220,12 +220,12 @@ ishead=@ishead,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@relationshipid", DbType.Int32, request.relationshipid, ParameterDirection.Input);
-            command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@ishead", DbType.Boolean, request.ishead, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@relationshipid", DbType.Int32, request.relationshipid, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@ishead", DbType.Boolean, request.ishead, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -240,18 +240,18 @@ updatedby=@updatedby");
         public MResult DeleteRelationship(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("select count(1) too from householdmember where relationshipid = @relationshipid");
-            command.AddParam("@relationshipid", DbType.Int32, id, ParameterDirection.Input);
-            MResult result = connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("select count(1) too from householdmember where relationshipid = @relationshipid");
+            cmd.AddParam("@relationshipid", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
             if (result.retdata is DataTable data && data.Rows.Count > 0 && Convert.ToDecimal(data.Rows[0]["too"]) > 0)
                 return new MResult { rettype = 1, retmsg = "Өрхийн гишүүн бүртгэлд ашигласан тул устгах боломжгүй." };
 
-            command.CommandText("delete from relationship where relationshipid = @relationshipid");
-            return connector.Execute(ref command, false);
+            cmd.CommandText("delete from relationship where relationshipid = @relationshipid");
+            return connector.Execute(ref cmd, false);
 
         }
 

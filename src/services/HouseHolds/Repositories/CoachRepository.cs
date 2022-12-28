@@ -32,8 +32,8 @@ namespace HouseHolds.Repositories
         public MResult GetCoachList()
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     coachid,
     name,
     phone,
@@ -41,7 +41,7 @@ namespace HouseHolds.Repositories
 FROM
     coach
 order by updated desc");
-            return connector.Execute(ref command, false);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -52,8 +52,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult GetCoach(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     coachid,
     name,
     phone,
@@ -61,8 +61,8 @@ order by updated desc");
 FROM
     coach
 where coachid = @coachid");
-            command.AddParam("@coachid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@coachid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -73,13 +73,13 @@ where coachid = @coachid");
         public MResult SetCoach(coach request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.coachid == 0)
             {
-                command.CommandText(@"select coalesce(max(coachid),0)+1 newid from coach");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(coachid),0)+1 newid from coach");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -88,7 +88,7 @@ where coachid = @coachid");
                 }
             }
 
-            command.CommandText(@"insert into coach
+            cmd.CommandText(@"insert into coach
 (coachid,
 name,
 phone,
@@ -104,12 +104,12 @@ phone=@phone,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
-            command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -124,18 +124,18 @@ updatedby=@updatedby");
         public MResult DeleteCoach(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("select count(1) too from household where coachid = @coachid");
-            command.AddParam("@coachid", DbType.Int32, id, ParameterDirection.Input);
-            MResult result = connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("select count(1) too from household where coachid = @coachid");
+            cmd.AddParam("@coachid", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
             if (result.retdata is DataTable data && data.Rows.Count > 0 && Convert.ToDecimal(data.Rows[0]["too"]) > 0)
                 return new MResult { rettype = 1, retmsg = "Өрхийн бүртгэлд ашигласан тул устгах боломжгүй." };
 
-            command.CommandText("delete from coach where coachid = @coachid");
-            return connector.Execute(ref command, false);
+            cmd.CommandText("delete from coach where coachid = @coachid");
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -146,22 +146,27 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetHouseholdVisitList()
+        public MResult GetHouseholdVisitList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
-    visitid,
-    householdid,
-    DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
-    memberid,
-    coachid,
-    note,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    householdvisit.visitid,
+    householdvisit.householdid,
+    DATE_FORMAT(householdvisit.visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
+    householdvisit.memberid,
+    householdmember.name membername,
+    householdvisit.coachid,
+    householdvisit.note,
+    DATE_FORMAT(householdvisit.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdvisit
-order by updated desc");
-            return connector.Execute(ref command, false);
+left join householdmember on householdmember.memberid = householdvisit.memberid
+where householdvisit.householdid = @householdid
+order by householdvisit.updated desc");
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -171,8 +176,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult GetHouseholdVisit(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     visitid,
     householdid,
     DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
@@ -183,8 +188,8 @@ order by updated desc");
 FROM
     householdvisit
 where visitid = @visitid");
-            command.AddParam("@visitid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@visitid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -195,13 +200,13 @@ where visitid = @visitid");
         public MResult SetHouseholdVisit(householdvisit request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.visitid == 0)
             {
-                command.CommandText(@"select coalesce(max(visitid),0)+1 newid from householdvisit");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(visitid),0)+1 newid from householdvisit");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -210,7 +215,7 @@ where visitid = @visitid");
                 }
             }
 
-            command.CommandText(@"insert into householdvisit
+            cmd.CommandText(@"insert into householdvisit
 (visitid,
 householdid,
 visitdate,
@@ -235,15 +240,15 @@ note=@note,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@visitid", DbType.Int32, request.visitid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@visitdate", DbType.DateTime, request.visitdate, ParameterDirection.Input);
-            command.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
-            command.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
-            command.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@visitid", DbType.Int32, request.visitid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@visitdate", DbType.DateTime, request.visitdate, ParameterDirection.Input);
+            cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
+            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -257,12 +262,10 @@ updatedby=@updatedby");
         /// <returns></returns>
         public MResult DeleteHouseholdVisit(int id)
         {
-
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from householdvisit where visitid = @visitid");
-            command.AddParam("@visitid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
-
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from householdvisit where visitid = @visitid");
+            cmd.AddParam("@visitid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         #endregion
@@ -273,10 +276,10 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetmeetingattendanceList()
+        public MResult GetmeetingattendanceList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
@@ -285,8 +288,10 @@ updatedby=@updatedby");
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
+where meetingattendance.householdid = @householdid
 order by updated desc");
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -296,8 +301,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getmeetingattendance(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
@@ -307,8 +312,8 @@ order by updated desc");
 FROM
     meetingattendance
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -319,13 +324,13 @@ where entryid = @entryid");
         public MResult Setmeetingattendance(meetingattendance request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from meetingattendance");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from meetingattendance");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -334,7 +339,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into meetingattendance
+            cmd.CommandText(@"insert into meetingattendance
 (entryid,
 householdid,
 meetingdate,
@@ -356,14 +361,14 @@ quantity=@quantity,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@meetingdate", DbType.DateTime, request.meetingdate, ParameterDirection.Input);
-            command.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
-            command.AddParam("@quantity", DbType.Int32, request.quantity, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@meetingdate", DbType.DateTime, request.meetingdate, ParameterDirection.Input);
+            cmd.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
+            cmd.AddParam("@quantity", DbType.Int32, request.quantity, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -378,10 +383,10 @@ updatedby=@updatedby");
         public MResult Deletemeetingattendance(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from meetingattendance where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from meetingattendance where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -393,10 +398,10 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetloanList()
+        public MResult GetloanList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(loandate, '%Y-%m-%d %H:%i:%s') loandate,
@@ -405,8 +410,10 @@ updatedby=@updatedby");
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
+where loan.householdid = @householdid
 order by updated desc");
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -416,8 +423,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getloan(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(loandate, '%Y-%m-%d %H:%i:%s') loandate,
@@ -427,8 +434,8 @@ order by updated desc");
 FROM
     loan
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -439,13 +446,13 @@ where entryid = @entryid");
         public MResult Setloan(loan request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from loan");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from loan");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -454,7 +461,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into loan
+            cmd.CommandText(@"insert into loan
 (entryid,
 householdid,
 loandate,
@@ -476,14 +483,14 @@ note=@note,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@loandate", DbType.DateTime, request.loandate, ParameterDirection.Input);
-            command.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
-            command.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@loandate", DbType.DateTime, request.loandate, ParameterDirection.Input);
+            cmd.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
+            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -498,10 +505,10 @@ updatedby=@updatedby");
         public MResult Deleteloan(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from loan where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from loan where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -513,10 +520,10 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetloanrepaymentList()
+        public MResult GetloanrepaymentList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(repaymentdate, '%Y-%m-%d %H:%i:%s') repaymentdate,
@@ -525,8 +532,10 @@ updatedby=@updatedby");
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loanrepayment
+where loanrepayment.householdid = @householdid
 order by updated desc");
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -536,8 +545,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getloanrepayment(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(repaymentdate, '%Y-%m-%d %H:%i:%s') repaymentdate,
@@ -547,8 +556,8 @@ order by updated desc");
 FROM
     loanrepayment
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -559,13 +568,13 @@ where entryid = @entryid");
         public MResult Setloanrepayment(loanrepayment request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from loanrepayment");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from loanrepayment");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -574,7 +583,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into loanrepayment
+            cmd.CommandText(@"insert into loanrepayment
 (entryid,
 householdid,
 repaymentdate,
@@ -596,14 +605,14 @@ balance=@balance,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@repaymentdate", DbType.DateTime, request.repaymentdate, ParameterDirection.Input);
-            command.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
-            command.AddParam("@balance", DbType.Decimal, request.balance, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@repaymentdate", DbType.DateTime, request.repaymentdate, ParameterDirection.Input);
+            cmd.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
+            cmd.AddParam("@balance", DbType.Decimal, request.balance, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -618,10 +627,10 @@ updatedby=@updatedby");
         public MResult Deleteloanrepayment(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from loanrepayment where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from loanrepayment where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -633,24 +642,27 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GettrainingList()
+        public MResult GettrainingList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
-    name,
-    orgname,
-    duration,
-    isjoin,
-    memberid,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    training.entryid,
+    training.householdid,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    training.name,
+    training.orgname,
+    training.duration,
+    training.isjoin,
+    training.memberid,
+    householdmember.name membername,
+    DATE_FORMAT(training.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     training
-order by updated desc");
-            return connector.Execute(ref command, false);
-
+left join householdmember on householdmember.memberid = training.memberid
+where training.householdid = @householdid
+order by training.updated desc");
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -660,11 +672,11 @@ order by updated desc");
         /// <returns></returns>
         public MResult Gettraining(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
-    DATE_FORMAT(trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
+    DATE_FORMAT(trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
     name,
     orgname,
     duration,
@@ -674,8 +686,8 @@ order by updated desc");
 FROM
     training
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -686,13 +698,13 @@ where entryid = @entryid");
         public MResult Settraining(training request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from training");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from training");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -701,7 +713,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into training
+            cmd.CommandText(@"insert into training
 (entryid,
 householdid,
 trainingdate,
@@ -732,17 +744,17 @@ memberid=@memberid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@trainingdate", DbType.DateTime, request.trainingdate, ParameterDirection.Input);
-            command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
-            command.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
-            command.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
-            command.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@trainingdate", DbType.DateTime, request.trainingdate, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
+            cmd.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
+            cmd.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
+            cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -757,10 +769,10 @@ updatedby=@updatedby");
         public MResult Deletetraining(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from training where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from training where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -772,10 +784,10 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetimprovementList()
+        public MResult GetimprovementList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate
@@ -784,9 +796,10 @@ updatedby=@updatedby");
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     improvement
+where improvement.householdid = @householdid
 order by updated desc");
-            return connector.Execute(ref command, false);
-
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -796,8 +809,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getimprovement(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate
@@ -807,8 +820,8 @@ order by updated desc");
 FROM
     improvement
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -819,13 +832,13 @@ where entryid = @entryid");
         public MResult Setimprovement(improvement request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from improvement");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from improvement");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -834,7 +847,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into improvement
+            cmd.CommandText(@"insert into improvement
 (entryid,
 householdid,
 plandate,
@@ -856,14 +869,14 @@ subbranch=@subbranch,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@plandate", DbType.DateTime, request.plandate, ParameterDirection.Input);
-            command.AddParam("@selectedfarm", DbType.String, request.selectedfarm, ParameterDirection.Input);
-            command.AddParam("@subbranch", DbType.String, request.subbranch, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@plandate", DbType.DateTime, request.plandate, ParameterDirection.Input);
+            cmd.AddParam("@selectedfarm", DbType.String, request.selectedfarm, ParameterDirection.Input);
+            cmd.AddParam("@subbranch", DbType.String, request.subbranch, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -878,10 +891,10 @@ updatedby=@updatedby");
         public MResult Deleteimprovement(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from improvement where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from improvement where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -893,10 +906,10 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetinvestmentList()
+        public MResult GetinvestmentList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
@@ -908,9 +921,10 @@ updatedby=@updatedby");
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     investment
+where investment.householdid = @householdid
 order by updated desc");
-            return connector.Execute(ref command, false);
-
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -920,8 +934,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getinvestment(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
@@ -934,8 +948,8 @@ order by updated desc");
 FROM
     investment
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -946,13 +960,13 @@ where entryid = @entryid");
         public MResult Setinvestment(investment request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from investment");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from investment");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -961,7 +975,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into investment
+            cmd.CommandText(@"insert into investment
 (entryid,
 householdid,
 investmentdate,
@@ -992,17 +1006,17 @@ note=@note,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@investmentdate", DbType.DateTime, request.investmentdate, ParameterDirection.Input);
-            command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@quantity", DbType.Decimal, request.quantity, ParameterDirection.Input);
-            command.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
-            command.AddParam("@totalprice", DbType.Decimal, request.totalprice, ParameterDirection.Input);
-            command.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@investmentdate", DbType.DateTime, request.investmentdate, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@quantity", DbType.Decimal, request.quantity, ParameterDirection.Input);
+            cmd.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
+            cmd.AddParam("@totalprice", DbType.Decimal, request.totalprice, ParameterDirection.Input);
+            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -1017,10 +1031,10 @@ updatedby=@updatedby");
         public MResult Deleteinvestment(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from investment where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from investment where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -1032,10 +1046,10 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetothersupportList()
+        public MResult GetothersupportList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
@@ -1047,9 +1061,10 @@ updatedby=@updatedby");
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     othersupport
+where othersupport.householdid = @householdid
 order by updated desc");
-            return connector.Execute(ref command, false);
-
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -1059,8 +1074,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getothersupport(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
@@ -1073,8 +1088,8 @@ order by updated desc");
 FROM
     othersupport
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -1085,13 +1100,13 @@ where entryid = @entryid");
         public MResult Setothersupport(othersupport request)
         {
 
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from othersupport");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from othersupport");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -1100,7 +1115,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into othersupport
+            cmd.CommandText(@"insert into othersupport
 (entryid,
 householdid,
 supportdate,
@@ -1131,17 +1146,17 @@ orgname=@orgname,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@supportdate", DbType.DateTime, request.supportdate, ParameterDirection.Input);
-            command.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            command.AddParam("@quantity", DbType.Decimal, request.quantity, ParameterDirection.Input);
-            command.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
-            command.AddParam("@totalprice", DbType.Decimal, request.totalprice, ParameterDirection.Input);
-            command.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@supportdate", DbType.DateTime, request.supportdate, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@quantity", DbType.Decimal, request.quantity, ParameterDirection.Input);
+            cmd.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
+            cmd.AddParam("@totalprice", DbType.Decimal, request.totalprice, ParameterDirection.Input);
+            cmd.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -1156,10 +1171,10 @@ updatedby=@updatedby");
         public MResult Deleteothersupport(int id)
         {
 
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from othersupport where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from othersupport where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
 
         }
 
@@ -1171,21 +1186,25 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetmediatedactivityList()
+        public MResult GetmediatedactivityList(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
-    orgname,
-    servicename,
-    memberid, 
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    mediatedactivity.entryid,
+    mediatedactivity.householdid,
+    DATE_FORMAT(mediatedactivity.mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
+    mediatedactivity.orgname,
+    mediatedactivity.servicename,
+    mediatedactivity.memberid, 
+    householdmember.name membername, 
+    DATE_FORMAT(mediatedactivity.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     mediatedactivity
-order by updated desc");
-            return connector.Execute(ref command, false);
+left join householdmember on householdmember.memberid = mediatedactivity.memberid
+where mediatedactivity.householdid = @householdid
+order by mediatedactivity.updated desc");
+            cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -1195,8 +1214,8 @@ order by updated desc");
         /// <returns></returns>
         public MResult Getmediatedactivity(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     entryid,
     householdid,
     DATE_FORMAT(mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
@@ -1207,8 +1226,8 @@ order by updated desc");
 FROM
     mediatedactivity
 where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>
@@ -1218,13 +1237,13 @@ where entryid = @entryid");
         /// <returns></returns>
         public MResult Setmediatedactivity(mediatedactivity request)
         {
-            MCommand command = connector.PopCommand();
+            MCommand cmd = connector.PopCommand();
             MResult result;
 
             if (request.entryid == 0)
             {
-                command.CommandText(@"select coalesce(max(entryid),0)+1 newid from mediatedactivity");
-                result = connector.Execute(ref command, false);
+                cmd.CommandText(@"select coalesce(max(entryid),0)+1 newid from mediatedactivity");
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -1233,7 +1252,7 @@ where entryid = @entryid");
                 }
             }
 
-            command.CommandText(@"insert into mediatedactivity
+            cmd.CommandText(@"insert into mediatedactivity
 (entryid,
 householdid,
 mediateddate,
@@ -1258,15 +1277,15 @@ memberid=@memberid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            command.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
-            command.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            command.AddParam("@mediateddate", DbType.DateTime, request.mediateddate, ParameterDirection.Input);
-            command.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
-            command.AddParam("@servicename", DbType.String, request.servicename, ParameterDirection.Input);
-            command.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
-            command.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+            cmd.AddParam("@mediateddate", DbType.DateTime, request.mediateddate, ParameterDirection.Input);
+            cmd.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
+            cmd.AddParam("@servicename", DbType.String, request.servicename, ParameterDirection.Input);
+            cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref command, false);
+            result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
@@ -1280,10 +1299,10 @@ updatedby=@updatedby");
         /// <returns></returns>
         public MResult Deletemediatedactivity(int id)
         {
-            MCommand command = connector.PopCommand();
-            command.CommandText("delete from mediatedactivity where entryid = @entryid");
-            command.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref command, false);
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from mediatedactivity where entryid = @entryid");
+            cmd.AddParam("@entryid", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         #endregion

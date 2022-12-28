@@ -38,10 +38,10 @@ namespace Systems.Repositories
             {
                 request.encryptpass = Infrastructure.Utility.EncryptPass(request.password);
 
-                MCommand command = connector.PopCommand();
-                command.CommandText("select * from tbluser where username = @username");
-                command.AddParam("@username", DbType.String, request.username, ParameterDirection.Input);
-                MResult result = connector.Execute(ref command, false);
+                MCommand cmd = connector.PopCommand();
+                cmd.CommandText("select * from tbluser where username = @username");
+                cmd.AddParam("@username", DbType.String, request.username, ParameterDirection.Input);
+                MResult result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
 

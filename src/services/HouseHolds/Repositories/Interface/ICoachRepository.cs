@@ -44,8 +44,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetHouseholdVisitList();
+        MResult GetHouseholdVisitList(int id);
 
         /// <summary>
         /// 
@@ -75,8 +76,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetmeetingattendanceList();
+        MResult GetmeetingattendanceList(int id);
 
         /// <summary>
         /// 
@@ -106,8 +108,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetloanList();
+        MResult GetloanList(int id);
 
         /// <summary>
         /// 
@@ -137,8 +140,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetloanrepaymentList();
+        MResult GetloanrepaymentList(int id);
 
         /// <summary>
         /// 
@@ -168,8 +172,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GettrainingList();
+        MResult GettrainingList(int id);
 
         /// <summary>
         /// 
@@ -199,8 +204,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetimprovementList();
+        MResult GetimprovementList(int id);
 
         /// <summary>
         /// 
@@ -230,8 +236,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetinvestmentList();
+        MResult GetinvestmentList(int id);
 
         /// <summary>
         /// 
@@ -261,8 +268,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetothersupportList();
+        MResult GetothersupportList(int id);
 
         /// <summary>
         /// 
@@ -292,8 +300,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetmediatedactivityList();
+        MResult GetmediatedactivityList(int id);
 
         /// <summary>
         /// 
