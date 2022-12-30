@@ -69,17 +69,24 @@ order by household.updated desc");
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    householdid,
-    numberof,
-    name,
-    district,
-    section,
-    address,
-    phone,
-    coachid,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    household.householdid,
+    (select count(1) from householdmember a where a.householdid = household.householdid) numberof,
+    (select max(a.name) from householdmember a 
+                     inner join relationship b 
+                        on b.relationshipid = a.relationshipid 
+                     where b.ishead = true 
+                       and a.householdid = household.householdid) name,
+    household.district,
+    district.name districtname,
+    household.section,
+    household.address,
+    household.phone,
+    household.coachid,
+    DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     household
+left join district
+on district.districtid = household.district
 where householdid = @householdid");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
