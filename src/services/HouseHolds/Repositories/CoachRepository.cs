@@ -285,7 +285,10 @@ updatedby=@updatedby");
     entryid,
     householdid,
     DATE_FORMAT(meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
-    isjoin,
+    case
+        when isjoin = 0 then 'Үгүй'
+        else 'Тийм'
+    end isjoin,
     quantity,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -407,7 +410,7 @@ updatedby=@updatedby");
     entryid,
     householdid,
     DATE_FORMAT(loandate, '%Y-%m-%d %H:%i:%s') loandate,
-    amount,
+    FORMAT(amount,2) amount,
     note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -529,8 +532,8 @@ updatedby=@updatedby");
     entryid,
     householdid,
     DATE_FORMAT(repaymentdate, '%Y-%m-%d %H:%i:%s') repaymentdate,
-    amount,
-    balance,
+    FORMAT(amount,2) amount,
+    FORMAT(balance,2) balance,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loanrepayment
