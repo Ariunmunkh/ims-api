@@ -40,7 +40,7 @@ namespace HouseHolds.Repositories
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     coach
-order by updated desc");
+order by name asc");
             return connector.Execute(ref cmd, false);
 
         }
@@ -158,11 +158,13 @@ updatedby=@updatedby");
     householdvisit.memberid,
     householdmember.name membername,
     householdvisit.coachid,
+    coach.name coachname,
     householdvisit.note,
     DATE_FORMAT(householdvisit.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdvisit
 left join householdmember on householdmember.memberid = householdvisit.memberid
+left join coach on coach.coachid = householdvisit.coachid
 where householdvisit.householdid = @householdid
 order by householdvisit.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
