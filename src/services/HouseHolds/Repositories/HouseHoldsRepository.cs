@@ -41,7 +41,7 @@ namespace HouseHolds.Repositories
                         on b.relationshipid = a.relationshipid 
                      where b.ishead = true 
                        and a.householdid = household.householdid) name,
-    household.district,
+    household.districtid,
     district.name districtname,
     household.section,
     household.address,
@@ -52,7 +52,7 @@ namespace HouseHolds.Repositories
 FROM
     household
 left join district
-on district.districtid = household.district
+on district.districtid = household.districtid
 left join coach
 on coach.coachid = household.coachid
 order by household.updated desc");
@@ -76,7 +76,7 @@ order by household.updated desc");
                         on b.relationshipid = a.relationshipid 
                      where b.ishead = true 
                        and a.householdid = household.householdid) name,
-    household.district,
+    household.districtid,
     district.name districtname,
     household.section,
     household.address,
@@ -86,7 +86,7 @@ order by household.updated desc");
 FROM
     household
 left join district
-on district.districtid = household.district
+on district.districtid = household.districtid
 where householdid = @householdid");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -119,7 +119,7 @@ where householdid = @householdid");
 (householdid,
 numberof,
 name,
-district,
+districtid,
 section,
 address,
 phone,
@@ -129,7 +129,7 @@ values
 (@householdid,
 @numberof,
 @name,
-@district,
+@districtid,
 @section,
 @address,
 @phone,
@@ -138,7 +138,7 @@ values
 on duplicate key update 
 numberof=@numberof,
 name=@name,
-district=@district,
+districtid=@districtid,
 section=@section,
 address=@address,
 phone=@phone,
@@ -149,7 +149,7 @@ updatedby=@updatedby");
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@numberof", DbType.Int32, request.numberof, ParameterDirection.Input);
             cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            cmd.AddParam("@district", DbType.Int32, request.districtid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
             cmd.AddParam("@section", DbType.Int32, request.section, ParameterDirection.Input);
             cmd.AddParam("@address", DbType.String, request.address, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
