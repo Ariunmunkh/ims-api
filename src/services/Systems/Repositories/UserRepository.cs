@@ -40,11 +40,15 @@ namespace Systems.Repositories
     tbluser.roleid,
     tbluser.coachid,
     coach.name coachname,
+    coach.phone,
+    district.name districtname,
     date_format(tbluser.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     tbluser
  LEFT JOIN coach 
    ON coach.coachid = tbluser.coachid
+ left join district
+   on district.districtid = coach.districtid
 ORDER BY tbluser.username");
             return connector.Execute(ref cmd, false);
 
@@ -59,7 +63,22 @@ ORDER BY tbluser.username");
         {
 
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText("select userid, username, email, roleid, coachid, updated from tbluser where userid = @userid");
+            cmd.CommandText(@"SELECT 
+    tbluser.userid,
+    tbluser.username,
+    tbluser.email,
+    tbluser.roleid,
+    tbluser.coachid,
+    coach.name,
+    coach.phone,
+    coach.districtid,
+    tbluser.updated
+FROM
+    tbluser
+        LEFT JOIN
+    coach ON coach.coachid = tbluser.coachid
+WHERE
+    tbluser.userid = @userid");
             cmd.AddParam("@userid", DbType.Int32, userid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
