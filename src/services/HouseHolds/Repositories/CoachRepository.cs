@@ -36,6 +36,7 @@ namespace HouseHolds.Repositories
             cmd.CommandText(@"SELECT 
     coach.coachid,
     coach.name,
+    coach.phone,
     coach.districtid,
     district.name districtname,
     DATE_FORMAT(coach.updated, '%Y-%m-%d %H:%i:%s') updated

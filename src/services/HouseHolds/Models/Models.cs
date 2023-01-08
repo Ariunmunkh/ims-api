@@ -86,6 +86,11 @@ namespace HouseHolds.Models
         public int gender { get; set; }
 
         /// <summary>
+        /// Гол оролцогч
+        /// </summary>
+        public bool isparticipant { get; set; }
+
+        /// <summary>
         /// Одоо тантай хамт амьдарч байгаа юу?
         /// </summary>
         public bool istogether { get; set; }

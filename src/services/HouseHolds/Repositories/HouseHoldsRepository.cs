@@ -213,6 +213,10 @@ updatedby=@updatedby");
         when householdmember.istogether = 0 then 'Үгүй'
         else 'Тийм'
     end istogether,
+    case
+        when householdmember.isparticipant = 0 then 'Үгүй'
+        else 'Тийм'
+    end isparticipant,
     householdmember.educationlevel,
     householdmember.employment,
     householdmember.health,
@@ -244,6 +248,7 @@ order by householdmember.birthdate asc");
     date_format(birthdate, '%Y-%m-%d') birthdate,
     gender,
     istogether,
+    isparticipant,
     educationlevel,
     employment,
     health,
@@ -286,6 +291,7 @@ relationshipid,
 birthdate,
 gender,
 istogether,
+isparticipant,
 educationlevel,
 employment,
 health,
@@ -298,6 +304,7 @@ values
 @birthdate,
 @gender,
 @istogether,
+@isparticipant,
 @educationlevel,
 @employment,
 @health,
@@ -309,6 +316,7 @@ relationshipid=@relationshipid,
 birthdate=@birthdate,
 gender=@gender,
 istogether=@istogether,
+isparticipant=@isparticipant,
 educationlevel=@educationlevel,
 employment=@employment,
 health=@health,
@@ -322,6 +330,7 @@ updatedby=@updatedby");
             cmd.AddParam("@birthdate", DbType.DateTime, request.birthdate, ParameterDirection.Input);
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             cmd.AddParam("@istogether", DbType.Boolean, request.istogether, ParameterDirection.Input);
+            cmd.AddParam("@isparticipant", DbType.Boolean, request.isparticipant, ParameterDirection.Input);
             cmd.AddParam("@educationlevel", DbType.String, request.educationlevel, ParameterDirection.Input);
             cmd.AddParam("@employment", DbType.String, request.employment, ParameterDirection.Input);
             cmd.AddParam("@health", DbType.String, request.health, ParameterDirection.Input);
