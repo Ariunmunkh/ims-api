@@ -37,16 +37,17 @@ namespace HouseHolds.Repositories
         /// <returns></returns>
         MResult DeleteCoach(int id);
 
-        #endregion   
-        
+        #endregion
+
         #region HouseholdVisit
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetHouseholdVisitList(int id);
+        MResult GetHouseholdVisitList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -77,8 +78,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetmeetingattendanceList(int id);
+        MResult GetmeetingattendanceList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -109,8 +111,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetloanList(int id);
+        MResult GetloanList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -141,8 +144,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetloanrepaymentList(int id);
+        MResult GetloanrepaymentList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -173,8 +177,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GettrainingList(int id);
+        MResult GettrainingList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -205,8 +210,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetimprovementList(int id);
+        MResult GetimprovementList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -237,8 +243,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetinvestmentList(int id);
+        MResult GetinvestmentList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -269,8 +276,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetothersupportList(int id);
+        MResult GetothersupportList(int id, int coachid);
 
         /// <summary>
         /// 
@@ -301,8 +309,9 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        MResult GetmediatedactivityList(int id);
+        MResult GetmediatedactivityList(int id, int coachid);
 
         /// <summary>
         /// 

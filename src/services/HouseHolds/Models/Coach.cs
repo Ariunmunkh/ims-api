@@ -60,6 +60,10 @@ namespace HouseHolds.Models
         /// </summary>
         public string phone { get; set; }
 
+        /// <summary>
+        /// Сум, Дүүрэг
+        /// </summary>
+        public int districtid { get; set; }
     }
 
     /// <summary>zl

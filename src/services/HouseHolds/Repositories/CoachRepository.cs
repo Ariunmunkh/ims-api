@@ -34,13 +34,15 @@ namespace HouseHolds.Repositories
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    coachid,
-    name,
-    phone,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    coach.coachid,
+    coach.name,
+    coach.districtid,
+    district.name districtname,
+    DATE_FORMAT(coach.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     coach
-order by name asc");
+left join district on district.districtid = coach.districtid
+order by coach.name asc");
             return connector.Execute(ref cmd, false);
 
         }
@@ -57,6 +59,7 @@ order by name asc");
     coachid,
     name,
     phone,
+    districtid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     coach
@@ -92,21 +95,25 @@ where coachid = @coachid");
 (coachid,
 name,
 phone,
+districtid,
 updatedby)
 values
 (@coachid,
 @name,
 @phone,
+@districtid,
 @updatedby) 
 on duplicate key update 
 name=@name,
 phone=@phone,
+districtid=@districtid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
             cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -147,8 +154,9 @@ updatedby=@updatedby");
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetHouseholdVisitList(int id)
+        public MResult GetHouseholdVisitList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -163,11 +171,14 @@ updatedby=@updatedby");
     DATE_FORMAT(householdvisit.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdvisit
+left join household on household.householdid = householdvisit.householdid
 left join householdmember on householdmember.memberid = householdvisit.memberid
 left join coach on coach.coachid = householdvisit.coachid
-where householdvisit.householdid = @householdid
+where (householdvisit.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
 order by householdvisit.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -277,25 +288,30 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetmeetingattendanceList(int id)
+        public MResult GetmeetingattendanceList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
+    meetingattendance.entryid,
+    meetingattendance.householdid,
+    DATE_FORMAT(meetingattendance.meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
     case
-        when isjoin = 0 then 'Үгүй'
+        when meetingattendance.isjoin = 0 then 'Үгүй'
         else 'Тийм'
     end isjoin,
-    quantity,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    meetingattendance.quantity,
+    DATE_FORMAT(meetingattendance.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
-where meetingattendance.householdid = @householdid
-order by updated desc");
+left join household on household.householdid = meetingattendance.householdid
+where (meetingattendance.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
+order by meetingattendance.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -402,22 +418,27 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetloanList(int id)
+        public MResult GetloanList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(loandate, '%Y-%m-%d %H:%i:%s') loandate,
-    FORMAT(amount,2) amount,
-    note,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    loan.entryid,
+    loan.householdid,
+    DATE_FORMAT(loan.loandate, '%Y-%m-%d %H:%i:%s') loandate,
+    FORMAT(loan.amount,2) amount,
+    loan.note,
+    DATE_FORMAT(loan.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
-where loan.householdid = @householdid
-order by updated desc");
+left join household on household.householdid = loan.householdid
+where (loan.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
+order by loan.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -524,22 +545,27 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetloanrepaymentList(int id)
+        public MResult GetloanrepaymentList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(repaymentdate, '%Y-%m-%d %H:%i:%s') repaymentdate,
-    FORMAT(amount,2) amount,
-    FORMAT(balance,2) balance,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    loanrepayment.entryid,
+    loanrepayment.householdid,
+    DATE_FORMAT(loanrepayment.repaymentdate, '%Y-%m-%d %H:%i:%s') repaymentdate,
+    FORMAT(loanrepayment.amount,2) amount,
+    FORMAT(loanrepayment.balance,2) balance,
+    DATE_FORMAT(loanrepayment.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loanrepayment
-where loanrepayment.householdid = @householdid
-order by updated desc");
+left join household on household.householdid = loanrepayment.householdid
+where (loanrepayment.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
+order by loanrepayment.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -646,8 +672,10 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GettrainingList(int id)
+        public MResult GettrainingList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -663,10 +691,13 @@ updatedby=@updatedby");
     DATE_FORMAT(training.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     training
+left join household on household.householdid = training.householdid
 left join householdmember on householdmember.memberid = training.memberid
-where training.householdid = @householdid
+where (training.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
 order by training.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -788,22 +819,27 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetimprovementList(int id)
+        public MResult GetimprovementList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate
-    selectedfarm,
-    subbranch,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    improvement.entryid,
+    improvement.householdid,
+    DATE_FORMAT(improvement.plandate, '%Y-%m-%d %H:%i:%s') plandate,
+    improvement.selectedfarm,
+    improvement.subbranch,
+    DATE_FORMAT(improvement.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     improvement
-where improvement.householdid = @householdid
-order by updated desc");
+left join household on household.householdid = improvement.householdid
+where (improvement.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
+order by improvement.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -818,7 +854,7 @@ order by updated desc");
             cmd.CommandText(@"SELECT 
     entryid,
     householdid,
-    DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate
+    DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate,
     selectedfarm,
     subbranch,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
@@ -910,25 +946,30 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetinvestmentList(int id)
+        public MResult GetinvestmentList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
-    name,
-    quantity,
-    unitprice,
-    totalprice,
-    note,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    investment.entryid,
+    investment.householdid,
+    DATE_FORMAT(investment.investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
+    investment.name,
+    investment.quantity,
+    investment.unitprice,
+    investment.totalprice,
+    investment.note,
+    DATE_FORMAT(investment.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     investment
-where investment.householdid = @householdid
-order by updated desc");
+left join household on household.householdid = investment.householdid
+where (investment.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
+order by investment.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1050,25 +1091,30 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetothersupportList(int id)
+        public MResult GetothersupportList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    entryid,
-    householdid,
-    DATE_FORMAT(supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
-    name,
-    quantity,
-    unitprice,
-    totalprice,
-    orgname,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    othersupport.entryid,
+    othersupport.householdid,
+    DATE_FORMAT(othersupport.supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
+    othersupport.name,
+    othersupport.quantity,
+    othersupport.unitprice,
+    othersupport.totalprice,
+    othersupport.orgname,
+    DATE_FORMAT(othersupport.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     othersupport
-where othersupport.householdid = @householdid
-order by updated desc");
+left join household on household.householdid = othersupport.householdid
+where (othersupport.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
+order by othersupport.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1190,8 +1236,10 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetmediatedactivityList(int id)
+        public MResult GetmediatedactivityList(int id, int coachid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -1206,9 +1254,12 @@ updatedby=@updatedby");
 FROM
     mediatedactivity
 left join householdmember on householdmember.memberid = mediatedactivity.memberid
-where mediatedactivity.householdid = @householdid
+inner join household on household.householdid = mediatedactivity.householdid
+where (mediatedactivity.householdid = @householdid or 0 = @householdid)
+  and (household.coachid = @coachid or 0 = @coachid)
 order by mediatedactivity.updated desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
