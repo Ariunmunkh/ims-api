@@ -229,6 +229,14 @@ where visitid = @visitid");
                 }
             }
 
+            if (request.visitdate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.visitdate.AddHours(now.Hour);
+                request.visitdate.AddMinutes(now.Minute);
+                request.visitdate.AddSeconds(now.Second);
+            }
+
             cmd.CommandText(@"insert into householdvisit
 (visitid,
 householdid,
@@ -361,6 +369,14 @@ where entryid = @entryid");
                 }
             }
 
+            if (request.meetingdate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.meetingdate.AddHours(now.Hour);
+                request.meetingdate.AddMinutes(now.Minute);
+                request.meetingdate.AddSeconds(now.Second);
+            }
+
             cmd.CommandText(@"insert into meetingattendance
 (entryid,
 householdid,
@@ -488,6 +504,14 @@ where entryid = @entryid");
                 }
             }
 
+            if (request.loandate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.loandate.AddHours(now.Hour);
+                request.loandate.AddMinutes(now.Minute);
+                request.loandate.AddSeconds(now.Second);
+            }
+
             cmd.CommandText(@"insert into loan
 (entryid,
 householdid,
@@ -613,6 +637,14 @@ where entryid = @entryid");
                 {
                     request.entryid = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
+            }
+
+            if (request.repaymentdate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.repaymentdate.AddHours(now.Hour);
+                request.repaymentdate.AddMinutes(now.Minute);
+                request.repaymentdate.AddSeconds(now.Second);
             }
 
             cmd.CommandText(@"insert into loanrepayment
@@ -748,6 +780,14 @@ where entryid = @entryid");
                 {
                     request.entryid = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
+            }
+
+            if (request.trainingdate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.trainingdate.AddHours(now.Hour);
+                request.trainingdate.AddMinutes(now.Minute);
+                request.trainingdate.AddSeconds(now.Second);
             }
 
             cmd.CommandText(@"insert into training
@@ -889,6 +929,14 @@ where entryid = @entryid");
                 }
             }
 
+            if (request.plandate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.plandate.AddHours(now.Hour);
+                request.plandate.AddMinutes(now.Minute);
+                request.plandate.AddSeconds(now.Second);
+            }
+
             cmd.CommandText(@"insert into improvement
 (entryid,
 householdid,
@@ -1020,6 +1068,14 @@ where entryid = @entryid");
                 {
                     request.entryid = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
+            }
+
+            if (request.investmentdate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.investmentdate.AddHours(now.Hour);
+                request.investmentdate.AddMinutes(now.Minute);
+                request.investmentdate.AddSeconds(now.Second);
             }
 
             cmd.CommandText(@"insert into investment
@@ -1167,6 +1223,14 @@ where entryid = @entryid");
                 }
             }
 
+            if (request.supportdate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.supportdate.AddHours(now.Hour);
+                request.supportdate.AddMinutes(now.Minute);
+                request.supportdate.AddSeconds(now.Second);
+            }
+
             cmd.CommandText(@"insert into othersupport
 (entryid,
 householdid,
@@ -1307,6 +1371,14 @@ where entryid = @entryid");
                 {
                     request.entryid = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
+            }
+
+            if (request.mediateddate.ToString("HH:mm:ss").Equals("00:00:00"))
+            {
+                DateTime now = DateTime.Now;
+                request.mediateddate.AddHours(now.Hour);
+                request.mediateddate.AddMinutes(now.Minute);
+                request.mediateddate.AddSeconds(now.Second);
             }
 
             cmd.CommandText(@"insert into mediatedactivity
