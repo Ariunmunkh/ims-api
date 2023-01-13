@@ -321,7 +321,7 @@ where id = @id", type));
                 }
             }
 
-            cmd.CommandText(string.Format(@"insert into relationship
+            cmd.CommandText(string.Format(@"insert into {0}
 (id,
 name,
 updatedby)

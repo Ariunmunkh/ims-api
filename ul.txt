@@ -19,3 +19,8 @@ docker rm 2d946ba0a560
 docker images
 docker ps -a
 docker image prune -a
+
+export DOCKER_HOST=ssh://root@103.253.147.44
+cd D:/PROJECTS_TFS/ul-api
+docker-compose build
+docker-compose up -d
