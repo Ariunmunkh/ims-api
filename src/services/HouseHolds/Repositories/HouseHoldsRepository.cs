@@ -46,6 +46,7 @@ namespace HouseHolds.Repositories
     household.section,
     household.address,
     household.phone,
+    household.status,
     household.coachid,
     coach.name coachname,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
@@ -81,6 +82,7 @@ order by household.updated desc");
     household.section,
     household.address,
     household.phone,
+    household.status,
     household.coachid,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -123,6 +125,7 @@ districtid,
 section,
 address,
 phone,
+status,
 coachid,
 updatedby)
 values
@@ -133,6 +136,7 @@ values
 @section,
 @address,
 @phone,
+@status,
 @coachid,
 @updatedby) 
 on duplicate key update 
@@ -142,6 +146,7 @@ districtid=@districtid,
 section=@section,
 address=@address,
 phone=@phone,
+status=@status,
 coachid=@coachid,
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -153,6 +158,7 @@ updatedby=@updatedby");
             cmd.AddParam("@section", DbType.Int32, request.section, ParameterDirection.Input);
             cmd.AddParam("@address", DbType.String, request.address, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
+            cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 

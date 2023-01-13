@@ -256,5 +256,109 @@ updatedby=@updatedby");
         }
 
         #endregion
+
+        #region DropDownItem
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetDropDownItemList(string type)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(string.Format(@"SELECT 
+    id,
+    name,
+    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    {0}
+order by updated desc", type));
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public MResult GetDropDownItem(int id, string type)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(string.Format(@"SELECT 
+    id,
+    name,
+    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    {0}
+where id = @id", type));
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetDropDownItem(dropdownitem request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(string.Format(@"select coalesce(max(id),0)+1 newid from {0}", request.type));
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText(string.Format(@"insert into relationship
+(id,
+name,
+updatedby)
+values
+(@id,
+@name,
+@updatedby) 
+on duplicate key update 
+name=@name,
+updated=current_timestamp,
+updatedby=@updatedby", request.type));
+
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public MResult DeleteDropDownItem(int id, string type)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(string.Format("delete from {0} where id = @id", type));
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        #endregion
     }
 }

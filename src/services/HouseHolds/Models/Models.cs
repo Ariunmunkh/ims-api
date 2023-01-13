@@ -14,6 +14,11 @@ namespace HouseHolds.Models
         public int householdid { get; set; }
 
         /// <summary>
+        /// Өрхийн статус
+        /// </summary>
+        public int status { get; set; }
+
+        /// <summary>
         /// Ам бүлийн тоо
         /// </summary>
         public int numberof { get; set; }

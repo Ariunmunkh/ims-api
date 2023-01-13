@@ -2,44 +2,6 @@
 
 namespace HouseHolds.Models
 {
-
-    /// <summary>
-    /// Сум, Дүүрэг
-    /// </summary>
-    public class district
-    {
-        /// <summary>
-        /// Дугаар
-        /// </summary>
-        public int districtid { get; set; }
-
-        /// <summary>
-        /// Нэр
-        /// </summary>
-        public string name { get; set; }
-    }
-
-    /// <summary>
-    /// өрхийн тэргүүнтэй ямар холбоотой вэ
-    /// </summary>
-    public class relationship
-    {
-        /// <summary>
-        /// дугаар
-        /// </summary>
-        public int relationshipid { get; set; }
-
-        /// <summary>
-        /// нэр
-        /// </summary>
-        public string name { get; set; }
-
-        /// <summary>
-        /// өрхийн тэргүүн эсэх
-        /// </summary>
-        public bool ishead { get; set; }
-    }
-
     /// <summary>
     /// Коуч
     /// </summary>
