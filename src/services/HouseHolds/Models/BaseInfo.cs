@@ -62,6 +62,22 @@ namespace HouseHolds.Models
     }
 
     /// <summary>
+    /// Өрхийн статус
+    /// </summary>
+    public class householdstatus
+    {
+        /// <summary>
+        /// дугаар
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// нэр
+        /// </summary>
+        public string name { get; set; }
+    }
+
+    /// <summary>
     /// Боловсролын зэрэг
     /// </summary>
     public class educationdegree

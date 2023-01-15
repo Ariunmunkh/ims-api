@@ -28,8 +28,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="coachid"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldList()
+        public MResult GetHouseHoldList(int coachid)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -41,12 +42,16 @@ namespace HouseHolds.Repositories
                         on b.relationshipid = a.relationshipid 
                      where b.ishead = true 
                        and a.householdid = household.householdid) name,
+    (select max(a.name) from householdmember a 
+                     where a.isparticipant = true 
+                       and a.householdid = household.householdid) participant,
     household.districtid,
     district.name districtname,
     household.section,
     household.address,
     household.phone,
     household.status,
+    householdstatus.name householdstatus,
     household.coachid,
     coach.name coachname,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
@@ -54,9 +59,11 @@ FROM
     household
 left join district
 on district.districtid = household.districtid
-left join coach
-on coach.coachid = household.coachid
+left join coach on coach.coachid = household.coachid
+left join householdstatus on householdstatus.id = household.status
+where (household.coachid = @coachid or 0 = @coachid)
 order by household.updated desc");
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }

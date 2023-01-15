@@ -28,9 +28,10 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
+        /// <param name="coachid"></param>
         /// <returns></returns>
         [HttpGet("get_household_list")]
-        public IActionResult GetHouseHoldList()
+        public IActionResult GetHouseHoldList(int coachid)
         {
             return Ok(_HouseHoldsRepository.GetHouseHoldList());
         }
