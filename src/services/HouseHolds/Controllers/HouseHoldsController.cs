@@ -33,7 +33,7 @@ namespace HouseHolds.Controllers
         [HttpGet("get_household_list")]
         public IActionResult GetHouseHoldList(int coachid)
         {
-            return Ok(_HouseHoldsRepository.GetHouseHoldList());
+            return Ok(_HouseHoldsRepository.GetHouseHoldList(coachid));
         }
 
         /// <summary>

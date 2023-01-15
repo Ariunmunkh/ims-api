@@ -119,7 +119,7 @@ updatedby=@updatedby");
         {
 
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText("select count(1) too from household where district = @districtid");
+            cmd.CommandText("select count(1) too from household where districtid = @districtid");
             cmd.AddParam("@districtid", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
@@ -356,7 +356,49 @@ updatedby=@updatedby", request.type));
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(string.Format("delete from {0} where id = @id", type));
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+                if (result.retmsg.Contains("fk_householdmember_educationdegreeid")
+                    || result.retmsg.Contains("fk_householdmember_employmentstatusid")
+                    || result.retmsg.Contains("fk_householdmember_healthconditionid"))
+                {
+                    tablename = "Өрхийн гишүүдийн мэдээлэл";
+                }
+                else if (result.retmsg.Contains("fk_loan_loanpurposeid"))
+                {
+                    tablename = "Зээлийн мэдээлэл";
+                }
+                else if (result.retmsg.Contains("fk_training_trainingtypeid")
+               || result.retmsg.Contains("fk_training_trainingandactivityid")
+               || result.retmsg.Contains("fk_training_organizationid"))
+                {
+                    tablename = "Сургалт, үйл ажиллагаа";
+                }
+                else if (result.retmsg.Contains("fk_improvement_subbranchid"))
+                {
+                    tablename = "Амьжиргаа сайжруулах үйл ажиллагааны мэдээлэл";
+                }
+                else if (result.retmsg.Contains("fk_investment_assetreceivedtypeid")
+               || result.retmsg.Contains("fk_investment_assetreceivedid"))
+                {
+                    tablename = "Хөрөнгө оруулалтын мэдээлэл";
+                }
+                else if (result.retmsg.Contains("fk_othersupport_supportreceivedtypeid")
+               || result.retmsg.Contains("fk_othersupport_sponsoringorganizationid"))
+                {
+                    tablename = "Бусад тусламж, дэмжлэг";
+                }
+                else if (result.retmsg.Contains("fk_mediatedactivity_mediatedservicetypeid")
+               || result.retmsg.Contains("fk_mediatedactivity_intermediaryorganizationid")
+               || result.retmsg.Contains("fk_mediatedactivity_proxyserviceid"))
+                {
+                    tablename = "Холбон зуучилсан үйл ажиллагаа";
+                }
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            return result;
         }
 
         #endregion
