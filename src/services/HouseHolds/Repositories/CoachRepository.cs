@@ -313,6 +313,7 @@ updatedby=@updatedby");
     end isjoin,
     meetingattendance.quantity,
     meetingattendance.amount,
+    FORMAT(meetingattendance.amount,2) famount,
     DATE_FORMAT(meetingattendance.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
@@ -453,6 +454,7 @@ updatedby=@updatedby");
     DATE_FORMAT(loan.loandate, '%Y-%m-%d %H:%i:%s') loandate,
     FORMAT(loan.amount,2) amount,
     loan.loanpurposeid,
+    loanpurpose.name loanpurpose,
     DATE_FORMAT(loan.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
@@ -1032,7 +1034,9 @@ updatedby=@updatedby");
     assetreceived.name assetreceived,
     investment.quantity,
     investment.unitprice,
+    FORMAT(investment.unitprice,2) funitprice,
     investment.totalprice,
+    FORMAT(investment.totalprice,2) ftotalprice,
     investment.note,
     DATE_FORMAT(investment.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -1194,7 +1198,9 @@ updatedby=@updatedby");
     othersupport.name,
     othersupport.quantity,
     othersupport.unitprice,
+    FORMAT(othersupport.unitprice,2) funitprice,
     othersupport.totalprice,
+    FORMAT(othersupport.totalprice,2) ftotalprice,
     othersupport.sponsoringorganizationid,
     sponsoringorganization.name sponsoringorganization,
     DATE_FORMAT(othersupport.updated, '%Y-%m-%d %H:%i:%s') updated
