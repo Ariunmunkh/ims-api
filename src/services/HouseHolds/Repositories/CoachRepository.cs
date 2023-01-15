@@ -312,6 +312,7 @@ updatedby=@updatedby");
         else 'Тийм'
     end isjoin,
     meetingattendance.quantity,
+    meetingattendance.amount,
     DATE_FORMAT(meetingattendance.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
@@ -338,6 +339,7 @@ order by meetingattendance.updated desc");
     DATE_FORMAT(meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
     isjoin,
     quantity,
+    amount,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
@@ -383,6 +385,7 @@ householdid,
 meetingdate,
 isjoin,
 quantity,
+amount,
 updatedby)
 values
 (@entryid,
@@ -390,12 +393,14 @@ values
 @meetingdate,
 @isjoin,
 @quantity,
+@amount,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 meetingdate=@meetingdate,
 isjoin=@isjoin,
 quantity=@quantity,
+amount=@amount,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -404,6 +409,7 @@ updatedby=@updatedby");
             cmd.AddParam("@meetingdate", DbType.DateTime, request.meetingdate, ParameterDirection.Input);
             cmd.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
             cmd.AddParam("@quantity", DbType.Int32, request.quantity, ParameterDirection.Input);
+            cmd.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -446,11 +452,12 @@ updatedby=@updatedby");
     loan.householdid,
     DATE_FORMAT(loan.loandate, '%Y-%m-%d %H:%i:%s') loandate,
     FORMAT(loan.amount,2) amount,
-    loan.note,
+    loan.loanpurposeid,
     DATE_FORMAT(loan.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
 left join household on household.householdid = loan.householdid
+left join loanpurpose on loanpurpose.id = loan.loanpurposeid
 where (loan.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by loan.updated desc");
@@ -472,7 +479,7 @@ order by loan.updated desc");
     householdid,
     DATE_FORMAT(loandate, '%Y-%m-%d %H:%i:%s') loandate,
     amount,
-    note,
+    loanpurposeid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
@@ -517,20 +524,20 @@ where entryid = @entryid");
 householdid,
 loandate,
 amount,
-note,
+loanpurposeid,
 updatedby)
 values
 (@entryid,
 @householdid,
 @loandate,
 @amount,
-@note,
+@loanpurposeid,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 loandate=@loandate,
 amount=@amount,
-note=@note,
+loanpurposeid=@loanpurposeid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -538,7 +545,7 @@ updatedby=@updatedby");
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@loandate", DbType.DateTime, request.loandate, ParameterDirection.Input);
             cmd.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
-            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@loanpurposeid", DbType.Int32, request.loanpurposeid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -715,8 +722,12 @@ updatedby=@updatedby");
     training.entryid,
     training.householdid,
     DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
-    training.name,
-    training.orgname,
+    training.trainingtypeid,
+    trainingtype.name trainingtype,
+    training.trainingandactivityid,
+    trainingandactivity.name trainingandactivity,
+    training.organizationid,
+    organization.name organization,
     training.duration,
     training.isjoin,
     training.memberid,
@@ -726,6 +737,9 @@ FROM
     training
 left join household on household.householdid = training.householdid
 left join householdmember on householdmember.memberid = training.memberid
+left join trainingtype on trainingtype.id = training.trainingtypeid
+left join trainingandactivity on trainingandactivity.id = training.trainingandactivityid
+left join organization on organization.id = training.organizationid
 where (training.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by training.updated desc");
@@ -746,8 +760,9 @@ order by training.updated desc");
     entryid,
     householdid,
     DATE_FORMAT(trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
-    name,
-    orgname,
+    trainingtypeid,
+    trainingandactivityid,
+    organizationid,
     duration,
     isjoin,
     memberid,
@@ -794,8 +809,9 @@ where entryid = @entryid");
 (entryid,
 householdid,
 trainingdate,
-name,
-orgname,
+trainingtypeid,
+trainingandactivityid,
+organizationid,
 duration,
 isjoin,
 memberid,
@@ -804,8 +820,9 @@ values
 (@entryid,
 @householdid,
 @trainingdate,
-@name,
-@orgname,
+@trainingtypeid,
+@trainingandactivityid,
+@organizationid,
 @duration,
 @isjoin,
 @memberid,
@@ -813,8 +830,9 @@ values
 on duplicate key update 
 householdid=@householdid,
 trainingdate=@trainingdate,
-name=@name,
-orgname=@orgname,
+trainingtypeid=@trainingtypeid,
+trainingandactivityid=@trainingandactivityid,
+organizationid=@organizationid,
 duration=@duration,
 isjoin=@isjoin,
 memberid=@memberid,
@@ -824,9 +842,10 @@ updatedby=@updatedby");
             cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@trainingdate", DbType.DateTime, request.trainingdate, ParameterDirection.Input);
-            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            cmd.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
-            cmd.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
+            cmd.AddParam("@trainingtypeid", DbType.Int32, request.trainingtypeid, ParameterDirection.Input);
+            cmd.AddParam("@trainingandactivityid", DbType.Int32, request.trainingandactivityid, ParameterDirection.Input);
+            cmd.AddParam("@organizationid", DbType.Int32, request.organizationid, ParameterDirection.Input);
+            cmd.AddParam("@duration", DbType.Decimal, request.duration, ParameterDirection.Input);
             cmd.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
             cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
@@ -871,11 +890,13 @@ updatedby=@updatedby");
     improvement.householdid,
     DATE_FORMAT(improvement.plandate, '%Y-%m-%d %H:%i:%s') plandate,
     improvement.selectedfarm,
-    improvement.subbranch,
+    improvement.subbranchid,
+    subbranch.name subbranch,
     DATE_FORMAT(improvement.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     improvement
 left join household on household.householdid = improvement.householdid
+left join subbranch on subbranch.id = improvement.subbranchid
 where (improvement.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by improvement.updated desc");
@@ -897,7 +918,7 @@ order by improvement.updated desc");
     householdid,
     DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate,
     selectedfarm,
-    subbranch,
+    subbranchid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     improvement
@@ -942,20 +963,20 @@ where entryid = @entryid");
 householdid,
 plandate,
 selectedfarm,
-subbranch,
+subbranchid,
 updatedby)
 values
 (@entryid,
 @householdid,
 @plandate,
 @selectedfarm,
-@subbranch,
+@subbranchid,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 plandate=@plandate,
 selectedfarm=@selectedfarm,
-subbranch=@subbranch,
+subbranchid=@subbranchid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -963,7 +984,7 @@ updatedby=@updatedby");
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@plandate", DbType.DateTime, request.plandate, ParameterDirection.Input);
             cmd.AddParam("@selectedfarm", DbType.String, request.selectedfarm, ParameterDirection.Input);
-            cmd.AddParam("@subbranch", DbType.String, request.subbranch, ParameterDirection.Input);
+            cmd.AddParam("@subbranchid", DbType.Int32, request.subbranchid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -1005,7 +1026,10 @@ updatedby=@updatedby");
     investment.entryid,
     investment.householdid,
     DATE_FORMAT(investment.investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
-    investment.name,
+    investment.assetreceivedtypeid,
+    assetreceivedtype.name assetreceivedtype,
+    investment.assetreceivedid,
+    assetreceived.name assetreceived,
     investment.quantity,
     investment.unitprice,
     investment.totalprice,
@@ -1014,6 +1038,8 @@ updatedby=@updatedby");
 FROM
     investment
 left join household on household.householdid = investment.householdid
+left join assetreceivedtype on assetreceivedtype.id = investment.assetreceivedtypeid
+left join assetreceived on assetreceived.id = investment.assetreceivedid
 where (investment.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by investment.updated desc");
@@ -1034,7 +1060,8 @@ order by investment.updated desc");
     entryid,
     householdid,
     DATE_FORMAT(investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
-    name,
+    assetreceivedtypeid,
+    assetreceivedid,
     quantity,
     unitprice,
     totalprice,
@@ -1082,7 +1109,8 @@ where entryid = @entryid");
 (entryid,
 householdid,
 investmentdate,
-name,
+assetreceivedtypeid,
+assetreceivedid,
 quantity,
 unitprice,
 totalprice,
@@ -1092,7 +1120,8 @@ values
 (@entryid,
 @householdid,
 @investmentdate,
-@name,
+@assetreceivedtypeid,
+@assetreceivedid,
 @quantity,
 @unitprice,
 @totalprice,
@@ -1101,7 +1130,8 @@ values
 on duplicate key update 
 householdid=@householdid,
 investmentdate=@investmentdate,
-name=@name,
+assetreceivedtypeid=@assetreceivedtypeid,
+assetreceivedid=@assetreceivedid,
 quantity=@quantity,
 unitprice=@unitprice,
 totalprice=@totalprice,
@@ -1112,7 +1142,8 @@ updatedby=@updatedby");
             cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@investmentdate", DbType.DateTime, request.investmentdate, ParameterDirection.Input);
-            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@assetreceivedtypeid", DbType.Int32, request.assetreceivedtypeid, ParameterDirection.Input);
+            cmd.AddParam("@assetreceivedid", DbType.Int32, request.assetreceivedid, ParameterDirection.Input);
             cmd.AddParam("@quantity", DbType.Decimal, request.quantity, ParameterDirection.Input);
             cmd.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
             cmd.AddParam("@totalprice", DbType.Decimal, request.totalprice, ParameterDirection.Input);
@@ -1158,15 +1189,20 @@ updatedby=@updatedby");
     othersupport.entryid,
     othersupport.householdid,
     DATE_FORMAT(othersupport.supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
+    othersupport.supportreceivedtypeid,
+    supportreceivedtype.name supportreceivedtype,
     othersupport.name,
     othersupport.quantity,
     othersupport.unitprice,
     othersupport.totalprice,
-    othersupport.orgname,
+    othersupport.sponsoringorganizationid,
+    sponsoringorganization.name sponsoringorganization,
     DATE_FORMAT(othersupport.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     othersupport
 left join household on household.householdid = othersupport.householdid
+left join supportreceivedtype on supportreceivedtype.id = othersupport.supportreceivedtypeid
+left join sponsoringorganization on sponsoringorganization.id = othersupport.sponsoringorganizationid
 where (othersupport.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by othersupport.updated desc");
@@ -1187,11 +1223,12 @@ order by othersupport.updated desc");
     entryid,
     householdid,
     DATE_FORMAT(supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
+    supportreceivedtypeid,
     name,
     quantity,
     unitprice,
     totalprice,
-    orgname,
+    sponsoringorganizationid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     othersupport
@@ -1235,41 +1272,45 @@ where entryid = @entryid");
 (entryid,
 householdid,
 supportdate,
+supportreceivedtypeid,
 name,
 quantity,
 unitprice,
 totalprice,
-orgname,
+sponsoringorganizationid,
 updatedby)
 values
 (@entryid,
 @householdid,
 @supportdate,
+@supportreceivedtypeid,
 @name,
 @quantity,
 @unitprice,
 @totalprice,
-@orgname,
+@sponsoringorganizationid,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 supportdate=@supportdate,
+supportreceivedtypeid=@supportreceivedtypeid,
 name=@name,
 quantity=@quantity,
 unitprice=@unitprice,
 totalprice=@totalprice,
-orgname=@orgname,
+sponsoringorganizationid=@sponsoringorganizationid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
             cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@supportdate", DbType.DateTime, request.supportdate, ParameterDirection.Input);
+            cmd.AddParam("@supportreceivedtypeid", DbType.Int32, request.supportreceivedtypeid, ParameterDirection.Input);
             cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
             cmd.AddParam("@quantity", DbType.Decimal, request.quantity, ParameterDirection.Input);
             cmd.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
             cmd.AddParam("@totalprice", DbType.Decimal, request.totalprice, ParameterDirection.Input);
-            cmd.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
+            cmd.AddParam("@sponsoringorganizationid", DbType.Int32, request.sponsoringorganizationid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -1311,15 +1352,22 @@ updatedby=@updatedby");
     mediatedactivity.entryid,
     mediatedactivity.householdid,
     DATE_FORMAT(mediatedactivity.mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
-    mediatedactivity.orgname,
-    mediatedactivity.servicename,
+    mediatedactivity.mediatedservicetypeid,
+    mediatedservicetype.name mediatedservicetype,
+    mediatedactivity.intermediaryorganizationid,
+    intermediaryorganization.name intermediaryorganization,
+    mediatedactivity.proxyserviceid,
+    proxyservice.name proxyservice,
     mediatedactivity.memberid, 
     householdmember.name membername, 
     DATE_FORMAT(mediatedactivity.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     mediatedactivity
 left join householdmember on householdmember.memberid = mediatedactivity.memberid
-inner join household on household.householdid = mediatedactivity.householdid
+left join household on household.householdid = mediatedactivity.householdid
+left join mediatedservicetype on mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
+left join intermediaryorganization on intermediaryorganization.id = mediatedactivity.intermediaryorganizationid
+left join proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
 where (mediatedactivity.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by mediatedactivity.updated desc");
@@ -1340,8 +1388,9 @@ order by mediatedactivity.updated desc");
     entryid,
     householdid,
     DATE_FORMAT(mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
-    orgname,
-    servicename,
+    mediatedservicetypeid,
+    intermediaryorganizationid,
+    proxyserviceid,
     memberid, 
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -1385,23 +1434,26 @@ where entryid = @entryid");
 (entryid,
 householdid,
 mediateddate,
-orgname,
-servicename,
+mediatedservicetypeid,
+intermediaryorganizationid,
+proxyserviceid,
 memberid, 
 updatedby)
 values
 (@entryid,
 @householdid,
 @mediateddate,
-@orgname,
-@servicename,
+@mediatedservicetypeid,
+@intermediaryorganizationid,
+@proxyserviceid,
 @memberid, 
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 mediateddate=@mediateddate,
-orgname=@orgname,
-servicename=@servicename,
+mediatedservicetypeid=@mediatedservicetypeid,
+intermediaryorganizationid=@intermediaryorganizationid,
+proxyserviceid=@proxyserviceid,
 memberid=@memberid, 
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -1409,8 +1461,9 @@ updatedby=@updatedby");
             cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@mediateddate", DbType.DateTime, request.mediateddate, ParameterDirection.Input);
-            cmd.AddParam("@orgname", DbType.String, request.orgname, ParameterDirection.Input);
-            cmd.AddParam("@servicename", DbType.String, request.servicename, ParameterDirection.Input);
+            cmd.AddParam("@mediatedservicetypeid", DbType.Int32, request.mediatedservicetypeid, ParameterDirection.Input);
+            cmd.AddParam("@intermediaryorganizationid", DbType.Int32, request.intermediaryorganizationid, ParameterDirection.Input);
+            cmd.AddParam("@proxyserviceid", DbType.String, request.proxyserviceid, ParameterDirection.Input);
             cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 

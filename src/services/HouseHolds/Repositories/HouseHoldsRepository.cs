@@ -223,14 +223,23 @@ updatedby=@updatedby");
         when householdmember.isparticipant = 0 then 'Үгүй'
         else 'Тийм'
     end isparticipant,
-    householdmember.educationlevel,
-    householdmember.employment,
-    householdmember.health,
+    householdmember.educationdegreeid,
+    educationdegree.name educationdegree,
+    householdmember.employmentstatusid,
+    employmentstatus.name employmentstatus,
+    householdmember.healthconditionid,
+    healthcondition.name healthcondition,
     date_format(householdmember.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdmember 
 left join relationship
 on relationship.relationshipid = householdmember.relationshipid
+left join educationdegree
+on educationdegree.id = householdmember.educationdegreeid
+left join employmentstatus
+on employmentstatus.id = householdmember.employmentstatusid
+left join healthcondition
+on healthcondition.id = householdmember.healthconditionid
 where householdmember.householdid = @householdid
 order by householdmember.birthdate asc");
             cmd.AddParam("@householdid", DbType.Int32, householdid, ParameterDirection.Input);
@@ -255,9 +264,9 @@ order by householdmember.birthdate asc");
     gender,
     istogether,
     isparticipant,
-    educationlevel,
-    employment,
-    health,
+    educationdegreeid,
+    employmentstatusid,
+    healthconditionid,
     date_format(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdmember
@@ -298,9 +307,9 @@ birthdate,
 gender,
 istogether,
 isparticipant,
-educationlevel,
-employment,
-health,
+educationdegreeid,
+employmentstatusid,
+healthconditionid,
 updatedby)
 values
 (@memberid,
@@ -311,9 +320,9 @@ values
 @gender,
 @istogether,
 @isparticipant,
-@educationlevel,
-@employment,
-@health,
+@educationdegreeid,
+@employmentstatusid,
+@healthconditionid,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
@@ -323,9 +332,9 @@ birthdate=@birthdate,
 gender=@gender,
 istogether=@istogether,
 isparticipant=@isparticipant,
-educationlevel=@educationlevel,
-employment=@employment,
-health=@health,
+educationdegreeid=@educationdegreeid,
+employmentstatusid=@employmentstatusid,
+healthconditionid=@healthconditionid,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -337,9 +346,9 @@ updatedby=@updatedby");
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             cmd.AddParam("@istogether", DbType.Boolean, request.istogether, ParameterDirection.Input);
             cmd.AddParam("@isparticipant", DbType.Boolean, request.isparticipant, ParameterDirection.Input);
-            cmd.AddParam("@educationlevel", DbType.String, request.educationlevel, ParameterDirection.Input);
-            cmd.AddParam("@employment", DbType.String, request.employment, ParameterDirection.Input);
-            cmd.AddParam("@health", DbType.String, request.health, ParameterDirection.Input);
+            cmd.AddParam("@educationdegreeid", DbType.Int32, request.educationdegreeid, ParameterDirection.Input);
+            cmd.AddParam("@employmentstatusid", DbType.Int32, request.employmentstatusid, ParameterDirection.Input);
+            cmd.AddParam("@healthconditionid", DbType.Int32, request.healthconditionid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);

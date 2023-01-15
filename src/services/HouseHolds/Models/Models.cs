@@ -103,17 +103,17 @@ namespace HouseHolds.Models
         /// <summary>
         /// Боловсролын зэрэг
         /// </summary>
-        public string educationlevel { get; set; }
+        public int educationdegreeid { get; set; }
 
         /// <summary>
         /// Хөдөлмөр эрхлэлтийн байдал
         /// </summary>
-        public string employment { get; set; }
+        public int employmentstatusid { get; set; }
 
         /// <summary>
         /// Эрүүл мэндийн байдал
         /// </summary>
-        public string health { get; set; }
+        public int healthconditionid { get; set; }
 
     }
 

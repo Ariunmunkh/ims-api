@@ -98,6 +98,11 @@ namespace HouseHolds.Models
         /// Худалдан авсан хувьцааны тоо
         /// </summary>
         public int quantity { get; set; }
+
+        /// <summary>
+        /// Хуримтлуулсан мөнгөн дүн
+        /// </summary>
+        public decimal amount { get; set; }
     }
 
     /// <summary>
@@ -128,7 +133,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Зээлийн зориулалт
         /// </summary>
-        public string note { get; set; }
+        public int loanpurposeid { get; set; }
     }
 
     /// <summary>
@@ -185,19 +190,24 @@ namespace HouseHolds.Models
         public DateTime trainingdate { get; set; }
 
         /// <summary>
+        /// Сургалтын төрөл
+        /// </summary>
+        public int trainingtypeid { get; set; }
+
+        /// <summary>
         /// Зохион байгуулагдсан сургалт, үйл ажиллагааны нэр
         /// </summary>
-        public string name { get; set; }
+        public int trainingandactivityid { get; set; }
 
         /// <summary>
         /// Сургалт, үйл ажиллагаа зохион байгуулсан байгууллагын нэр
         /// </summary>
-        public string orgname { get; set; }
+        public int organizationid { get; set; }
 
         /// <summary>
         /// Сургалтын үргэжилсэн хугацаа
         /// </summary>
-        public int duration { get; set; }
+        public decimal duration { get; set; }
 
         /// <summary>
         /// Өрхөөс уг сургалтад хамрагдсан эсэх
@@ -238,7 +248,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Харьяалагдах дэд салбар
         /// </summary>
-        public string subbranch { get; set; }
+        public int subbranchid { get; set; }
 
     }
 
@@ -263,9 +273,14 @@ namespace HouseHolds.Models
         public DateTime investmentdate { get; set; }
 
         /// <summary>
+        /// Хүлээн авсан хөрөнгийн төрөл
+        /// </summary>
+        public int assetreceivedtypeid { get; set; }
+
+        /// <summary>
         /// Хүлээн авсан хөрөнгийн нэр
         /// </summary>
-        public string name { get; set; }
+        public int assetreceivedid { get; set; }
 
         /// <summary>
         /// Тоо ширхэг
@@ -309,6 +324,11 @@ namespace HouseHolds.Models
         public DateTime supportdate { get; set; }
 
         /// <summary>
+        /// Хүлээн авсан дэмжлэгийн төрөл
+        /// </summary>
+        public int supportreceivedtypeid { get; set; }
+
+        /// <summary>
         /// Хүлээн авсан тусламж дэмжлэг
         /// </summary>
         public string name { get; set; }
@@ -331,7 +351,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Дэмжлэг олгосон байгууллагын нэр
         /// </summary>
-        public string orgname { get; set; }
+        public int sponsoringorganizationid { get; set; }
     }
 
     /// <summary>
@@ -355,14 +375,19 @@ namespace HouseHolds.Models
         public DateTime mediateddate { get; set; }
 
         /// <summary>
+        /// Холбон зуучилсан үйлчилгээний төрөл
+        /// </summary>
+        public int mediatedservicetypeid { get; set; }
+
+        /// <summary>
         /// Холбон зуучилсан байгууллагын нэр
         /// </summary>
-        public string orgname { get; set; }
+        public int intermediaryorganizationid { get; set; }
 
         /// <summary>
         /// Холбон зуучилсан үйлчилгээний нэр
         /// </summary>
-        public string servicename { get; set; }
+        public int proxyserviceid { get; set; }
 
         /// <summary>
         /// Үйлчилгээнд холбогдсон өрхийн гишүүний нэр
