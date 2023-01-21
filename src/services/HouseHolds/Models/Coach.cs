@@ -3,6 +3,42 @@
 namespace HouseHolds.Models
 {
     /// <summary>
+    /// Төслийн ерөнхий мэдээлэл
+    /// </summary>
+    public class project
+    {
+        /// <summary>
+        /// Төслийн дугаар
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// Төслийн нэр
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// Төслийн удирдагчийн нэр
+        /// </summary>
+        public string leadername { get; set; }
+
+        /// <summary>
+        /// Утас
+        /// </summary>
+        public string leaderphone { get; set; }
+
+        /// <summary>
+        /// Төслийн байршил
+        /// </summary>
+        public string location { get; set; }
+
+        /// <summary>
+        /// Төсөл хэрэгжих хороо/сум
+        /// </summary>
+        public string implementation { get; set; }
+    }
+
+    /// <summary>
     /// Коуч
     /// </summary>
     public class coach
@@ -23,9 +59,14 @@ namespace HouseHolds.Models
         public string phone { get; set; }
 
         /// <summary>
+        /// Төсөл
+        /// </summary>
+        public int? projectid { get; set; }
+
+        /// <summary>
         /// Сум, Дүүрэг
         /// </summary>
-        public int districtid { get; set; }
+        public int? districtid { get; set; }
     }
 
     /// <summary>zl

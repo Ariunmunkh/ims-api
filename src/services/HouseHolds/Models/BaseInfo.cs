@@ -78,6 +78,22 @@ namespace HouseHolds.Models
     }
 
     /// <summary>
+    /// Өрхийн бүлэг
+    /// </summary>
+    public class householdgroup
+    {
+        /// <summary>
+        /// дугаар
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// нэр
+        /// </summary>
+        public string name { get; set; }
+    }
+
+    /// <summary>
     /// Боловсролын зэрэг
     /// </summary>
     public class educationdegree

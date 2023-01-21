@@ -15,6 +15,7 @@ householdid int not null,
 status int default 0,
 numberof int,
 name varchar(200),
+householdgroupid int,
 districtid int,
 section int,
 address varchar(200),
@@ -64,15 +65,30 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (relationshipid)
 );
+create table project
+(
+id int not null,
+name varchar(200),
+leadername varchar(200),
+leaderphone varchar(200),
+location varchar(200),
+implementation varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 create table coach
 (
 coachid int not null,
 name varchar(200),
 phone varchar(20),
+projectid int,
 districtid int,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (coachid)
+PRIMARY KEY (coachid),
+INDEX ind_coach_projectid (projectid),  
+CONSTRAINT fk_coach_projectid FOREIGN KEY (projectid) REFERENCES project(id)
 );
 create table householdvisit
 (
@@ -366,3 +382,13 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+create table householdgroup
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+
+

@@ -41,6 +41,6 @@ namespace Systems.Models
         /// <summary>
         /// Коуч
         /// </summary>
-        public int coachid { get; set; }
+        public int? coachid { get; set; }
     }
 }

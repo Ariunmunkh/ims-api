@@ -8,6 +8,37 @@ namespace HouseHolds.Repositories
     /// </summary>
     public interface ICoachRepository
     {
+        #region Project
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetProjectList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetProject(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetProject(project request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteProject(int id);
+
+        #endregion
+
         #region Coach
 
         /// <summary>

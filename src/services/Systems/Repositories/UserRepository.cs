@@ -91,7 +91,8 @@ WHERE
         /// <returns></returns>
         public MResult SetUser(tbluser tbluser)
         {
-            string updatepasssql = string.Empty;
+            string updatepasssql = "password = password,";
+            tbluser.encryptpass = Utility.EncryptPass("5");
             if (!string.IsNullOrEmpty(tbluser.password))
             {
                 tbluser.encryptpass = Utility.EncryptPass(tbluser.password);
@@ -128,7 +129,7 @@ updated = current_timestamp", updatepasssql));
             cmd.AddParam("@password", DbType.String, tbluser.encryptpass, ParameterDirection.Input);
             cmd.AddParam("@roleid", DbType.Int32, tbluser.roleid, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, tbluser.coachid, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
+            return connector.Execute(ref cmd, true);
         }
 
         /// <summary>

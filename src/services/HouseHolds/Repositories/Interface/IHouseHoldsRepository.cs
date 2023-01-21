@@ -34,6 +34,14 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="householdid"></param>
+        /// <param name="householdgroupid"></param>
+        /// <returns></returns>
+        MResult SetHouseHoldGroup(int householdid, int householdgroupid);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         MResult DeleteHouseHold(int id);

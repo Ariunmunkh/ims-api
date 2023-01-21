@@ -59,6 +59,18 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
+        /// Өрхийн бүлгийн мэдээлэл өөрчилөх
+        /// </summary>
+        /// <param name="householdid">Өрхийн дугаар</param>
+        /// <param name="householdgroupid">Бүлгийн дугаар</param>
+        /// <returns></returns>
+        [HttpPost("set_household_group")]
+        public IActionResult SetHouseHoldGroup(int householdid, int householdgroupid)
+        {
+            return Ok(_HouseHoldsRepository.SetHouseHoldGroup(householdid, householdgroupid));
+        }
+
+        /// <summary>
         /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="id"></param>

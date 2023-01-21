@@ -1,11 +1,14 @@
+sudo apt update
+sudo apt install docker.io
+
 ssh-keygen
 ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
-ssh-copy-id -i ~/.ssh/id_rsa root@206.189.153.33
+ssh-copy-id -i ~/.ssh/id_rsa root@188.166.242.38
 p@ssW0rd
 
-export DOCKER_HOST=ssh://root@206.189.153.33
+export DOCKER_HOST=ssh://root@188.166.242.38
 
 cd D:/PROJECTS_TFS/ul-api
 cd D:/PROJECTS_TFS/ul-ui
@@ -20,12 +23,12 @@ docker images
 docker ps -a
 docker image prune -a
 
-export DOCKER_HOST=ssh://root@206.189.153.33
+export DOCKER_HOST=ssh://root@188.166.242.38
 cd D:/PROJECTS_TFS/ul-api
 docker-compose build
 docker-compose up -d
 
-export DOCKER_HOST=ssh://root@206.189.153.33
+export DOCKER_HOST=ssh://root@188.166.242.38
 cd D:/PROJECTS_TFS/ul-ui
 docker-compose build
 docker-compose up -d

@@ -23,6 +23,53 @@ namespace HouseHolds.Controllers
             _CoachRepository = CoachRepository ?? throw new ArgumentNullException(nameof(CoachRepository));
         }
 
+        #region project
+
+        /// <summary>
+        /// Төсөл
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_project_list")]
+        public IActionResult GetProjectList()
+        {
+            return Ok(_CoachRepository.GetProjectList());
+        }
+
+        /// <summary>
+        /// Төсөл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_project")]
+        public IActionResult GetProject(int id)
+        {
+            return Ok(_CoachRepository.GetProject(id));
+        }
+
+        /// <summary>
+        /// Төсөл
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_project")]
+        public IActionResult SetProject([FromBody] project request)
+        {
+            return Ok(_CoachRepository.SetProject(request));
+        }
+
+        /// <summary>
+        /// Төсөл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_project")]
+        public IActionResult DeleteProject(int id)
+        {
+            return Ok(_CoachRepository.DeleteProject(id));
+        }
+
+        #endregion
+
         #region coach
 
         /// <summary>

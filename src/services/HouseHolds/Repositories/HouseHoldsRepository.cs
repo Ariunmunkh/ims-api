@@ -45,6 +45,8 @@ namespace HouseHolds.Repositories
     (select max(a.name) from householdmember a 
                      where a.isparticipant = true 
                        and a.householdid = household.householdid) participant,
+    household.householdgroupid,
+    householdgroup.name householdgroupname,
     household.districtid,
     district.name districtname,
     household.section,
@@ -61,6 +63,7 @@ left join district
 on district.districtid = household.districtid
 left join coach on coach.coachid = household.coachid
 left join householdstatus on householdstatus.id = household.status
+left join householdgroup on householdgroup.id = household.householdgroupid
 where (household.coachid = @coachid or 0 = @coachid)
 order by household.updated desc");
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
@@ -84,6 +87,8 @@ order by household.updated desc");
                         on b.relationshipid = a.relationshipid 
                      where b.ishead = true 
                        and a.householdid = household.householdid) name,
+    household.householdgroupid,
+    householdgroup.name householdgroupname,
     household.districtid,
     district.name districtname,
     household.section,
@@ -96,6 +101,7 @@ FROM
     household
 left join district
 on district.districtid = household.districtid
+left join householdgroup on householdgroup.id = household.householdgroupid
 where householdid = @householdid");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -128,6 +134,7 @@ where householdid = @householdid");
 (householdid,
 numberof,
 name,
+householdgroupid,
 districtid,
 section,
 address,
@@ -139,6 +146,7 @@ values
 (@householdid,
 @numberof,
 @name,
+@householdgroupid,
 @districtid,
 @section,
 @address,
@@ -149,6 +157,7 @@ values
 on duplicate key update 
 numberof=@numberof,
 name=@name,
+householdgroupid=@householdgroupid,
 districtid=@districtid,
 section=@section,
 address=@address,
@@ -161,6 +170,7 @@ updatedby=@updatedby");
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@numberof", DbType.Int32, request.numberof, ParameterDirection.Input);
             cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@householdgroupid", DbType.Int32, request.householdgroupid, ParameterDirection.Input);
             cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
             cmd.AddParam("@section", DbType.Int32, request.section, ParameterDirection.Input);
             cmd.AddParam("@address", DbType.String, request.address, ParameterDirection.Input);
@@ -169,11 +179,35 @@ updatedby=@updatedby");
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref cmd, false);
+            result = connector.Execute(ref cmd, true);
             if (result.rettype != 0)
                 return result;
 
             return new MResult { retdata = request.householdid };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="householdid"></param>
+        /// <param name="householdgroupid"></param>
+        /// <returns></returns>
+        public MResult SetHouseHoldGroup(int householdid, int householdgroupid)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"UPDATE household 
+SET 
+    householdgroupid = @householdgroupid,
+    updated = CURRENT_TIMESTAMP,
+    updatedby = @updatedby
+WHERE
+    householdid = @householdid");
+
+            cmd.AddParam("@householdid", DbType.Int32, householdid, ParameterDirection.Input);
+            cmd.AddParam("@householdgroupid", DbType.Int32, householdgroupid, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+            return connector.Execute(ref cmd, true);
         }
 
         /// <summary>
@@ -194,7 +228,7 @@ updatedby=@updatedby");
                 return new MResult { rettype = 1, retmsg = "Өрхийн гишүүн бүртгэлд ашигласан тул устгах боломжгүй." };
 
             cmd.CommandText("delete from household where householdid = @householdid");
-            return connector.Execute(ref cmd, false);
+            return connector.Execute(ref cmd, true);
 
         }
 

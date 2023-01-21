@@ -29,6 +29,11 @@ namespace HouseHolds.Models
         public string name { get; set; }
 
         /// <summary>
+        /// Бүлэг
+        /// </summary>
+        public int householdgroupid { get; set; }
+
+        /// <summary>
         /// Дүүрэг
         /// </summary>
         public int districtid { get; set; }

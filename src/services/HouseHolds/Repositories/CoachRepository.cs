@@ -23,6 +23,132 @@ namespace HouseHolds.Repositories
             connector = _connector;
         }
 
+        #region Project
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetProjectList()
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    project.id,
+    project.name,
+    project.leadername,
+    project.leaderphone,
+    project.location,
+    project.implementation,
+    DATE_FORMAT(project.updated, '%Y-%m-%d %H:%i:%s') updated
+from
+    project
+order by project.updated desc");
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetProject(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select 
+    project.id,
+    project.name,
+    project.leadername,
+    project.leaderphone,
+    project.location,
+    project.implementation,
+    date_format(project.updated, '%y-%m-%d %h:%i:%s') updated
+from
+    project
+where project.id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetProject(project request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from project");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText(@"insert into project
+(id,
+name,
+leadername,
+leaderphone,
+location,
+implementation,
+updatedby)
+values
+(@id,
+@name,
+@leadername,
+@leaderphone,
+@location,
+@implementation,
+@updatedby) 
+on duplicate key update 
+name=@name,
+leadername=@leadername,
+leaderphone=@leaderphone,
+location=@location,
+implementation=@implementation,
+updated=current_timestamp,
+updatedby=@updatedby");
+
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@leadername", DbType.String, request.leadername, ParameterDirection.Input);
+            cmd.AddParam("@leaderphone", DbType.String, request.leaderphone, ParameterDirection.Input);
+            cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
+            cmd.AddParam("@implementation", DbType.String, request.implementation, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteProject(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from project where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        #endregion
+
         #region Coach
 
         /// <summary>
@@ -37,11 +163,14 @@ namespace HouseHolds.Repositories
     coach.coachid,
     coach.name,
     coach.phone,
+    coach.projectid,
+    project.name projectname,
     coach.districtid,
     district.name districtname,
     DATE_FORMAT(coach.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     coach
+left join project on project.id = coach.projectid
 left join district on district.districtid = coach.districtid
 order by coach.name asc");
             return connector.Execute(ref cmd, false);
@@ -60,6 +189,7 @@ order by coach.name asc");
     coachid,
     name,
     phone,
+    coach.projectid,
     districtid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -96,17 +226,20 @@ where coachid = @coachid");
 (coachid,
 name,
 phone,
+projectid,
 districtid,
 updatedby)
 values
 (@coachid,
 @name,
 @phone,
+@projectid,
 @districtid,
 @updatedby) 
 on duplicate key update 
 name=@name,
 phone=@phone,
+projectid=@projectid,
 districtid=@districtid,
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -114,6 +247,7 @@ updatedby=@updatedby");
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
             cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
+            cmd.AddParam("@projectid", DbType.Int32, request.projectid, ParameterDirection.Input);
             cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
@@ -131,7 +265,6 @@ updatedby=@updatedby");
         /// <returns></returns>
         public MResult DeleteCoach(int id)
         {
-
             MCommand cmd = connector.PopCommand();
             cmd.CommandText("select count(1) too from household where coachid = @coachid");
             cmd.AddParam("@coachid", DbType.Int32, id, ParameterDirection.Input);
@@ -144,7 +277,6 @@ updatedby=@updatedby");
 
             cmd.CommandText("delete from coach where coachid = @coachid");
             return connector.Execute(ref cmd, false);
-
         }
 
         #endregion
