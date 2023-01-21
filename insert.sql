@@ -155,5 +155,16 @@ coachid )values('coach@mail.mn','?-}?{?+??aE?Ka?"2{.?????Ud???',101,'coach01'
 ('coach@mail.mn','?-}?{?+??aE?Ka?"2{.?????Ud???',119,'coach19',3,19),
 ('coach@mail.mn','?-}?{?+??aE?Ka?"2{.?????Ud???',120,'coach20',3,20);
 
-
+insert into householdmember (memberid , 
+householdid ,
+name ,
+relationshipid ,
+isparticipant ,
+istogether )
+select ROW_NUMBER() OVER (ORDER BY householdid) , 
+householdid ,
+name ,
+1 ,
+true ,
+true from household;
 
