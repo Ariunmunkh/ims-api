@@ -29,11 +29,13 @@ namespace HouseHolds.Controllers
         /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="coachid"></param>
+        /// <param name="status"></param>
+        /// <param name="group"></param>
         /// <returns></returns>
         [HttpGet("get_household_list")]
-        public IActionResult GetHouseHoldList(int coachid)
+        public IActionResult GetHouseHoldList(int coachid, int status, int group)
         {
-            return Ok(_HouseHoldsRepository.GetHouseHoldList(coachid));
+            return Ok(_HouseHoldsRepository.GetHouseHoldList(coachid,status,group));
         }
 
         /// <summary>

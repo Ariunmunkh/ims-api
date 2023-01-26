@@ -24,7 +24,14 @@ phone varchar(200),
 coachid int,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (householdid)
+PRIMARY KEY (householdid),
+INDEX ind_household_status (status),  
+CONSTRAINT fk_household_status FOREIGN KEY (status) REFERENCES householdstatus(ID),
+INDEX ind_household_householdgroupid (householdgroupid),  
+CONSTRAINT fk_household_householdgroupid FOREIGN KEY (householdgroupid) REFERENCES householdgroup(ID),
+INDEX ind_household_districtid (districtid),  
+CONSTRAINT fk_household_districtid FOREIGN KEY (districtid) REFERENCES district(districtid),
+INDEX ind_household_coachid (coachid)
 );
 create table householdmember
 (

@@ -29,44 +29,33 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <param name="coachid"></param>
+        /// <param name="status"></param>
+        /// <param name="group"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldList(int coachid)
+        public MResult GetHouseHoldList(int coachid, int status, int group)
         {
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
     household.householdid,
-    (select count(1) from householdmember a where a.householdid = household.householdid) numberof,
-    (select max(a.name) from householdmember a 
-                     inner join relationship b 
-                        on b.relationshipid = a.relationshipid 
-                     where b.ishead = true 
-                       and a.householdid = household.householdid) name,
-    (select max(a.name) from householdmember a 
-                     where a.isparticipant = true 
-                       and a.householdid = household.householdid) participant,
+    household.numberof,
+    household.name,
     household.householdgroupid,
-    householdgroup.name householdgroupname,
-    household.districtid,
     district.name districtname,
     household.section,
     household.address,
     household.phone,
-    household.status,
     householdstatus.name householdstatus,
-    household.coachid,
-    coach.name coachname,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     household
-left join district
-on district.districtid = household.districtid
-left join coach on coach.coachid = household.coachid
+left join district on district.districtid = household.districtid
 left join householdstatus on householdstatus.id = household.status
-left join householdgroup on householdgroup.id = household.householdgroupid
-where (household.coachid = @coachid or 0 = @coachid)
+where (household.coachid = @coachid or 0 = @coachid) and household.status = @status and (household.householdgroupid = @group or 0 = @group)
 order by household.updated desc");
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@group", DbType.Int32, group, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -392,7 +381,18 @@ updatedby=@updatedby");
             cmd.AddParam("@healthconditionid", DbType.Int32, request.healthconditionid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref cmd, false);
+            result = connector.Execute(ref cmd, true);
+            if (result.rettype != 0)
+                return result;
+
+            cmd.CommandText(@"update household a set 
+a.name = (select max(b.name) from householdmember b where b.householdid = a.householdid and b.isparticipant = true), 
+a.numberof = (select count(1) from householdmember b where b.householdid = a.householdid)
+where a.householdid = @householdid");
+            cmd.ClearParam();
+            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, true);
             if (result.rettype != 0)
                 return result;
 
