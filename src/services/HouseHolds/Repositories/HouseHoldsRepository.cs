@@ -63,6 +63,29 @@ order by household.updated desc");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="districtid"></param>
+        /// <param name="coachid"></param>
+        /// <returns></returns>
+        public MResult GetHouseHoldLocation(int districtid, int coachid)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    householdid,
+    latitude,
+    longitude,
+    status
+FROM
+    household
+where (0 = @districtid or household.districtid = @districtid)
+  and (0 = @coachid or household.coachid = @coachid)");
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public MResult GetHouseHold(int id)

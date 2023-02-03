@@ -29,6 +29,14 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="districtid"></param>
+        /// <param name="coachid"></param>
+        /// <returns></returns>
+        MResult GetHouseHoldLocation(int districtid, int coachid);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         MResult SetHouseHold(household request);

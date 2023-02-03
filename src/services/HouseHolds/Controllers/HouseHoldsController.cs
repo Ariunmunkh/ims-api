@@ -50,6 +50,18 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
+        /// Өрхийн GPS байршил
+        /// </summary>
+        /// <param name="districtid"></param>
+        /// <param name="coachid"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_location")]
+        public IActionResult GetHouseHoldLocation(int districtid, int coachid)
+        {
+            return Ok(_HouseHoldsRepository.GetHouseHoldLocation(districtid,  coachid));
+        }
+
+        /// <summary>
         /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="request"></param>
