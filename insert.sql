@@ -35,7 +35,7 @@ address=@address ,
 phone=@phone ,
 coachid=@coachid ,
 updated = current_timestamp,
-updatedby =@updatedby
+updatedby =@updatedby;
 
 
 insert into householdmember
@@ -64,7 +64,7 @@ birthdate=@birthdate,
 gender=@gender,
 istogether=@istogether,
 updated=current_timestamp,
-updatedby=@updatedby
+updatedby=@updatedby;
 
 SELECT 
     householdid,
@@ -77,7 +77,7 @@ SELECT
     coachid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
-    household
+    household;
 
 
 
