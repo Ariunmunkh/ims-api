@@ -73,10 +73,13 @@ order by household.updated desc");
     householdid,
     latitude,
     longitude,
+    latitude ||' '|| longitude location,
+    latitude ||', '|| longitude location2,
     status
 FROM
     household
-where (0 = @districtid or household.districtid = @districtid)
+where latitude is not null and longitude is not null
+  and (0 = @districtid or household.districtid = @districtid)
   and (0 = @coachid or household.coachid = @coachid)");
             cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
