@@ -7,6 +7,7 @@ ssh-agent bash
 ssh-add ~/.ssh/id_rsa
 ssh-copy-id -i ~/.ssh/id_rsa root@188.166.242.38
 p@ssW0rd
+r@dcr0ss
 
 export DOCKER_HOST=ssh://root@188.166.242.38
 

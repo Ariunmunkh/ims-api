@@ -46,7 +46,7 @@ namespace HouseHolds.Repositories
     household.address,
     household.phone,
     householdstatus.name householdstatus,
-    DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
+    household.coachid
 FROM
     household
 left join district on district.districtid = household.districtid
