@@ -31,11 +31,12 @@ namespace HouseHolds.Controllers
         /// <param name="coachid"></param>
         /// <param name="status"></param>
         /// <param name="group"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
         [HttpGet("get_household_list")]
-        public IActionResult GetHouseHoldList(int coachid, int status, int group)
+        public IActionResult GetHouseHoldList(int coachid, int status, int group, int districtid)
         {
-            return Ok(_HouseHoldsRepository.GetHouseHoldList(coachid,status,group));
+            return Ok(_HouseHoldsRepository.GetHouseHoldList(coachid, status, group, districtid));
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace HouseHolds.Controllers
         [HttpGet("get_household_location")]
         public IActionResult GetHouseHoldLocation(int districtid, int coachid)
         {
-            return Ok(_HouseHoldsRepository.GetHouseHoldLocation(districtid,  coachid));
+            return Ok(_HouseHoldsRepository.GetHouseHoldLocation(districtid, coachid));
         }
 
         /// <summary>

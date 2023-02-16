@@ -16,8 +16,9 @@ namespace HouseHolds.Repositories
         /// <param name="coachid"></param>
         /// <param name="status"></param>
         /// <param name="group"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetHouseHoldList(int coachid, int status, int group);
+        MResult GetHouseHoldList(int coachid, int status, int group, int districtid);
 
         /// <summary>
         /// 

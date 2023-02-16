@@ -31,8 +31,9 @@ namespace HouseHolds.Repositories
         /// <param name="coachid"></param>
         /// <param name="status"></param>
         /// <param name="group"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldList(int coachid, int status, int group)
+        public MResult GetHouseHoldList(int coachid, int status, int group, int districtid)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -51,11 +52,15 @@ FROM
     household
 left join district on district.districtid = household.districtid
 left join householdstatus on householdstatus.id = household.status
-where (household.coachid = @coachid or 0 = @coachid) and household.status = @status and (household.householdgroupid = @group or 0 = @group)
+where (household.coachid = @coachid or 0 = @coachid) 
+and household.status = @status 
+and (household.householdgroupid = @group or 0 = @group)
+and (household.districtid = @districtid or 0 = @districtid)
 order by household.updated desc");
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
             cmd.AddParam("@group", DbType.Int32, group, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
