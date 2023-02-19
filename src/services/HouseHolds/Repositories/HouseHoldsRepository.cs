@@ -4,6 +4,8 @@ using LConnection.Model;
 using System.Data;
 using HouseHolds.Models;
 using System;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace HouseHolds.Repositories
 {
@@ -73,13 +75,13 @@ order by household.updated desc");
         /// <returns></returns>
         public MResult GetHouseHoldLocation(int districtid, int coachid)
         {
+            List<object> retdata = new List<object>();
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select
     householdid,
+    name,
     latitude,
     longitude,
-    latitude ||' '|| longitude location,
-    latitude ||', '|| longitude location2,
     status
 FROM
     household
@@ -88,7 +90,24 @@ where latitude is not null and longitude is not null
   and (0 = @coachid or household.coachid = @coachid)");
             cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            if (result.retdata is DataTable data)
+            {
+                foreach (DataRow dr in data.Rows)
+                {
+                    retdata.Add(new Hashtable
+                    {
+                        { "householdid",  dr["householdid"] },
+                        { "status",  dr["status"] },
+                        { "center",  new Hashtable { { "latitude", dr["latitude"] }, { "longitude", dr["longitude"] } } },
+                        { "options", new Hashtable { { "title", dr["name"] } } }
+                    });
+                }
+
+            }
+            return new MResult { retdata = retdata };
         }
 
         /// <summary>
