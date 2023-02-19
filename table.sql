@@ -37,10 +37,12 @@ INDEX ind_household_coachid (coachid)
 );
 create table householdsurvey (
 householdid int not null,
+regdate date not null,
 survey LONGTEXT,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (householdid));
+PRIMARY KEY (householdid,regdate),
+INDEX ind_householdsurvey_regdate (regdate));
 create table householdmember
 (
 memberid int not null, 

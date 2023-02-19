@@ -177,5 +177,16 @@ namespace HouseHolds.Controllers
         {
             return Ok(await _BaseRepository.GetSurvey());
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_tree_dropdown")]
+        public IActionResult GetTreeDropdown()
+        {
+            return Ok(_BaseRepository.GetTreeDropdown());
+        }
     }
 }

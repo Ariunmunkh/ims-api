@@ -29,6 +29,9 @@ cd D:/PROJECTS_TFS/ul-api
 docker-compose build
 docker-compose up -d
 
+docker-compose build households
+docker-compose up -d households
+
 export DOCKER_HOST=ssh://root@188.166.242.38
 cd D:/PROJECTS_TFS/ul-ui
 docker-compose build

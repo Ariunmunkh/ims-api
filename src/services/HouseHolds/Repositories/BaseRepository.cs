@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using System.Net;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace HouseHolds.Repositories
 {
@@ -432,10 +434,12 @@ updatedby=@updatedby", request.type));
                     MCommand cmd = connector.PopCommand();
                     cmd.CommandText(@"insert into householdsurvey
 (householdid,
+regdate,
 survey,
 updatedby)
 values
 (@householdid,
+@regdate,
 @survey,
 @updatedby) 
 on duplicate key update 
@@ -444,12 +448,14 @@ updated=current_timestamp,
 updatedby=@updatedby");
 
                     cmd.AddParam("@householdid", DbType.Int32, ParameterDirection.Input);
+                    cmd.AddParam("@regdate", DbType.DateTime, ParameterDirection.Input);
                     cmd.AddParam("@survey", DbType.String, ParameterDirection.Input);
                     cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
                     foreach (var item in jsonLinq)
                     {
                         cmd.SetParamValue("@householdid", Convert.ToInt32(item["group1/id_pull"]));
+                        cmd.SetParamValue("@regdate", Convert.ToDateTime(item["end"]));
                         cmd.SetParamValue("@survey", item.ToString());
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
@@ -470,6 +476,119 @@ updatedby=@updatedby");
 
                 return new MResult { retdata = ex };
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetTreeDropdown()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT DISTINCT
+    household.status,
+    householdstatus.name statusname,
+    COALESCE(household.districtid,-1) districtid,
+    COALESCE(district.name,'Хоосон') districtname,
+    COALESCE(household.section,-1) section,
+    COALESCE(household.householdgroupid,-1) householdgroupid,
+    COALESCE(householdgroup.name,'Хоосон') householdgroupname,
+    COALESCE(household.coachid,-1) coachid,
+    COALESCE(coach.name,'Хоосон') coachname
+FROM
+    household
+        LEFT JOIN
+    householdstatus ON householdstatus.id = household.status
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid");
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            List<object> retdata = new List<object>();
+
+            if (result.retdata is DataTable data)
+            {
+                DataRow[] districts;
+                DataRow[] sections;
+                DataRow[] groups;
+                DataRow[] coachs;
+                using (DataSet ds = new DataSet())
+                {
+                    ds.Tables.Add(data.DefaultView.ToTable("status", true, "status", "statusname"));
+                    ds.Tables.Add(data.DefaultView.ToTable("district", true, "status", "districtid", "districtname"));
+                    ds.Tables.Add(data.DefaultView.ToTable("section", true, "status", "districtid", "section"));
+                    ds.Tables.Add(data.DefaultView.ToTable("group", true, "status", "districtid", "section", "householdgroupid", "householdgroupname"));
+                    ds.Tables.Add(data.DefaultView.ToTable("coach", true, "status", "districtid", "section", "householdgroupid", "coachid", "coachname"));
+
+                    foreach (DataRow status in ds.Tables["status"].Rows)
+                    {
+                        Hashtable ht = new Hashtable();
+                        ht.Add("key", status["status"]);
+                        ht.Add("name", status["statusname"]);
+                        List<object> districtlist = new List<object>();
+
+                        districts = ds.Tables["district"].Select("status='" + status["status"] + "'");
+
+                        for (int i = districts.Length - 1; i >= 0; i--)
+                        {
+                            Hashtable dht = new Hashtable();
+                            dht.Add("key", districts[i]["districtid"]);
+                            dht.Add("name", districts[i]["districtname"]);
+                            List<object> sectionlist = new List<object>();
+
+                            sections = ds.Tables["section"].Select("status='" + status["status"] + "' and districtid='" + districts[i]["districtid"] + "'");
+                            for (int j = sections.Length - 1; j >= 0; j--)
+                            {
+                                Hashtable sht = new Hashtable();
+                                sht.Add("key", sections[j]["section"]);
+                                sht.Add("name", sections[j]["section"]);
+                                List<object> grouplist = new List<object>();
+
+                                groups = ds.Tables["group"].Select("status='" + status["status"] + "' and districtid='" + districts[i]["districtid"] + "' and section='" + sections[j]["section"] + "'");
+                                for (int k = groups.Length - 1; k >= 0; k--)
+                                {
+                                    Hashtable ght = new Hashtable();
+                                    ght.Add("key", groups[k]["householdgroupid"]);
+                                    ght.Add("name", groups[k]["householdgroupname"]);
+                                    List<object> coachlist = new List<object>();
+
+                                    coachs = ds.Tables["coach"].Select("status='" + status["status"] + "' and districtid='" + districts[i]["districtid"] + "' and section='" + sections[j]["section"] + "' and householdgroupid='" + groups[k]["householdgroupid"] + "'");
+                                    for (int m = coachs.Length - 1; m >= 0; m--)
+                                    {
+                                        Hashtable cht = new Hashtable();
+                                        cht.Add("key", coachs[m]["coachid"]);
+                                        cht.Add("name", coachs[m]["coachname"]);
+                                        ds.Tables["coach"].Rows.Remove(coachs[m]);
+                                        coachlist.Add(cht);
+                                    }
+
+                                    ds.Tables["group"].Rows.Remove(groups[k]);
+                                    ght.Add("coach", coachlist);
+                                    grouplist.Add(ght);
+                                }
+
+                                ds.Tables["section"].Rows.Remove(sections[j]);
+                                sht.Add("group", grouplist);
+                                sectionlist.Add(sht);
+                            }
+
+                            ds.Tables["district"].Rows.Remove(districts[i]);
+                            dht.Add("section", sectionlist);
+                            districtlist.Add(dht);
+                        }
+
+                        ht.Add("district", districtlist);
+                        retdata.Add(ht);
+                    }
+                }
+            }
+
+            return new MResult { retdata = retdata };
         }
 
     }

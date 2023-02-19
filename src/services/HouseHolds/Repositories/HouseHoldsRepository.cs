@@ -79,13 +79,23 @@ order by household.updated desc");
             List<object> retdata = new List<object>();
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select
-    householdid,
-    name,
-    latitude,
-    longitude,
-    status
+    household.householdid,
+    district.name districtname,
+    household.districtid,
+    household.districtid ||'-'|| household.section districtsection,
+    coach.name coachname,
+    household.coachid,
+    household.householdgroupid,
+    household.name,
+    household.latitude,
+    household.longitude,
+    household.status
 FROM
     household
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
 where latitude is not null and longitude is not null
   and (0 = @districtid or household.districtid = @districtid)
   and (0 = @coachid or household.coachid = @coachid)");
@@ -101,7 +111,12 @@ where latitude is not null and longitude is not null
                     retdata.Add(new Hashtable
                     {
                         { "householdid",  dr["householdid"] },
-                        { "status",  dr["status"] },
+                        { "districtid",  dr["districtid"] },
+                        { "districtname",  dr["districtname"] },
+                        { "section",  dr["districtsection"] },
+                        { "coachid",  dr["coachid"] },
+                        { "coachname",  dr["coachname"] },
+                        { "householdgroupid",  dr["householdgroupid"] },
                         { "center",  new Hashtable { { "latitude", dr["latitude"] }, { "longitude", dr["longitude"] } } },
                         { "options", new Hashtable { { "title", dr["name"] } } }
                     });
@@ -125,6 +140,7 @@ where latitude is not null and longitude is not null
     coach.name coachname,
     district.name districtname,
     householdgroup.name householdgroupname,
+    householdsurvey.regdate,
     householdsurvey.survey
 FROM
     household

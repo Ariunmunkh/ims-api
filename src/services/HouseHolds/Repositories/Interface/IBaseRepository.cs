@@ -109,6 +109,12 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-         Task<MResult> GetSurvey();
+        Task<MResult> GetSurvey();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetTreeDropdown();
     }
 }
