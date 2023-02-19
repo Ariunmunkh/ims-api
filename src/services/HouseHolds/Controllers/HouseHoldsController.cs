@@ -63,6 +63,18 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
+        /// Өрхийн судалгаа
+        /// </summary>
+        /// <param name="districtid"></param>
+        /// <param name="coachid"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_survey")]
+        public IActionResult GetHouseHoldSurvey(int districtid, int coachid)
+        {
+            return Ok(_HouseHoldsRepository.GetHouseHoldSurvey(districtid, coachid));
+        }
+
+        /// <summary>
         /// Өрхийн ерөнхий мэдээлэл
         /// </summary>
         /// <param name="request"></param>

@@ -1,5 +1,6 @@
 ﻿using Connection.Model;
 using HouseHolds.Models;
+using System.Threading.Tasks;
 
 namespace HouseHolds.Repositories
 {
@@ -103,5 +104,11 @@ namespace HouseHolds.Repositories
         MResult DeleteDropDownItem(int id, string type);
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+         Task<MResult> GetSurvey();
     }
 }

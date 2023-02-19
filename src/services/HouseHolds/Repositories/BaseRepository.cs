@@ -4,6 +4,12 @@ using LConnection.Model;
 using System.Data;
 using HouseHolds.Models;
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Net;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace HouseHolds.Repositories
 {
@@ -13,14 +19,17 @@ namespace HouseHolds.Repositories
     public class BaseRepository : IBaseRepository
     {
         private readonly DWConnector connector;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="_connector"></param>
-        public BaseRepository(DWConnector _connector)
+        /// <param name="_httpClientFactory"></param>
+        public BaseRepository(DWConnector _connector, IHttpClientFactory _httpClientFactory)
         {
             connector = _connector;
+            this._httpClientFactory = _httpClientFactory;
         }
 
         #region District
@@ -402,5 +411,66 @@ updatedby=@updatedby", request.type));
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<MResult> GetSurvey()
+        {
+            try
+            {
+                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://kobonew.ifrc.org/assets/aB3cZfRrraeAVbRcSm3nNe/submissions/?format=json") { Headers = { { HeaderNames.Authorization, "Token 8a3756d5136bb71b85b89ad790d17d22a5cc09e4" } } };
+                var httpClient = _httpClientFactory.CreateClient();
+                var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var jsonData = await httpResponseMessage.Content.ReadAsStringAsync();
+                    var jsonLinq = JArray.Parse(jsonData);
+
+                    MResult result;
+                    MCommand cmd = connector.PopCommand();
+                    cmd.CommandText(@"insert into householdsurvey
+(householdid,
+survey,
+updatedby)
+values
+(@householdid,
+@survey,
+@updatedby) 
+on duplicate key update 
+survey=@survey,
+updated=current_timestamp,
+updatedby=@updatedby");
+
+                    cmd.AddParam("@householdid", DbType.Int32, ParameterDirection.Input);
+                    cmd.AddParam("@survey", DbType.String, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                    foreach (var item in jsonLinq)
+                    {
+                        cmd.SetParamValue("@householdid", Convert.ToInt32(item["group1/id_pull"]));
+                        cmd.SetParamValue("@survey", item.ToString());
+                        result = connector.Execute(ref cmd, false);
+                        if (result.rettype != 0)
+                            return result;
+                    }
+
+                }
+                return new MResult { };
+
+            }
+            catch (WebException ex)
+            {
+
+                return new MResult { retdata = ex };
+            }
+            catch (Exception ex)
+            {
+
+                return new MResult { retdata = ex };
+            }
+        }
+
     }
 }

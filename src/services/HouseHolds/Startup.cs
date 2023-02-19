@@ -38,6 +38,7 @@ namespace HouseHolds
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
+            services.AddHttpClient();
             services.AddTransient<IBaseRepository, BaseRepository>();
             services.AddTransient<ICoachRepository, CoachRepository>();
             services.AddTransient<IHouseHoldsRepository, HouseHoldsRepository>();

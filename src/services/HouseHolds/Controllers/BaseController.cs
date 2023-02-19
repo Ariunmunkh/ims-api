@@ -2,6 +2,7 @@
 using System;
 using HouseHolds.Models;
 using HouseHolds.Repositories;
+using System.Threading.Tasks;
 
 namespace HouseHolds.Controllers
 {
@@ -167,5 +168,14 @@ namespace HouseHolds.Controllers
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_survey")]
+        public async Task<IActionResult> GetSurvey()
+        {
+            return Ok(await _BaseRepository.GetSurvey());
+        }
     }
 }

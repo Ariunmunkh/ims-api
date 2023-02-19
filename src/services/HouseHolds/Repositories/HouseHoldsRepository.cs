@@ -6,6 +6,7 @@ using HouseHolds.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Newtonsoft.Json;
 
 namespace HouseHolds.Repositories
 {
@@ -108,6 +109,53 @@ where latitude is not null and longitude is not null
 
             }
             return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="districtid"></param>
+        /// <param name="coachid"></param>
+        /// <returns></returns>
+        public MResult GetHouseHoldSurvey(int districtid, int coachid)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.*,
+    coach.name coachname,
+    district.name districtname,
+    householdgroup.name householdgroupname,
+    householdsurvey.survey
+FROM
+    household
+        INNER JOIN
+    householdsurvey ON householdsurvey.householdid = household.householdid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+WHERE
+    (0 = @districtid OR household.districtid = @districtid)
+AND (0 = @coachid OR household.coachid = @coachid)");
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable data)
+            {
+                data.Columns.Add("jsondata", typeof(object));
+                foreach (DataRow dr in data.Rows)
+                {
+                    dr["jsondata"] = JsonConvert.DeserializeObject(dr["survey"].ToString());
+                }
+                data.Columns.Remove("survey");
+            }
+
+            return result;
         }
 
         /// <summary>

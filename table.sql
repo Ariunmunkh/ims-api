@@ -35,6 +35,12 @@ INDEX ind_household_districtid (districtid),
 CONSTRAINT fk_household_districtid FOREIGN KEY (districtid) REFERENCES district(districtid),
 INDEX ind_household_coachid (coachid)
 );
+create table householdsurvey (
+householdid int not null,
+survey LONGTEXT,
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (householdid));
 create table householdmember
 (
 memberid int not null, 
