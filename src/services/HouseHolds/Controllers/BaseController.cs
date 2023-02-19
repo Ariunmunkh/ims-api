@@ -172,7 +172,7 @@ namespace HouseHolds.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("get_survey")]
+        [HttpGet("download_survey")]
         public async Task<IActionResult> GetSurvey()
         {
             return Ok(await _BaseRepository.GetSurvey());
