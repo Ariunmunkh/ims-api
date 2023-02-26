@@ -1,5 +1,6 @@
 ﻿using Connection.Model;
 using HouseHolds.Models;
+using System;
 
 namespace HouseHolds.Repositories
 {
@@ -38,10 +39,16 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="districtid"></param>
-        /// <param name="coachid"></param>
+        /// <param name="status"></param>
+        /// <param name="district"></param>
+        /// <param name="section"></param>
+        /// <param name="group"></param>
+        /// <param name="coach"></param>
+        /// <param name="household"></param>
+        /// <param name="begindate"></param>
+        /// <param name="enddate"></param>
         /// <returns></returns>
-        MResult GetHouseHoldSurvey(int districtid, int coachid);
+        MResult GetHouseHoldSurvey(int status, int? district, int? section, int? group, int? coach, int? household, DateTime begindate, DateTime enddate);
 
         /// <summary>
         /// 

@@ -65,13 +65,19 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// Өрхийн судалгаа
         /// </summary>
-        /// <param name="districtid"></param>
-        /// <param name="coachid"></param>
+        /// <param name="status"></param>
+        /// <param name="district"></param>
+        /// <param name="section"></param>
+        /// <param name="group"></param>
+        /// <param name="coach"></param>
+        /// <param name="household"></param>
+        /// <param name="begindate"></param>
+        /// <param name="enddate"></param>
         /// <returns></returns>
         [HttpGet("get_household_survey")]
-        public IActionResult GetHouseHoldSurvey(int districtid, int coachid)
+        public IActionResult GetHouseHoldSurvey(int status, int? district, int? section, int? group, int? coach, int? household, DateTime begindate, DateTime enddate)
         {
-            return Ok(_HouseHoldsRepository.GetHouseHoldSurvey(districtid, coachid));
+            return Ok(_HouseHoldsRepository.GetHouseHoldSurvey(status, district, section, group, coach, household, begindate, enddate));
         }
 
         /// <summary>

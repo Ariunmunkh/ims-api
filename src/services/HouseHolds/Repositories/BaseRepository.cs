@@ -435,11 +435,37 @@ updatedby=@updatedby", request.type));
                     cmd.CommandText(@"insert into householdsurvey
 (householdid,
 regdate,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h7,
+h8,
+h9,
+h10,
+h11,
+h12,
+h13,
 survey,
 updatedby)
 values
 (@householdid,
 @regdate,
+@h1,
+@h2,
+@h3,
+@h4,
+@h5,
+@h6,
+@h7,
+@h8,
+@h9,
+@h10,
+@h11,
+@h12,
+@h13,
 @survey,
 @updatedby) 
 on duplicate key update 
@@ -449,6 +475,19 @@ updatedby=@updatedby");
 
                     cmd.AddParam("@householdid", DbType.Int32, ParameterDirection.Input);
                     cmd.AddParam("@regdate", DbType.DateTime, ParameterDirection.Input);
+                    cmd.AddParam("@h1", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h2", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h3", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h4", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h5", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h6", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h7", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h8", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h9", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h10", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h11", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h12", DbType.Decimal, ParameterDirection.Input);
+                    cmd.AddParam("@h13", DbType.Decimal, ParameterDirection.Input);
                     cmd.AddParam("@survey", DbType.String, ParameterDirection.Input);
                     cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
@@ -456,6 +495,19 @@ updatedby=@updatedby");
                     {
                         cmd.SetParamValue("@householdid", Convert.ToInt32(item["group1/id_pull"]));
                         cmd.SetParamValue("@regdate", Convert.ToDateTime(item["end"]));
+                        cmd.SetParamValue("@h1", ToDecimal(item["g16/g14/h1"]));
+                        cmd.SetParamValue("@h2", ToDecimal(item["g16/g14/h2"]));
+                        cmd.SetParamValue("@h3", ToDecimal(item["g16/g14/h3"]));
+                        cmd.SetParamValue("@h4", ToDecimal(item["g16/g14/h4"]));
+                        cmd.SetParamValue("@h5", ToDecimal(item["g16/g14/h5"]));
+                        cmd.SetParamValue("@h6", ToDecimal(item["g16/g14/h6"]));
+                        cmd.SetParamValue("@h7", ToDecimal(item["g16/g14/h7"]));
+                        cmd.SetParamValue("@h8", ToDecimal(item["g16/g14/h8"]));
+                        cmd.SetParamValue("@h9", ToDecimal(item["g16/g14/h9"]));
+                        cmd.SetParamValue("@h10", ToDecimal(item["g16/g14/h10"]));
+                        cmd.SetParamValue("@h11", ToDecimal(item["g16/g14/h11"]));
+                        cmd.SetParamValue("@h12", ToDecimal(item["g16/g14/h12"]));
+                        cmd.SetParamValue("@h13", ToDecimal(item["g16/g14/h13"]));
                         cmd.SetParamValue("@survey", item.ToString());
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
@@ -478,11 +530,23 @@ updatedby=@updatedby");
             }
         }
 
+        private decimal ToDecimal(object value)
+        {
+            try
+            {
+                return Convert.ToDecimal(value);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetTreeDropdown()
+        public MResult GetTreeDropdown(bool issurvey)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT DISTINCT
@@ -504,7 +568,7 @@ FROM
         LEFT JOIN
     householdgroup ON householdgroup.id = household.householdgroupid
         LEFT JOIN
-    coach ON coach.coachid = household.coachid");
+    coach ON coach.coachid = household.coachid" + (issurvey ? "where exists (select null from householdsurvey where householdsurvey.householdid = household.householdid)" : string.Empty));
             MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;

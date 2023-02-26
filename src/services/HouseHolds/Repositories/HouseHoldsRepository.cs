@@ -129,19 +129,33 @@ where latitude is not null and longitude is not null
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="districtid"></param>
-        /// <param name="coachid"></param>
+        /// <param name="status"></param>
+        /// <param name="district"></param>
+        /// <param name="section"></param>
+        /// <param name="group"></param>
+        /// <param name="coach"></param>
+        /// <param name="household"></param>
+        /// <param name="begindate"></param>
+        /// <param name="enddate"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldSurvey(int districtid, int coachid)
+        public MResult GetHouseHoldSurvey(int status, int? district, int? section, int? group, int? coach, int? household, DateTime begindate, DateTime enddate)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    household.*,
-    coach.name coachname,
-    district.name districtname,
-    householdgroup.name householdgroupname,
-    householdsurvey.regdate,
-    householdsurvey.survey
+count(householdsurvey.householdid) householdcount,
+avg(h1) h1,
+avg(h2) h2,
+avg(h3) h3,
+avg(h4) h4,
+avg(h5) h5,
+avg(h6) h6,
+avg(h7) h7,
+avg(h8) h8,
+avg(h9) h9,
+avg(h10) h10,
+avg(h11) h11,
+avg(h12) h12,
+avg(h13) h13
 FROM
     household
         INNER JOIN
@@ -153,25 +167,21 @@ FROM
         LEFT JOIN
     householdgroup ON householdgroup.id = household.householdgroupid
 WHERE
-    (0 = @districtid OR household.districtid = @districtid)
-AND (0 = @coachid OR household.coachid = @coachid)");
-            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
-            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
-            MResult result = connector.Execute(ref cmd, false);
-            if (result.rettype != 0)
-                return result;
-
-            if (result.retdata is DataTable data)
-            {
-                data.Columns.Add("jsondata", typeof(object));
-                foreach (DataRow dr in data.Rows)
-                {
-                    dr["jsondata"] = JsonConvert.DeserializeObject(dr["survey"].ToString());
-                }
-                data.Columns.Remove("survey");
-            }
-
-            return result;
+    household.status = @status
+AND householdsurvey.regdate between @begindate and @enddate
+AND (0 = @districtid OR household.districtid = @districtid)
+AND (0 = @section OR household.section = @section)
+AND (0 = @householdgroupid OR household.householdgroupid = @householdgroupid)
+AND (0 = @householdid OR household.householdid = @householdid)");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, district ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@section", DbType.Int32, section ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@householdgroupid", DbType.Int32, group ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, coach ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, household ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@begindate", DbType.Date, begindate, ParameterDirection.Input);
+            cmd.AddParam("@enddate", DbType.Date, enddate, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
         }
 
         /// <summary>

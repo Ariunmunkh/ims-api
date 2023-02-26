@@ -184,9 +184,9 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("get_tree_dropdown")]
-        public IActionResult GetTreeDropdown()
+        public IActionResult GetTreeDropdown(bool issurvey)
         {
-            return Ok(_BaseRepository.GetTreeDropdown());
+            return Ok(_BaseRepository.GetTreeDropdown(issurvey));
         }
     }
 }
