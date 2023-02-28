@@ -200,3 +200,6 @@ name ,
 true ,
 true from household;
 
+insert into tbluser(email,password,userid,username,roleid,coachid )values('admin@mail.mn','?-}?{?+??aE?Ka?"2{.?????Ud???',1,'admin',1,null);
+insert into householdstatus (id,name) values(0,'Хяналтын өрх'),(1,'Хөтөлбөрийн өрх');
+

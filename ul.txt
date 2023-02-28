@@ -5,12 +5,12 @@ ssh-keygen
 ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
-ssh-copy-id -i ~/.ssh/id_rsa root@188.166.242.38
+ssh-copy-id -i ~/.ssh/id_rsa root@159.223.36.47
 p@ssW0rd
 r@dcr0ss
 fw*+!*Q%G^AA@a$&
 
-export DOCKER_HOST=ssh://root@188.166.242.38
+export DOCKER_HOST=ssh://root@159.223.36.47
 
 cd D:/PROJECTS_TFS/ul-api
 cd D:/PROJECTS_TFS/ul-ui
@@ -26,7 +26,7 @@ docker ps -a
 docker image prune -a
 service docker restart
 
-export DOCKER_HOST=ssh://root@188.166.242.38
+export DOCKER_HOST=ssh://root@159.223.36.47
 cd D:/PROJECTS_TFS/ul-api
 docker-compose build
 docker-compose up -d
@@ -34,7 +34,7 @@ docker-compose up -d
 docker-compose build households
 docker-compose up -d households
 
-export DOCKER_HOST=ssh://root@188.166.242.38
+export DOCKER_HOST=ssh://root@159.223.36.47
 cd D:/PROJECTS_TFS/ul-ui
 docker-compose build
 docker-compose up -d

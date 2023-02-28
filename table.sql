@@ -9,6 +9,39 @@ updated timestamp default current_timestamp,
 updatedby int,
 PRIMARY KEY (userid)
 );
+create table householdstatus
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table householdgroup
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table district
+(
+districtid int not null, 
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (districtid)
+);
+create table relationship
+(
+relationshipid int not null,
+name varchar(200),
+ishead bool,
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (relationshipid)
+);
 create table household
 (
 householdid int not null, 
@@ -56,6 +89,31 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (householdid,regdate),
 INDEX ind_householdsurvey_regdate (regdate));
+
+create table educationdegree
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table employmentstatus
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table healthcondition
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 create table householdmember
 (
 memberid int not null, 
@@ -78,23 +136,6 @@ INDEX ind_householdmember_employmentstatusid (employmentstatusid),
 CONSTRAINT fk_householdmember_employmentstatusid FOREIGN KEY (employmentstatusid) REFERENCES employmentstatus(ID),
 INDEX ind_householdmember_healthconditionid (healthconditionid),  
 CONSTRAINT fk_householdmember_healthconditionid FOREIGN KEY (healthconditionid) REFERENCES healthcondition(ID)  
-);
-create table district
-(
-districtid int not null, 
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (districtid)
-);
-create table relationship
-(
-relationshipid int not null,
-name varchar(200),
-ishead bool,
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (relationshipid)
 );
 create table project
 (
@@ -150,6 +191,103 @@ updatedby int,
 PRIMARY KEY (entryid),
 INDEX ind_meetingattendance_householdid (householdid),  
 CONSTRAINT fk_meetingattendance_householdid FOREIGN KEY (householdid) REFERENCES household(householdid)
+);
+
+create table loanpurpose
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table trainingtype
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table trainingandactivity
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table organization
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table subbranch
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table assetreceivedtype
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table assetreceived
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table supportreceivedtype
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table sponsoringorganization
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table mediatedservicetype
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table intermediaryorganization
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table proxyservice
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
 );
 create table loan
 (
@@ -285,141 +423,3 @@ CONSTRAINT fk_mediatedactivity_intermediaryorganizationid FOREIGN KEY (intermedi
 INDEX ind_mediatedactivity_proxyserviceid (proxyserviceid),  
 CONSTRAINT fk_mediatedactivity_proxyserviceid FOREIGN KEY (proxyserviceid) REFERENCES proxyservice(id)
 );
-create table householdstatus
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table educationdegree
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table employmentstatus
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table healthcondition
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table loanpurpose
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table trainingtype
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table trainingandactivity
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table organization
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table subbranch
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table assetreceivedtype
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table assetreceived
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table supportreceivedtype
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table sponsoringorganization
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table mediatedservicetype
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table intermediaryorganization
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table proxyservice
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table householdgroup
-(
-id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-
-
