@@ -143,19 +143,19 @@ where latitude is not null and longitude is not null
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
 count(householdsurvey.householdid) householdcount,
-avg(h1) h1,
-avg(h2) h2,
-avg(h3) h3,
-avg(h4) h4,
-avg(h5) h5,
-avg(h6) h6,
-avg(h7) h7,
-avg(h8) h8,
-avg(h9) h9,
-avg(h10) h10,
-avg(h11) h11,
-avg(h12) h12,
-avg(h13) h13
+COALESCE(avg(h1),0) h1,
+COALESCE(avg(h2),0) h2,
+COALESCE(avg(h3),0) h3,
+COALESCE(avg(h4),0) h4,
+COALESCE(avg(h5),0) h5,
+COALESCE(avg(h6),0) h6,
+COALESCE(avg(h7),0) h7,
+COALESCE(avg(h8),0) h8,
+COALESCE(avg(h9),0) h9,
+COALESCE(avg(h10),0) h10,
+COALESCE(avg(h11),0) h11,
+COALESCE(avg(h12),0) h12,
+COALESCE(avg(h13),0) h13
 FROM
     household
         INNER JOIN
