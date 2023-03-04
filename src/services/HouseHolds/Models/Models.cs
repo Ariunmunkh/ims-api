@@ -122,5 +122,44 @@ namespace HouseHolds.Models
 
     }
 
+    /// <summary>
+    /// Өрхийн судалгаа
+    /// </summary>
+    public class surveyfilter
+    {
+        /// <summary>
+        /// Өрхийн статус
+        /// </summary>
+        public int status { get; set; }
 
+        /// <summary>
+        /// Дүүрэг
+        /// </summary>
+        public int? district { get; set; }
+
+        /// <summary>
+        /// Хороо
+        /// </summary>
+        public int? section { get; set; }
+
+        /// <summary>
+        /// Өрхийн бүлгийн дугаар
+        /// </summary>
+        public int? group { get; set; }
+
+        /// <summary>
+        /// Коучийн дугаар
+        /// </summary>
+        public int? coach { get; set; }
+
+        /// <summary>
+        /// Өрхийн дугаар
+        /// </summary>
+        public int? household { get; set; }
+
+        /// <summary>
+        /// Судалгааны дугаарууд
+        /// </summary>
+        public int[] dugaar { get; set; }
+    }
 }

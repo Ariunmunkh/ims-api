@@ -129,58 +129,63 @@ where latitude is not null and longitude is not null
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="district"></param>
-        /// <param name="section"></param>
-        /// <param name="group"></param>
-        /// <param name="coach"></param>
-        /// <param name="household"></param>
-        /// <param name="begindate"></param>
-        /// <param name="enddate"></param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldSurvey(int status, int? district, int? section, int? group, int? coach, int? household, DateTime begindate, DateTime enddate)
+        public MResult GetHouseHoldSurvey(surveyfilter filter)
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
-count(householdsurvey.householdid) householdcount,
-COALESCE(avg(h1),0) h1,
-COALESCE(avg(h2),0) h2,
-COALESCE(avg(h3),0) h3,
-COALESCE(avg(h4),0) h4,
-COALESCE(avg(h5),0) h5,
-COALESCE(avg(h6),0) h6,
-COALESCE(avg(h7),0) h7,
-COALESCE(avg(h8),0) h8,
-COALESCE(avg(h9),0) h9,
-COALESCE(avg(h10),0) h10,
-COALESCE(avg(h11),0) h11,
-COALESCE(avg(h12),0) h12,
-COALESCE(avg(h13),0) h13
+            cmd.CommandText(string.Format(@"SELECT 
+    data.*,
+    ROUND((data.h1 + data.h2 + data.h3) / 3, 1) r1,
+    ROUND((data.h4 + data.h5) / 2, 1) r2,
+    ROUND((data.h6 + data.h7) / 2, 1) r3,
+    ROUND((data.h8 + data.h9 + data.h10 + data.h11 + data.h12 + data.h13) / 6,
+            1) r4,
+    ROUND((data.h1 + data.h2 + data.h3 + data.h4 + data.h5 + data.h6 + data.h7 + data.h8 + data.h9 + data.h10 + data.h11 + data.h12 + data.h13) / 13,
+            1) r5,
+80 r0
 FROM
-    household
-        INNER JOIN
-    householdsurvey ON householdsurvey.householdid = household.householdid
-        LEFT JOIN
-    district ON district.districtid = household.districtid
-        LEFT JOIN
-    coach ON coach.coachid = household.coachid
-        LEFT JOIN
-    householdgroup ON householdgroup.id = household.householdgroupid
-WHERE
-    household.status = @status
-AND householdsurvey.regdate between @begindate and @enddate
-AND (0 = @districtid OR household.districtid = @districtid)
-AND (0 = @section OR household.section = @section)
-AND (0 = @householdgroupid OR household.householdgroupid = @householdgroupid)
-AND (0 = @householdid OR household.householdid = @householdid)");
-            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
-            cmd.AddParam("@districtid", DbType.Int32, district ?? 0, ParameterDirection.Input);
-            cmd.AddParam("@section", DbType.Int32, section ?? 0, ParameterDirection.Input);
-            cmd.AddParam("@householdgroupid", DbType.Int32, group ?? 0, ParameterDirection.Input);
-            cmd.AddParam("@coachid", DbType.Int32, coach ?? 0, ParameterDirection.Input);
-            cmd.AddParam("@householdid", DbType.Int32, household ?? 0, ParameterDirection.Input);
-            cmd.AddParam("@begindate", DbType.Date, begindate, ParameterDirection.Input);
-            cmd.AddParam("@enddate", DbType.Date, enddate, ParameterDirection.Input);
+    (SELECT 
+        householdsurvey.dugaar,
+        'Асуумж '||dugaar name,
+            COUNT(householdsurvey.householdid) householdcount,
+            COALESCE(AVG(h1), 0) h1,
+            COALESCE(AVG(h2), 0) h2,
+            COALESCE(AVG(h3), 0) h3,
+            COALESCE(AVG(h4), 0) h4,
+            COALESCE(AVG(h5), 0) h5,
+            COALESCE(AVG(h6), 0) h6,
+            COALESCE(AVG(h7), 0) h7,
+            COALESCE(AVG(h8), 0) h8,
+            COALESCE(AVG(h9), 0) h9,
+            COALESCE(AVG(h10), 0) h10,
+            COALESCE(AVG(h11), 0) h11,
+            COALESCE(AVG(h12), 0) h12,
+            COALESCE(AVG(h13), 0) h13
+    FROM
+        household
+    INNER JOIN householdsurvey ON householdsurvey.householdid = household.householdid
+    LEFT JOIN district ON district.districtid = household.districtid
+    LEFT JOIN coach ON coach.coachid = household.coachid
+    LEFT JOIN householdgroup ON householdgroup.id = household.householdgroupid
+    WHERE
+        householdsurvey.dugaar IN ({0})
+            AND household.status = @status
+            AND (0 = @districtid
+            OR household.districtid = @districtid)
+            AND (0 = @section
+            OR household.section = @section)
+            AND (0 = @householdgroupid
+            OR household.householdgroupid = @householdgroupid)
+            AND (0 = @householdid
+            OR household.householdid = @householdid)
+    GROUP BY householdsurvey.dugaar) data", string.Join(",", filter.dugaar)));
+            cmd.AddParam("@status", DbType.Int32, filter.status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, filter.district ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@section", DbType.Int32, filter.section ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@householdgroupid", DbType.Int32, filter.group ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, filter.coach ?? 0, ParameterDirection.Input);
+            cmd.AddParam("@householdid", DbType.Int32, filter.household ?? 0, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 

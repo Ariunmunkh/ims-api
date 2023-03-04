@@ -70,7 +70,7 @@ INDEX ind_household_coachid (coachid)
 );
 create table householdsurvey (
 householdid int not null,
-regdate date not null,
+dugaar int not null,
 h1 decimal,
 h2 decimal,
 h3 decimal,
@@ -87,8 +87,8 @@ h13 decimal,
 survey LONGTEXT,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (householdid,regdate),
-INDEX ind_householdsurvey_regdate (regdate));
+PRIMARY KEY (householdid,dugaar),
+INDEX ind_householdsurvey_regdate (dugaar));
 
 create table educationdegree
 (

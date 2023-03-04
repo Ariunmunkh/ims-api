@@ -45,3 +45,6 @@ host = db-mysql-sgp1-90416-do-user-12986538-0.b.db.ondigitalocean.com
 port = 25060
 database = defaultdb
 sslmode = REQUIRED
+
+dms.digitalocean@gmail.com
+r@dcr0ss

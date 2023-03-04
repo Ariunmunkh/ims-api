@@ -39,16 +39,9 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="district"></param>
-        /// <param name="section"></param>
-        /// <param name="group"></param>
-        /// <param name="coach"></param>
-        /// <param name="household"></param>
-        /// <param name="begindate"></param>
-        /// <param name="enddate"></param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        MResult GetHouseHoldSurvey(int status, int? district, int? section, int? group, int? coach, int? household, DateTime begindate, DateTime enddate);
+        MResult GetHouseHoldSurvey(surveyfilter filter);
 
         /// <summary>
         /// 

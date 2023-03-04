@@ -434,7 +434,7 @@ updatedby=@updatedby", request.type));
                     MCommand cmd = connector.PopCommand();
                     cmd.CommandText(@"insert into householdsurvey
 (householdid,
-regdate,
+dugaar,
 h1,
 h2,
 h3,
@@ -452,7 +452,7 @@ survey,
 updatedby)
 values
 (@householdid,
-@regdate,
+@dugaar,
 @h1,
 @h2,
 @h3,
@@ -474,7 +474,7 @@ updated=current_timestamp,
 updatedby=@updatedby");
 
                     cmd.AddParam("@householdid", DbType.Int32, ParameterDirection.Input);
-                    cmd.AddParam("@regdate", DbType.DateTime, ParameterDirection.Input);
+                    cmd.AddParam("@dugaar", DbType.Int32, ParameterDirection.Input);
                     cmd.AddParam("@h1", DbType.Decimal, ParameterDirection.Input);
                     cmd.AddParam("@h2", DbType.Decimal, ParameterDirection.Input);
                     cmd.AddParam("@h3", DbType.Decimal, ParameterDirection.Input);
@@ -494,7 +494,7 @@ updatedby=@updatedby");
                     foreach (var item in jsonLinq)
                     {
                         cmd.SetParamValue("@householdid", Convert.ToInt32(item["group1/id_pull"]));
-                        cmd.SetParamValue("@regdate", Convert.ToDateTime(item["end"]));
+                        cmd.SetParamValue("@dugaar", Convert.ToInt32(item["group1/dugaar"]));
                         cmd.SetParamValue("@h1", ToDecimal(item["g16/g14/h1"]));
                         cmd.SetParamValue("@h2", ToDecimal(item["g16/g14/h2"]));
                         cmd.SetParamValue("@h3", ToDecimal(item["g16/g14/h3"]));
