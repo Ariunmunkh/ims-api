@@ -549,7 +549,7 @@ updatedby=@updatedby");
         public MResult GetTreeDropdown(bool issurvey)
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT DISTINCT
+            cmd.CommandText(@"SELECT
     household.status,
     householdstatus.name statusname,
     COALESCE(household.districtid,-1) districtid,
@@ -558,7 +558,9 @@ updatedby=@updatedby");
     COALESCE(household.householdgroupid,-1) householdgroupid,
     COALESCE(householdgroup.name,'Хоосон') householdgroupname,
     COALESCE(household.coachid,-1) coachid,
-    COALESCE(coach.name,'Хоосон') coachname
+    COALESCE(coach.name,'Хоосон') coachname,
+    household.householdid,
+    household.name
 FROM
     household
         LEFT JOIN
@@ -568,7 +570,7 @@ FROM
         LEFT JOIN
     householdgroup ON householdgroup.id = household.householdgroupid
         LEFT JOIN
-    coach ON coach.coachid = household.coachid" + (issurvey ? "where exists (select null from householdsurvey where householdsurvey.householdid = household.householdid)" : string.Empty));
+    coach ON coach.coachid = household.coachid" + (issurvey ? " where exists (select null from householdsurvey where householdsurvey.householdid = household.householdid)" : string.Empty));
             MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
@@ -581,6 +583,7 @@ FROM
                 DataRow[] sections;
                 DataRow[] groups;
                 DataRow[] coachs;
+                DataRow[] households;
                 using (DataSet ds = new DataSet())
                 {
                     ds.Tables.Add(data.DefaultView.ToTable("status", true, "status", "statusname"));
@@ -588,6 +591,7 @@ FROM
                     ds.Tables.Add(data.DefaultView.ToTable("section", true, "status", "districtid", "section"));
                     ds.Tables.Add(data.DefaultView.ToTable("group", true, "status", "districtid", "section", "householdgroupid", "householdgroupname"));
                     ds.Tables.Add(data.DefaultView.ToTable("coach", true, "status", "districtid", "section", "householdgroupid", "coachid", "coachname"));
+                    ds.Tables.Add(data.DefaultView.ToTable("household", true, "status", "districtid", "section", "householdgroupid", "coachid", "householdid", "name"));
 
                     foreach (DataRow status in ds.Tables["status"].Rows)
                     {
@@ -627,7 +631,21 @@ FROM
                                         Hashtable cht = new Hashtable();
                                         cht.Add("key", coachs[m]["coachid"]);
                                         cht.Add("name", coachs[m]["coachname"]);
+
+                                        List<object> householdlist = new List<object>();
+
+                                        households = ds.Tables["household"].Select("status='" + status["status"] + "' and districtid='" + districts[i]["districtid"] + "' and section='" + sections[j]["section"] + "' and householdgroupid='" + groups[k]["householdgroupid"] + "' and coachid = '" + coachs[m]["coachid"] + "'");
+                                        for (int n = households.Length - 1; n >= 0; n--)
+                                        {
+                                            Hashtable hht = new Hashtable();
+                                            hht.Add("key", households[n]["householdid"]);
+                                            hht.Add("name", households[n]["name"]);
+                                            ds.Tables["household"].Rows.Remove(households[n]);
+                                            householdlist.Add(hht);
+                                        }
+
                                         ds.Tables["coach"].Rows.Remove(coachs[m]);
+                                        cht.Add("household", householdlist);
                                         coachlist.Add(cht);
                                     }
 

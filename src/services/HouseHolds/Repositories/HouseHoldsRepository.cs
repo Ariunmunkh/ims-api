@@ -171,13 +171,13 @@ FROM
     WHERE
         householdsurvey.dugaar IN ({0})
             AND household.status = @status
-            AND (0 = @districtid
+            AND (1 > @districtid
             OR household.districtid = @districtid)
-            AND (0 = @section
+            AND (1 > @section
             OR household.section = @section)
-            AND (0 = @householdgroupid
+            AND (1 > @householdgroupid
             OR household.householdgroupid = @householdgroupid)
-            AND (0 = @householdid
+            AND (1 > @householdid
             OR household.householdid = @householdid)
     GROUP BY householdsurvey.dugaar) data", string.Join(",", filter.dugaar)));
             cmd.AddParam("@status", DbType.Int32, filter.status, ParameterDirection.Input);
