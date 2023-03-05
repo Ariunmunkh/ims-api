@@ -491,9 +491,34 @@ updatedby=@updatedby");
                     cmd.AddParam("@survey", DbType.String, ParameterDirection.Input);
                     cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
+                    MCommand cmdvisit = connector.PopCommand();
+                    cmdvisit.CommandText(@"insert into householdvisit
+(visitid,
+householdid,
+visitdate,
+memberid,
+coachid,
+note,
+updatedby)
+values
+((select coalesce(max(b.visitid),0)+1 from householdvisit b),
+@householdid,
+@visitdate,
+(select max(b.memberid) from householdmember b where b.householdid = @householdid),
+(select max(b.coachid) from household b where b.householdid = @householdid),
+@note,
+@updatedby)");
+
+                    cmdvisit.AddParam("@householdid", DbType.Int32, ParameterDirection.Input);
+                    cmdvisit.AddParam("@visitdate", DbType.DateTime, ParameterDirection.Input);
+                    cmdvisit.AddParam("@note", DbType.String, "kobo", ParameterDirection.Input);
+                    cmdvisit.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                    int householdid;
                     foreach (var item in jsonLinq)
                     {
-                        cmd.SetParamValue("@householdid", Convert.ToInt32(item["group1/id_pull"]));
+                        householdid = Convert.ToInt32(item["group1/id_pull"]);
+                        cmd.SetParamValue("@householdid", householdid);
                         cmd.SetParamValue("@dugaar", Convert.ToInt32(item["group1/dugaar"]));
                         cmd.SetParamValue("@h1", ToDecimal(item["g16/g14/h1"]));
                         cmd.SetParamValue("@h2", ToDecimal(item["g16/g14/h2"]));
@@ -510,6 +535,13 @@ updatedby=@updatedby");
                         cmd.SetParamValue("@h13", ToDecimal(item["g16/g14/h13"]));
                         cmd.SetParamValue("@survey", item.ToString());
                         result = connector.Execute(ref cmd, false);
+                        if (result.rettype != 0)
+                            return result;
+
+
+                        cmdvisit.SetParamValue("@householdid",householdid);
+                        cmdvisit.SetParamValue("@visitdate", Convert.ToDateTime(item["end"]));
+                        result = connector.Execute(ref cmdvisit, false);
                         if (result.rettype != 0)
                             return result;
                     }
