@@ -14,13 +14,6 @@ services:
       context: .
       dockerfile: src/services/HouseHolds/Dockerfile
     container_name: households
-
-  deliveries:
-    image: deliveries:latest
-    build:
-      context: .
-      dockerfile: src/services/Deliveries/Dockerfile
-    container_name: deliveries
     
   systems:
     image: systems:latest

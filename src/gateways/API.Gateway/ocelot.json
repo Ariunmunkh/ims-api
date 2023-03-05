@@ -18,23 +18,6 @@
       "ServiceName": "households"
     },
     {
-      "DownstreamPathTemplate": "/api/deliveries/{everything}",
-      "DownstreamScheme": "http",
-      "ServiceName": "deliveries",
-      "UpstreamPathTemplate": "/api/deliveries/{everything}",
-      "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": null,
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/swagger/v1/swagger.json",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/deliveries/docs/swagger.json",
-      "ServiceName": "deliveries"
-    },
-    {
       "DownstreamPathTemplate": "/api/systems/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "systems",
