@@ -5,12 +5,12 @@ ssh-keygen
 ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
-ssh-copy-id -i ~/.ssh/id_rsa root@159.223.36.47
+ssh-copy-id -i ~/.ssh/id_rsa root@157.230.46.90
 p@ssW0rd
 r@dcr0ss
 fw*+!*Q%G^AA@a$&
 
-export DOCKER_HOST=ssh://root@159.223.36.47
+export DOCKER_HOST=ssh://root@157.230.46.90
 
 cd D:/PROJECTS_TFS/ul-api
 cd D:/PROJECTS_TFS/ul-ui
@@ -26,7 +26,7 @@ docker ps -a
 docker image prune -a
 service docker restart
 
-export DOCKER_HOST=ssh://root@159.223.36.47
+export DOCKER_HOST=ssh://root@157.230.46.90
 cd D:/PROJECTS_TFS/ul-api
 docker-compose build
 docker-compose up -d
@@ -34,14 +34,14 @@ docker-compose up -d
 docker-compose build households
 docker-compose up -d households
 
-export DOCKER_HOST=ssh://root@159.223.36.47
+export DOCKER_HOST=ssh://root@157.230.46.90
 cd D:/PROJECTS_TFS/ul-ui
 docker-compose build
 docker-compose up -d
 
 username = doadmin
-password = AVNS_Ujd6ZQpHo03dbea_Jcz
-host = db-mysql-sgp1-90416-do-user-12986538-0.b.db.ondigitalocean.com
+password = AVNS_fzoPdpHhG59vNnK8Nh6
+host = db-mysql-sgp1-81348-do-user-13661090-0.b.db.ondigitalocean.com
 port = 25060
 database = defaultdb
 sslmode = REQUIRED
