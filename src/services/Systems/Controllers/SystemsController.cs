@@ -43,5 +43,17 @@ namespace Systems.Controllers
                 return Unauthorized(result);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost("password_recovery")]
+        public IActionResult PasswordRecovery(string username, string email)
+        {
+            return Ok(_SystemsRepository.PasswordRecovery(username, email));
+        }
     }
 }

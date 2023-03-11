@@ -1,5 +1,6 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
+using LConnection;
 using LConnection.Model;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -136,5 +137,39 @@ namespace Systems.Repositories
             return claims;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public MResult PasswordRecovery(string username, string email)
+        {
+            try
+            {
+                MCommand cmd = connector.PopCommand();
+                cmd.CommandText("select * from tbluser where username = @username and email = @email");
+                cmd.AddParam("@email", DbType.String, email, ParameterDirection.Input);
+                cmd.AddParam("@username", DbType.String, username, ParameterDirection.Input);
+                MResult result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+
+                }
+                else
+                {
+                    return new MResult { rettype = -1, retmsg = "Хэрэглэгч бүртгэлгүй байна." };
+                }
+
+                return EmailSender.EmailSending(email, "Hi", "test email");
+            }
+            catch (Exception ex)
+            {
+                return new MResult { rettype = -1, retmsg = ex.Message };
+            }
+        }
     }
 }
