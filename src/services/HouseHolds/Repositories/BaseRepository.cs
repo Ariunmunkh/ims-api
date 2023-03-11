@@ -512,7 +512,13 @@ values
                     cmdvisit.AddParam("@householdid", DbType.Int32, ParameterDirection.Input);
                     cmdvisit.AddParam("@visitdate", DbType.DateTime, ParameterDirection.Input);
                     cmdvisit.AddParam("@note", DbType.String, "kobo", ParameterDirection.Input);
-                    cmdvisit.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                    cmdvisit.AddParam("@updatedby", DbType.Int32, -1, ParameterDirection.Input);
+
+                    MCommand cmdduplicate = connector.PopCommand();
+                    cmdduplicate.CommandText(@"delete from householdvisit where updatedby = -1");
+                    result = connector.Execute(ref cmdduplicate, false);
+                    if (result.rettype != 0)
+                        return result;
 
                     int householdid;
                     foreach (var item in jsonLinq)
