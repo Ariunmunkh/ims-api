@@ -48,6 +48,7 @@ householdid int not null,
 status int default 0,
 numberof int,
 name varchar(200),
+headmemberid int,
 memberid int,
 householdgroupid int,
 districtid int,
@@ -70,7 +71,9 @@ CONSTRAINT fk_household_districtid FOREIGN KEY (districtid) REFERENCES district(
 INDEX ind_household_coachid (coachid),
 CONSTRAINT fk_household_coachid FOREIGN KEY (coachid) REFERENCES coach(coachid),
 INDEX ind_household_memberid (memberid),
-CONSTRAINT fk_household_memberid FOREIGN KEY (memberid) REFERENCES householdmember(memberid)
+CONSTRAINT fk_household_memberid FOREIGN KEY (memberid) REFERENCES householdmember(memberid),
+INDEX ind_household_headmemberid (headmemberid),
+CONSTRAINT fk_household_headmemberid FOREIGN KEY (headmemberid) REFERENCES householdmember(memberid)
 );
 create table householdsurvey (
 householdid int not null,

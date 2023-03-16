@@ -555,6 +555,16 @@ updatedby=@updatedby");
                 if (result.rettype != 0)
                     return result;
             }
+            if (request.relationshipid == 1)
+            {
+                cmd.CommandText(@"update household a set a.headmemberid = @memberid where a.householdid = @householdid");
+                cmd.ClearParam();
+                cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+                cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, true);
+                if (result.rettype != 0)
+                    return result;
+            }
 
             cmd.CommandText(@"update household a set 
 a.name = (select max(b.name) from householdmember b where b.householdid = a.householdid and b.isparticipant = true), 

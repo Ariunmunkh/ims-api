@@ -39,6 +39,7 @@ namespace HouseHolds
         {
             ConfigureConsul(services);
             services.AddHttpClient();
+            services.AddTransient<IReportRepository, ReportRepository>();
             services.AddTransient<IBaseRepository, BaseRepository>();
             services.AddTransient<ICoachRepository, CoachRepository>();
             services.AddTransient<IHouseHoldsRepository, HouseHoldsRepository>();

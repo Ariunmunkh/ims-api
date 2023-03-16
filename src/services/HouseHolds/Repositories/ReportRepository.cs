@@ -1,0 +1,1460 @@
+﻿using BaseLibrary.LConnection;
+using Connection.Model;
+using LConnection.Model;
+using System.Data;
+using HouseHolds.Models;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections;
+
+namespace HouseHolds.Repositories
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ReportRepository : IReportRepository
+    {
+        private readonly DWConnector connector;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_connector"></param>
+        public ReportRepository(DWConnector _connector)
+        {
+            connector = _connector;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdGenderCount(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(1) count
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid 
+where household.status = @status
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(1) count
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+where household.status = @status
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdGenderCountDistrict(int status, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(1) count
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(1) count
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetParticipantGenderCount(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid 
+where household.status = @status
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+where household.status = @status
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetParticipantGenderCountDistrict(int status, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetParticipantAgeCount(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) < 25 or householdmember.birthdate is null THEN 1
+        ELSE NULL
+    END) age24,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) between 25 and 54 THEN 1
+        ELSE NULL
+    END) age54,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) > 54 THEN 1
+        ELSE NULL
+    END) agemax
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid 
+where household.status = @status
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) < 25 or householdmember.birthdate is null THEN 1
+        ELSE NULL
+    END) age24,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) between 25 and 54 THEN 1
+        ELSE NULL
+    END) age54,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) > 54 THEN 1
+        ELSE NULL
+    END) agemax
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+where household.status = @status
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetParticipantAgeCountDistrict(int status, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) < 25 or householdmember.birthdate is null THEN 1
+        ELSE NULL
+    END) age24,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) between 25 and 54 THEN 1
+        ELSE NULL
+    END) age54,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) > 54 THEN 1
+        ELSE NULL
+    END) agemax
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) < 25 or householdmember.birthdate is null THEN 1
+        ELSE NULL
+    END) age24,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) between 25 and 54 THEN 1
+        ELSE NULL
+    END) age54,
+    COUNT(CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) > 54 THEN 1
+        ELSE NULL
+    END) agemax
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetParticipantDisabledCount(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        inner JOIN
+    householdmember ON householdmember.memberid = household.memberid 
+where household.status = @status
+and householdmember.healthconditionid in (1)
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        inner JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+where household.status = @status
+and householdmember.healthconditionid in (2)
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetParticipantDisabledCountDistrict(int status, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        inner JOIN
+    householdmember ON householdmember.memberid = household.memberid
+where household.status = @status
+and household.districtid = @districtid
+and householdmember.healthconditionid in (2)
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        inner JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+and householdmember.healthconditionid in (2)
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseheadGenderCount(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid 
+where household.status = @status
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+where household.status = @status
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHouseheadGenderCountDistrict(int status, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHousesingleGenderCount(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid 
+where household.status = @status
+and not exists (select null from householdmember b where b.relationshipid = 2 and b.householdid = household.householdid group by b.householdid having count(1)>0)
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+where household.status = @status
+and not exists (select null from householdmember b where b.relationshipid = 2 and b.householdid = household.householdid group by b.householdid having count(1)>0)
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHousesingleGenderCountDistrict(int status, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+where household.status = @status
+and household.districtid = @districtid
+and not exists (select null from householdmember b where b.relationshipid = 2 and b.householdid = household.householdid group by b.householdid having count(1)>0)
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN householdmember.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN householdmember.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN householdmember.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+and not exists (select null from householdmember b where b.relationshipid = 2 and b.householdid = household.householdid group by b.householdid having count(1)>0)
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdWorkingAgeCount(int status, int gender)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 18 AND 55 
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 18 AND 55
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdWorkingAgeCountDistrict(int status, int gender, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+where household.status = @status
+and household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 18 AND 55 
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 18 AND 55 
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdSchoolAgeCount(int status, int gender)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 6 AND 17 
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 6 AND 17 
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdSchoolAgeCountDistrict(int status, int gender, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+where household.status = @status
+and household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 6 AND 17
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) BETWEEN 6 AND 17 
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdKindergartenAgeCount(int status, int gender)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) < 6
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) < 6
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdKindergartenAgeCountDistrict(int status, int gender, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+where household.status = @status
+and household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) < 6
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    COUNT(CASE
+        WHEN member.gender = 0 THEN 1
+        ELSE NULL
+    END) male,
+    COUNT(CASE
+        WHEN member.gender = 1 THEN 1
+        ELSE NULL
+    END) female,
+    COUNT(CASE
+        WHEN member.gender IS NULL THEN 1
+        ELSE NULL
+    END) none
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember member ON member.householdid = household.householdid
+        AND member.memberid <> household.memberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+and household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+        AND TIMESTAMPDIFF(YEAR,
+        member.birthdate,
+        CURDATE()) < 6
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public MResult GetHousemenberAvg(int status, int gender)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    avg(household.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+     
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    avg(household.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetHousemenberAvgDistrict(int status, int gender, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    avg(household.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+where household.status = @status
+        AND household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    avg(household.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+        AND household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public MResult GetDisabledAvg(int status, int gender)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    1 rowno,
+    - 1 id,
+    'Бүгд' name,
+    avg(disabled.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        left join (select b.householdid, count(1) numberof from householdmember b where b.healthconditionid in (2) group by b.householdid)
+    disabled on disabled.householdid = household.householdid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+     
+UNION SELECT 
+    2 rowno,
+    household.districtid rowno,
+    district.name,
+    avg(disabled.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        left join (select b.householdid, count(1) numberof from householdmember b where b.healthconditionid in (2) group by b.householdid)
+    disabled on disabled.householdid = household.householdid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+WHERE
+    household.status = @status
+        AND (householdmember.gender = @gender or -1 = @gender)
+
+GROUP BY household.districtid , district.name) tbl order by rowno, id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="gender"></param>
+        /// <param name="districtid"></param>
+        /// <returns></returns>
+        public MResult GetDisabledAvgDistrict(int status, int gender, int districtid)
+        {
+            Hashtable retdata = new Hashtable();
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select * from (SELECT 
+    household.section id,
+    household.section ||' хороо' name,
+    avg(disabled.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        left join (select b.householdid, count(1) numberof from householdmember b where b.healthconditionid in (2) group by b.householdid)
+    disabled on disabled.householdid = household.householdid
+where household.status = @status
+        AND household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+GROUP BY household.section) tbl order by id");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            cmd.AddParam("@gender", DbType.Int32, gender, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("section", result.retdata);
+
+            cmd.CommandText(@"select * from (SELECT 
+    household.coachid id,
+    COALESCE(coach.name,'Коучгүй') name,
+    avg(disabled.numberof) avg
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.headmemberid
+        left join (select b.householdid, count(1) numberof from householdmember b where b.healthconditionid in (2) group by b.householdid)
+    disabled on disabled.householdid = household.householdid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+where household.status = @status
+        AND household.districtid = @districtid
+        AND (householdmember.gender = @gender or -1 = @gender)
+GROUP BY household.coachid, coach.name) tbl order by id");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            retdata.Add("coach", result.retdata);
+
+            return new MResult { retdata = retdata };
+        }
+
+    }
+}
