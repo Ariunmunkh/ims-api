@@ -298,6 +298,8 @@ updatedby=@updatedby");
     DATE_FORMAT(householdvisit.visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     householdvisit.memberid,
     householdmember.name membername,
+    district.name districtname,
+    household.section,
     householdvisit.coachid,
     coach.name coachname,
     householdvisit.note,
@@ -305,11 +307,12 @@ updatedby=@updatedby");
 FROM
     householdvisit
 left join household on household.householdid = householdvisit.householdid
+left join district on district.districtid = household.districtid
 left join householdmember on householdmember.memberid = householdvisit.memberid
 left join coach on coach.coachid = householdvisit.coachid
 where (householdvisit.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by householdvisit.updated desc");
+order by householdvisit.visitdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -446,13 +449,17 @@ updatedby=@updatedby");
     meetingattendance.quantity,
     meetingattendance.amount,
     FORMAT(meetingattendance.amount,2) famount,
+    household.name householdname,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(meetingattendance.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
 left join household on household.householdid = meetingattendance.householdid
+left join district on district.districtid = household.districtid
 where (meetingattendance.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by meetingattendance.updated desc");
+order by meetingattendance.meetingdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -587,14 +594,18 @@ updatedby=@updatedby");
     FORMAT(loan.amount,2) amount,
     loan.loanpurposeid,
     loanpurpose.name loanpurpose,
+    household.name householdname,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(loan.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
 left join household on household.householdid = loan.householdid
+left join district on district.districtid = household.districtid
 left join loanpurpose on loanpurpose.id = loan.loanpurposeid
 where (loan.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by loan.updated desc");
+order by loan.loandate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -723,13 +734,17 @@ updatedby=@updatedby");
     DATE_FORMAT(loanrepayment.repaymentdate, '%Y-%m-%d %H:%i:%s') repaymentdate,
     FORMAT(loanrepayment.amount,2) amount,
     FORMAT(loanrepayment.balance,2) balance,
+    household.name householdname,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(loanrepayment.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loanrepayment
 left join household on household.householdid = loanrepayment.householdid
+left join district on district.districtid = household.districtid
 where (loanrepayment.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by loanrepayment.updated desc");
+order by loanrepayment.repaymentdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -863,20 +878,27 @@ updatedby=@updatedby");
     training.organizationid,
     organization.name organization,
     training.duration,
-    training.isjoin,
+    case
+        when training.isjoin = 0 then 'Үгүй'
+        when training.isjoin = 1 then 'Тийм'
+        else 'Хоосон'
+    end isjoin,
     training.memberid,
     householdmember.name membername,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(training.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     training
 left join household on household.householdid = training.householdid
+left join district on district.districtid = household.districtid
 left join householdmember on householdmember.memberid = training.memberid
 left join trainingtype on trainingtype.id = training.trainingtypeid
 left join trainingandactivity on trainingandactivity.id = training.trainingandactivityid
 left join organization on organization.id = training.organizationid
 where (training.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by training.updated desc");
+order by training.trainingdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -1026,14 +1048,18 @@ updatedby=@updatedby");
     improvement.selectedfarm,
     improvement.subbranchid,
     subbranch.name subbranch,
+    household.name householdname,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(improvement.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     improvement
 left join household on household.householdid = improvement.householdid
+left join district on district.districtid = household.districtid
 left join subbranch on subbranch.id = improvement.subbranchid
 where (improvement.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by improvement.updated desc");
+order by improvement.plandate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -1170,15 +1196,19 @@ updatedby=@updatedby");
     investment.totalprice,
     FORMAT(investment.totalprice,2) ftotalprice,
     investment.note,
+    household.name householdname,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(investment.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     investment
 left join household on household.householdid = investment.householdid
+left join district on district.districtid = household.districtid
 left join assetreceivedtype on assetreceivedtype.id = investment.assetreceivedtypeid
 left join assetreceived on assetreceived.id = investment.assetreceivedid
 where (investment.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by investment.updated desc");
+order by investment.investmentdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -1335,15 +1365,19 @@ updatedby=@updatedby");
     FORMAT(othersupport.totalprice,2) ftotalprice,
     othersupport.sponsoringorganizationid,
     sponsoringorganization.name sponsoringorganization,
+    household.name householdname,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(othersupport.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     othersupport
 left join household on household.householdid = othersupport.householdid
+left join district on district.districtid = household.districtid
 left join supportreceivedtype on supportreceivedtype.id = othersupport.supportreceivedtypeid
 left join sponsoringorganization on sponsoringorganization.id = othersupport.sponsoringorganizationid
 where (othersupport.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by othersupport.updated desc");
+order by othersupport.supportdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -1497,18 +1531,21 @@ updatedby=@updatedby");
     mediatedactivity.proxyserviceid,
     proxyservice.name proxyservice,
     mediatedactivity.memberid, 
-    householdmember.name membername, 
+    householdmember.name membername,
+    district.name districtname,
+    household.section,
     DATE_FORMAT(mediatedactivity.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     mediatedactivity
 left join householdmember on householdmember.memberid = mediatedactivity.memberid
 left join household on household.householdid = mediatedactivity.householdid
+left join district on district.districtid = household.districtid
 left join mediatedservicetype on mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
 left join intermediaryorganization on intermediaryorganization.id = mediatedactivity.intermediaryorganizationid
 left join proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
 where (mediatedactivity.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
-order by mediatedactivity.updated desc");
+order by mediatedactivity.mediateddate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);

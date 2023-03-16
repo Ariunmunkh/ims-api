@@ -44,7 +44,13 @@ namespace HouseHolds.Repositories
     household.householdid,
     household.numberof,
     household.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
     household.householdgroupid,
+    householdgroup.name householdgroupname,
     district.name districtname,
     household.section,
     household.address,
@@ -53,8 +59,10 @@ namespace HouseHolds.Repositories
     household.coachid
 FROM
     household
+left join householdmember on householdmember.memberid = household.memberid
 left join district on district.districtid = household.districtid
 left join householdstatus on householdstatus.id = household.status
+LEFT JOIN householdgroup ON householdgroup.id = household.householdgroupid
 where (household.coachid = @coachid or 0 = @coachid) 
 and household.status = @status 
 and (household.householdgroupid = @group or 0 = @group)
@@ -214,6 +222,8 @@ FROM
     household.phone,
     household.status,
     household.coachid,
+    household.latitude,
+    household.longitude,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     household
@@ -236,6 +246,18 @@ where householdid = @householdid");
             MCommand cmd = connector.PopCommand();
             MResult result;
 
+            if (request.isnew.HasValue && request.isnew.Value)
+            {
+                cmd.CommandText("select count(1) too from household where householdid = @householdid");
+                cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0 && Convert.ToInt32(data.Rows[0]["too"]) > 0)
+                {
+                    return new MResult { retdata = request.householdid };
+                }
+            }
             if (request.householdid == 0)
             {
                 cmd.CommandText(@"select coalesce(max(householdid),0)+1 newid from household");
@@ -259,6 +281,8 @@ address,
 phone,
 status,
 coachid,
+latitude,
+longitude,
 updatedby)
 values
 (@householdid,
@@ -271,6 +295,8 @@ values
 @phone,
 @status,
 @coachid,
+@latitude,
+@longitude,
 @updatedby) 
 on duplicate key update 
 numberof=@numberof,
@@ -282,6 +308,8 @@ address=@address,
 phone=@phone,
 status=@status,
 coachid=@coachid,
+latitude=@latitude,
+longitude=@longitude,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -295,6 +323,8 @@ updatedby=@updatedby");
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
+            cmd.AddParam("@latitude", DbType.String, request.latitude, ParameterDirection.Input);
+            cmd.AddParam("@longitude", DbType.String, request.longitude, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, true);
@@ -372,7 +402,8 @@ WHERE
     date_format(householdmember.birthdate, '%Y-%m-%d') birthdate,
     case
         when householdmember.gender = 0 then 'Эрэгтэй'
-        else 'Эмэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
     end gender,
     case
         when householdmember.istogether = 0 then 'Үгүй'
@@ -513,6 +544,17 @@ updatedby=@updatedby");
             result = connector.Execute(ref cmd, true);
             if (result.rettype != 0)
                 return result;
+
+            if (request.isparticipant)
+            {
+                cmd.CommandText(@"update householdmember set isparticipant = 0 where householdid = @householdid and memberid <> @memberid");
+                cmd.ClearParam();
+                cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+                cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, true);
+                if (result.rettype != 0)
+                    return result;
+            }
 
             cmd.CommandText(@"update household a set 
 a.name = (select max(b.name) from householdmember b where b.householdid = a.householdid and b.isparticipant = true), 

@@ -58,6 +58,20 @@ namespace HouseHolds.Models
         /// </summary>
         public int coachid { get; set; }
 
+        /// <summary>
+        /// Өргөрөг
+        /// </summary>
+        public string latitude { get; set; }
+
+        /// <summary>
+        /// Уртраг
+        /// </summary>
+        public string longitude { get; set; }
+
+        /// <summary>
+        /// Жагсаалтнаас шинэ 
+        /// </summary>
+        public bool? isnew { get; set; }
     }
 
     /// <summary>
@@ -93,7 +107,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Хүйс 0-эр, 1-эм
         /// </summary>
-        public int gender { get; set; }
+        public int? gender { get; set; }
 
         /// <summary>
         /// Гол оролцогч
@@ -108,17 +122,17 @@ namespace HouseHolds.Models
         /// <summary>
         /// Боловсролын зэрэг
         /// </summary>
-        public int educationdegreeid { get; set; }
+        public int? educationdegreeid { get; set; }
 
         /// <summary>
         /// Хөдөлмөр эрхлэлтийн байдал
         /// </summary>
-        public int employmentstatusid { get; set; }
+        public int? employmentstatusid { get; set; }
 
         /// <summary>
         /// Эрүүл мэндийн байдал
         /// </summary>
-        public int healthconditionid { get; set; }
+        public int? healthconditionid { get; set; }
 
     }
 

@@ -12,12 +12,6 @@ fw*+!*Q%G^AA@a$&
 
 export DOCKER_HOST=ssh://root@157.230.46.90
 
-cd D:/PROJECTS_TFS/ul-api
-cd D:/PROJECTS_TFS/ul-ui
-
-docker-compose build
-docker-compose up -d
-
 docker stop 2d946ba0a560
 docker rmi -f 2d946ba0a560
 docker rm 2d946ba0a560
@@ -27,7 +21,7 @@ docker image prune -a
 service docker restart
 
 export DOCKER_HOST=ssh://root@157.230.46.90
-cd D:/PROJECTS_TFS/ul-api
+cd D:/PROJECTS_TFS/dms-api
 docker-compose build
 docker-compose up -d
 
@@ -35,16 +29,9 @@ docker-compose build households
 docker-compose up -d households
 
 export DOCKER_HOST=ssh://root@157.230.46.90
-cd D:/PROJECTS_TFS/ul-ui
+cd D:/PROJECTS_TFS/dms-ui
 docker-compose build
 docker-compose up -d
-
-username = doadmin
-password = AVNS_fzoPdpHhG59vNnK8Nh6
-host = db-mysql-sgp1-81348-do-user-13661090-0.b.db.ondigitalocean.com
-port = 25060
-database = defaultdb
-sslmode = REQUIRED
 
 dms.digitalocean@gmail.com
 r@dcr0ss
