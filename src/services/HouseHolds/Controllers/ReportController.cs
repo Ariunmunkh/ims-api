@@ -25,6 +25,61 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
+        /// Газарын зураг ба өрхүүд
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_location")]
+        public IActionResult GetHouseholdLocation(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdLocation(status));
+        }
+
+        /// <summary>
+        /// Өрхийн гишүүд
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_member")]
+        public IActionResult GetHouseholdMember(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdMember(status));
+        }
+
+        /// <summary>
+        /// Өрхийн Амьжиргааг дэмжих
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_improvement")]
+        public IActionResult GetHouseholdImprovement(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdImprovement(status));
+        }
+
+        /// <summary>
+        /// Өрхийн Хүлээн авсан хөрөнгө
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_investment")]
+        public IActionResult GetHouseholdInvestment(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdInvestment(status));
+        }
+
+        /// <summary>
+        /// Өрхийн Сургалт, үйл ажиллагаа
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_training")]
+        public IActionResult GetHouseholdTraining(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdTraining(status));
+        }
+
+        /// <summary>
         /// Нийт өрхийн тоо/нийт, хороо, дүүрэг, коучээр харах/
         /// </summary>
         /// <param name="status"></param>

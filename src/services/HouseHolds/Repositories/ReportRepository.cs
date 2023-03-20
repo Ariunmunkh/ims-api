@@ -32,6 +32,338 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
+        public MResult GetHouseholdLocation(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdMember(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+case when householdmember.isparticipant = true then 'Мөн' else 'Биш' end isparticipant,
+    householdmember.istogether,
+    householdmember.relationshipid,
+    relationship.name relationshipname,
+    householdmember.educationdegreeid,
+    COALESCE(educationdegree.name,'Боловсролын зэрэг хоосон') educationdegreename,
+    householdmember.employmentstatusid,
+    COALESCE(employmentstatus.name,'Хөдөлмөр эрхлэлтийн байдал хоосон') employmentstatusname,
+    householdmember.healthconditionid,
+    COALESCE(healthcondition.name,'Эрүүл мэндийн байдал хоосон') healthconditionname,      
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+       CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) < 25 THEN 'age24'
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) between 25 and 54 THEN 'age54'
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) > 54 THEN 'agemax'
+        ELSE 'Хоосон'
+    END agecategory,
+       CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) between 18 and 55 THEN 1
+        ELSE 0
+    END employmentage,
+       CASE
+        WHEN TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) < 6 THEN 1
+        ELSE 0
+    END kindergartenage
+FROM
+    household
+        LEFT JOIN
+    householdmember ON householdmember.householdid = household.householdid
+        LEFT JOIN
+    relationship on relationship.relationshipid = householdmember.relationshipid
+        left join
+    educationdegree on educationdegree.id = householdmember.educationdegreeid
+        left join
+    employmentstatus on employmentstatus.id = householdmember.employmentstatusid
+        left join
+    healthcondition on healthcondition.id =  householdmember.healthconditionid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdImprovement(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when improvement.entryid is null then 'Бизнесээ сонгоогүй'
+        else 'Бизнесээ сонгосон'
+    end improvement,
+    DATE_FORMAT(improvement.plandate, '%Y-%m-%d %H:%i:%s') plandate,
+    improvement.selectedfarm,
+    improvement.subbranchid,
+    subbranch.name subbranchname
+FROM
+    household
+        left join
+    improvement on improvement.householdid = household.householdid
+        left join 
+    subbranch on subbranch.id = improvement.subbranchid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdInvestment(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when investment.entryid is null then 'Хөрөнгө хүлээн аваагүй'
+        else 'Хөрөнгө хүлээн авсан'
+    end investment,
+    investment.assetreceivedid,
+    assetreceived.name assetreceivedname,
+    investment.assetreceivedtypeid,
+    assetreceivedtype.name assetreceivedtypename,
+    DATE_FORMAT(investment.investmentdate, '%Y-%m-%d %H:%i:%s') investmentdate,
+    investment.note,
+    investment.quantity,
+    investment.totalprice,
+    investment.unitprice
+FROM
+    household
+        left join
+    investment on investment.householdid = household.householdid
+        left join 
+    assetreceived on assetreceived.id = investment.assetreceivedid
+        left join 
+    assetreceivedtype on assetreceivedtype.id = investment.assetreceivedtypeid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdTraining(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when training.entryid is null then 'Сургалтанд хамрагдаж байгаагүй'
+        else 'Сургалтанд хамрагдсан'
+    end training,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    training.trainingtypeid,
+    trainingtype.name trainingtypename,
+    training.trainingandactivityid,
+    trainingandactivity.name trainingandactivityname,
+    training.organizationid,
+    organization.name organizationname,
+    training.duration,
+    training.isjoin,
+    training.memberid,
+    joinmember.name joinname
+FROM
+    household
+        left join
+    training on training.householdid = household.householdid
+        left join 
+    trainingtype on trainingtype.id = training.trainingtypeid
+        left join 
+    trainingandactivity on trainingandactivity.id = training.trainingandactivityid
+        left join 
+    organization on organization.id = training.organizationid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    householdmember joinmember ON joinmember.memberid = training.memberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public MResult GetHouseholdGenderCount(int status)
         {
             MCommand cmd = connector.PopCommand();

@@ -15,6 +15,41 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
+        MResult GetHouseholdLocation(int status);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdMember(int status);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdImprovement(int status);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdInvestment(int status);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdTraining(int status);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         MResult GetHouseholdGenderCount(int status);
 
         /// <summary>

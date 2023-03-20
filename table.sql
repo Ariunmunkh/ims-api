@@ -9,6 +9,14 @@ updated timestamp default current_timestamp,
 updatedby int,
 PRIMARY KEY (userid)
 );
+create table maritalstatus
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 create table householdstatus
 (
 id int not null,
@@ -131,6 +139,7 @@ birthdate datetime,
 gender int,
 isparticipant bool,
 istogether bool,
+maritalstatusid int,
 educationdegreeid int,
 employmentstatusid int,
 healthconditionid int,
