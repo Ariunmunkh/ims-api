@@ -155,6 +155,214 @@ where household.status = @status");
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
+        public MResult GetHouseholdVisit(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when householdvisit.visitid is null then 'Айлчлалын мэдээлэл байхгүй'
+        else 'Айлчлалын мэдээлэлтэй'
+    end householdvisit,
+    householdvisit.visitid,
+    DATE_FORMAT(householdvisit.visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
+    householdvisit.memberid,
+    visitmember.name visitmember,
+    householdvisit.coachid,
+    visitcoach.name visitcoach,
+    householdvisit.note
+FROM
+    household
+        left join
+    householdvisit on householdvisit.householdid = household.householdid
+        LEFT JOIN
+    coach visitcoach ON visitcoach.coachid = householdvisit.coachid
+        LEFT JOIN
+    householdmember visitmember ON visitmember.memberid = householdvisit.memberid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdLoan(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when loan.entryid is null then 'Зээл аваагүй'
+        else 'Зээл авсан'
+    end loan,
+    loan.entryid,
+    DATE_FORMAT(loan.loandate, '%Y-%m-%d %H:%i:%s') loandate,
+    loan.amount,
+    loan.loanpurposeid,
+    loanpurpose.name loanpurposename
+FROM
+    household
+        left join
+    loan on loan.householdid = household.householdid
+        left join 
+    loanpurpose on loanpurpose.id = loan.loanpurposeid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdTraining(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when training.entryid is null then 'Сургалтанд хамрагдаж байгаагүй'
+        else 'Сургалтанд хамрагдсан'
+    end training,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    training.trainingtypeid,
+    trainingtype.name trainingtypename,
+    training.trainingandactivityid,
+    trainingandactivity.name trainingandactivityname,
+    training.organizationid,
+    organization.name organizationname,
+    training.duration,
+    training.isjoin,
+    training.memberid,
+    joinmember.name joinname
+FROM
+    household
+        left join
+    training on training.householdid = household.householdid
+        left join 
+    trainingtype on trainingtype.id = training.trainingtypeid
+        left join 
+    trainingandactivity on trainingandactivity.id = training.trainingandactivityid
+        left join 
+    organization on organization.id = training.organizationid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
+        LEFT JOIN
+    householdmember joinmember ON joinmember.memberid = training.memberid 
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public MResult GetHouseholdImprovement(int status)
         {
             MCommand cmd = connector.PopCommand();
@@ -288,7 +496,7 @@ where household.status = @status");
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public MResult GetHouseholdTraining(int status)
+        public MResult GetHouseholdOthersupport(int status)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select
@@ -318,36 +526,106 @@ where household.status = @status");
     household.latitude,
     household.longitude,
     case
-        when training.entryid is null then 'Сургалтанд хамрагдаж байгаагүй'
-        else 'Сургалтанд хамрагдсан'
-    end training,
-    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
-    training.trainingtypeid,
-    trainingtype.name trainingtypename,
-    training.trainingandactivityid,
-    trainingandactivity.name trainingandactivityname,
-    training.organizationid,
-    organization.name organizationname,
-    training.duration,
-    training.isjoin,
-    training.memberid,
-    joinmember.name joinname
+        when othersupport.entryid is null then 'Дэмжлэг хүлээн аваагүй'
+        else 'Дэмжлэг хүлээн авсан'
+    end othersupport,
+    othersupport.entryid,
+    DATE_FORMAT(othersupport.supportdate, '%Y-%m-%d %H:%i:%s') supportdate,
+    othersupport.supportreceivedtypeid,
+    supportreceivedtype.name supportreceivedtypename,
+    othersupport.name othersupportname, 
+    othersupport.quantity,
+    othersupport.unitprice,
+    othersupport.totalprice,
+    othersupport.sponsoringorganizationid,
+    sponsoringorganization.name sponsoringorganizationname
 FROM
     household
         left join
-    training on training.householdid = household.householdid
+    othersupport on othersupport.householdid = household.householdid
         left join 
-    trainingtype on trainingtype.id = training.trainingtypeid
+    supportreceivedtype on supportreceivedtype.id = othersupport.supportreceivedtypeid
         left join 
-    trainingandactivity on trainingandactivity.id = training.trainingandactivityid
-        left join 
-    organization on organization.id = training.organizationid
+    sponsoringorganization on sponsoringorganization.id = othersupport.sponsoringorganizationid
         LEFT JOIN
     householdmember ON householdmember.memberid = household.memberid
         LEFT JOIN
     householdmember head ON head.memberid = household.headmemberid 
         LEFT JOIN
-    householdmember joinmember ON joinmember.memberid = training.memberid 
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+        LEFT JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+where household.status = @status");
+            cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdMediatedactivity(int status)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select
+    household.householdid,
+    household.districtid,
+    district.name districtname,
+    household.districtid ||'-'|| household.section districtsection,
+    household.section,
+    COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
+    household.coachid,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.name,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    TIMESTAMPDIFF(YEAR,householdmember.birthdate,CURDATE()) age,
+    head.name headname,
+    case
+        when head.gender = 0 then 'Эрэгтэй'
+        when head.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end headgender,
+    TIMESTAMPDIFF(YEAR,head.birthdate,CURDATE()) headage,
+    household.latitude,
+    household.longitude,
+    case
+        when mediatedactivity.entryid is null then 'Дэмжлэг хүлээн аваагүй'
+        else 'Дэмжлэг хүлээн авсан'
+    end mediatedactivity,
+    mediatedactivity.entryid,
+    DATE_FORMAT(mediatedactivity.mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
+    mediatedactivity.mediatedservicetypeid,
+    mediatedservicetype.name mediatedservicetypename,
+    mediatedactivity.intermediaryorganizationid,
+    intermediaryorganization.name intermediaryorganizationname,
+    mediatedactivity.proxyserviceid,
+    proxyservice.name proxyservicename,
+    mediatedactivity.memberid,
+    servicemember.name servicemember
+FROM
+    household
+        left join
+    mediatedactivity on mediatedactivity.householdid = household.householdid
+        left join 
+    mediatedservicetype on mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
+        left join 
+    intermediaryorganization on intermediaryorganization.id = mediatedactivity.intermediaryorganizationid
+        left join 
+    proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
+        left join 
+    householdmember servicemember on servicemember.memberid = mediatedactivity.memberid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    householdmember head ON head.memberid = household.headmemberid 
         LEFT JOIN
     district ON district.districtid = household.districtid
         LEFT JOIN

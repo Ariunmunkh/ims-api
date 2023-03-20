@@ -29,6 +29,27 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
+        MResult GetHouseholdVisit(int status);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdLoan(int status);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdTraining(int status);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         MResult GetHouseholdImprovement(int status);
         
         /// <summary>
@@ -37,13 +58,20 @@ namespace HouseHolds.Repositories
         /// <param name="status"></param>
         /// <returns></returns>
         MResult GetHouseholdInvestment(int status);
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        MResult GetHouseholdTraining(int status);
+        MResult GetHouseholdOthersupport(int status);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        MResult GetHouseholdMediatedactivity(int status);
 
         /// <summary>
         /// 

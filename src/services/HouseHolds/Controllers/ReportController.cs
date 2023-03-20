@@ -47,6 +47,39 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
+        /// Өрхийн айлчлалын мэдээлэл
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_visit")]
+        public IActionResult GetHouseholdVisit(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdVisit(status));
+        }
+
+        /// <summary>
+        /// Өрхийн Зээлийн мэдээлэл
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_loan")]
+        public IActionResult GetHouseholdLoan(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdLoan(status));
+        }
+
+        /// <summary>
+        /// Өрхийн Сургалт, үйл ажиллагаа
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_training")]
+        public IActionResult GetHouseholdTraining(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdTraining(status));
+        }
+
+        /// <summary>
         /// Өрхийн Амьжиргааг дэмжих
         /// </summary>
         /// <param name="status"></param>
@@ -69,14 +102,25 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// Өрхийн Сургалт, үйл ажиллагаа
+        /// Өрхийн Бусад тусламж, дэмжлэг
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        [HttpGet("get_household_training")]
-        public IActionResult GetHouseholdTraining(int status)
+        [HttpGet("get_household_othersupport")]
+        public IActionResult GetHouseholdOthersupport(int status)
         {
-            return Ok(_ReportRepository.GetHouseholdTraining(status));
+            return Ok(_ReportRepository.GetHouseholdOthersupport(status));
+        }
+
+        /// <summary>
+        /// Өрхийн Холбон зуучилсан үйл ажиллагаа
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet("get_household_mediatedactivity")]
+        public IActionResult GetHouseholdMediatedactivity(int status)
+        {
+            return Ok(_ReportRepository.GetHouseholdMediatedactivity(status));
         }
 
         /// <summary>
