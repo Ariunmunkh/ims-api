@@ -330,7 +330,8 @@ where household.status = @status");
     training.duration,
     training.isjoin,
     training.memberid,
-    joinmember.name joinname
+    joinmember.name joinname,
+    case when joinmember.isparticipant = true then 'Мөн' else 'Биш' end isparticipant
 FROM
     household
         left join
