@@ -95,6 +95,11 @@ namespace HouseHolds.Models
         public int memberid { get; set; }
 
         /// <summary>
+        /// Холбон зуучилсан үйлчилгээний төрөл
+        /// </summary>
+        public int? mediatedservicetypeid { get; set; }
+
+        /// <summary>
         /// Айлчилсан хүний нэр /Коучийн дугаар/
         /// </summary>
         public int coachid { get; set; }

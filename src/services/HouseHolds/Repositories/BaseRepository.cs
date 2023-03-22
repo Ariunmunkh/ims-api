@@ -332,7 +332,28 @@ where id = @id", type));
                 }
             }
 
-            cmd.CommandText(string.Format(@"insert into {0}
+            cmd.CommandText("select count(1) too from {0} where id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            {
+                cmd.CommandText(string.Format(@"update {0} set name=@name, updated=current_timestamp, updatedby=@updatedby where id = @id", request.type));
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+            else
+            {
+                cmd.CommandText(string.Format(@"insert into {0}
 (id,
 name,
 updatedby)
@@ -344,14 +365,15 @@ on duplicate key update
 name=@name,
 updated=current_timestamp,
 updatedby=@updatedby", request.type));
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
-            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
-
-            result = connector.Execute(ref cmd, false);
-            if (result.rettype != 0)
-                return result;
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
 
             return new MResult { retdata = request.id };
         }

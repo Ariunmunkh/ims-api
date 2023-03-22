@@ -26,6 +26,8 @@ cd D:/PROJECTS_TFS/dms-api
 docker-compose build
 docker-compose up -d
 
+export DOCKER_HOST=ssh://root@157.230.46.90
+cd D:/PROJECTS_TFS/dms-api
 docker-compose build households
 docker-compose up -d households
 

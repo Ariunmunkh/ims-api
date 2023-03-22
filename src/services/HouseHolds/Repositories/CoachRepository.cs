@@ -298,6 +298,8 @@ updatedby=@updatedby");
     DATE_FORMAT(householdvisit.visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     householdvisit.memberid,
     householdmember.name membername,
+    householdvisit.mediatedservicetypeid,
+    mediatedservicetype.name mediatedservicetypename,
     district.name districtname,
     household.section,
     householdvisit.coachid,
@@ -309,6 +311,7 @@ FROM
 left join household on household.householdid = householdvisit.householdid
 left join district on district.districtid = household.districtid
 left join householdmember on householdmember.memberid = householdvisit.memberid
+left join mediatedservicetype on mediatedservicetype.id = householdvisit.mediatedservicetypeid
 left join coach on coach.coachid = householdvisit.coachid
 where (householdvisit.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
@@ -331,6 +334,7 @@ order by householdvisit.visitdate desc");
     householdid,
     DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     memberid,
+    mediatedservicetypeid,
     coachid,
     note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
@@ -377,6 +381,7 @@ where visitid = @visitid");
 householdid,
 visitdate,
 memberid,
+mediatedservicetypeid,
 coachid,
 note,
 updatedby)
@@ -385,6 +390,7 @@ values
 @householdid,
 @visitdate,
 @memberid,
+@mediatedservicetypeid,
 @coachid,
 @note,
 @updatedby) 
@@ -392,6 +398,7 @@ on duplicate key update
 householdid=@householdid,
 visitdate=@visitdate,
 memberid=@memberid,
+mediatedservicetypeid=@mediatedservicetypeid,
 coachid=@coachid,
 note=@note,
 updated=current_timestamp,
@@ -401,6 +408,7 @@ updatedby=@updatedby");
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@visitdate", DbType.DateTime, request.visitdate, ParameterDirection.Input);
             cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+            cmd.AddParam("@mediatedservicetypeid", DbType.Int32, request.mediatedservicetypeid, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);

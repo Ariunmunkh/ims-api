@@ -185,6 +185,7 @@ householdid int,
 visitdate datetime,
 memberid int,
 coachid int,
+mediatedservicetypeid int,
 note varchar(2000),
 updated timestamp default current_timestamp,
 updatedby int,  
@@ -192,7 +193,9 @@ PRIMARY KEY (visitid),
 INDEX ind_householdvisit_memberid (memberid),  
 CONSTRAINT fk_householdvisit_memberid FOREIGN KEY (memberid) REFERENCES householdmember(memberid),
 INDEX ind_householdvisit_coachid (coachid),  
-CONSTRAINT fk_householdvisit_coachid FOREIGN KEY (coachid) REFERENCES coach(coachid)
+CONSTRAINT fk_householdvisit_coachid FOREIGN KEY (coachid) REFERENCES coach(coachid),
+INDEX ind_householdvisit_mediatedservicetypeid (mediatedservicetypeid),  
+CONSTRAINT fk_householdvisit_mediatedservicetypeid FOREIGN KEY (mediatedservicetypeid) REFERENCES mediatedservicetype(id)
 );
 create table meetingattendance
 (
