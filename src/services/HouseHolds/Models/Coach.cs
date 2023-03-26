@@ -289,7 +289,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Өрхийн сонгосон аж ахуй
         /// </summary>
-        public string selectedfarm { get; set; }
+        public int businessid { get; set; }
 
         /// <summary>
         /// Харьяалагдах дэд салбар

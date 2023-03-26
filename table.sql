@@ -129,6 +129,14 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+create table business
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 create table householdmember
 (
 memberid int not null, 
@@ -366,13 +374,15 @@ create table improvement
 entryid int not null,
 householdid int,
 plandate datetime,
-selectedfarm varchar(200),
+businessid int,
 subbranchid int,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (entryid),
 INDEX ind_improvement_householdid (householdid),  
 CONSTRAINT fk_improvement_householdid FOREIGN KEY (householdid) REFERENCES household(householdid),
+INDEX ind_improvement_businessid (businessid),  
+CONSTRAINT fk_improvement_businessid FOREIGN KEY (businessid) REFERENCES business(id),
 INDEX ind_improvement_subbranchid (subbranchid),  
 CONSTRAINT fk_improvement_subbranchid FOREIGN KEY (subbranchid) REFERENCES subbranch(id)
 );

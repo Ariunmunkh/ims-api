@@ -332,7 +332,7 @@ where id = @id", type));
                 }
             }
 
-            cmd.CommandText("select count(1) too from {0} where id = @id");
+            cmd.CommandText(string.Format("select count(1) too from {0} where id = @id", request.type));
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -567,7 +567,7 @@ values
                             return result;
 
 
-                        cmdvisit.SetParamValue("@householdid",householdid);
+                        cmdvisit.SetParamValue("@householdid", householdid);
                         cmdvisit.SetParamValue("@visitdate", Convert.ToDateTime(item["end"]));
                         result = connector.Execute(ref cmdvisit, false);
                         if (result.rettype != 0)

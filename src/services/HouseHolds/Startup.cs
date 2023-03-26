@@ -39,6 +39,7 @@ namespace HouseHolds
         {
             ConfigureConsul(services);
             services.AddHttpClient();
+            services.AddTransient<IPowerBIRepository, PowerBIRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
             services.AddTransient<IBaseRepository, BaseRepository>();
             services.AddTransient<ICoachRepository, CoachRepository>();

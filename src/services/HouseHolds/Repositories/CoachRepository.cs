@@ -1053,7 +1053,8 @@ updatedby=@updatedby");
     improvement.entryid,
     improvement.householdid,
     DATE_FORMAT(improvement.plandate, '%Y-%m-%d %H:%i:%s') plandate,
-    improvement.selectedfarm,
+    improvement.businessid,
+    business.name businessname,
     improvement.subbranchid,
     subbranch.name subbranch,
     household.name householdname,
@@ -1064,6 +1065,7 @@ FROM
     improvement
 left join household on household.householdid = improvement.householdid
 left join district on district.districtid = household.districtid
+left join business on business.id = improvement.businessid
 left join subbranch on subbranch.id = improvement.subbranchid
 where (improvement.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
@@ -1085,7 +1087,7 @@ order by improvement.plandate desc");
     entryid,
     householdid,
     DATE_FORMAT(plandate, '%Y-%m-%d %H:%i:%s') plandate,
-    selectedfarm,
+    businessid,
     subbranchid,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -1130,20 +1132,20 @@ where entryid = @entryid");
 (entryid,
 householdid,
 plandate,
-selectedfarm,
+businessid,
 subbranchid,
 updatedby)
 values
 (@entryid,
 @householdid,
 @plandate,
-@selectedfarm,
+@businessid,
 @subbranchid,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 plandate=@plandate,
-selectedfarm=@selectedfarm,
+businessid=@businessid,
 subbranchid=@subbranchid,
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -1151,7 +1153,7 @@ updatedby=@updatedby");
             cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@plandate", DbType.DateTime, request.plandate, ParameterDirection.Input);
-            cmd.AddParam("@selectedfarm", DbType.String, request.selectedfarm, ParameterDirection.Input);
+            cmd.AddParam("@businessid", DbType.String, request.businessid, ParameterDirection.Input);
             cmd.AddParam("@subbranchid", DbType.Int32, request.subbranchid, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
