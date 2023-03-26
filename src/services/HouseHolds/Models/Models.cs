@@ -36,12 +36,12 @@ namespace HouseHolds.Models
         /// <summary>
         /// Дүүрэг
         /// </summary>
-        public int districtid { get; set; }
+        public int? districtid { get; set; }
 
         /// <summary>
         /// Хороо
         /// </summary>
-        public int section { get; set; }
+        public int? section { get; set; }
 
         /// <summary>
         /// Хаяг
@@ -56,7 +56,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Коучийн дугаар Хариуцсан коучийн нэр
         /// </summary>
-        public int coachid { get; set; }
+        public int? coachid { get; set; }
 
         /// <summary>
         /// Өргөрөг

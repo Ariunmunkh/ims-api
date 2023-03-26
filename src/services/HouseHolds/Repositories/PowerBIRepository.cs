@@ -231,7 +231,7 @@ FROM
 where household.status = 1");
             return connector.Execute(ref cmd, false);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -395,7 +395,7 @@ WHERE
     household.status = 1");
             return connector.Execute(ref cmd, false);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -485,7 +485,7 @@ WHERE
     household.status = 1");
             return connector.Execute(ref cmd, false);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -510,7 +510,7 @@ WHERE
     household.status = 1 and exists(select null from investment where investment.householdid = household.householdid)");
             return connector.Execute(ref cmd, false);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -538,7 +538,7 @@ WHERE
     household.status = 1");
             return connector.Execute(ref cmd, false);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -578,7 +578,7 @@ WHERE
     household.status = 1 and training.trainingtypeid = 3");
             return connector.Execute(ref cmd, false);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -730,6 +730,79 @@ WHERE
     end membergender
 FROM
     household
+        left JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetCoachHouseholdgroup()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname
+FROM
+    household
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+       inner JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
+        LEFT JOIN
+    coach ON coach.coachid = householdgroup.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdLoan()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    loan.amount
+FROM
+    household
+        inner JOIN
+    loan ON loan.householdid = household.householdid
         left JOIN
     householdgroup ON householdgroup.id = household.householdgroupid
         LEFT JOIN

@@ -214,5 +214,25 @@ namespace HouseHolds.Controllers
             return Ok(_PowerBIRepository.GetHouseholdHouseholdgroup());
         }
 
+        /// <summary>
+        /// Коучийн хариуцаж буй бүлгийн тоо /нийт , дүүрэг, хороо / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_coach_householdgroup")]
+        public IActionResult GetCoachHouseholdgroup()
+        {
+            return Ok(_PowerBIRepository.GetCoachHouseholdgroup());
+        }
+
+        /// <summary>
+        /// Дундын хадгаламжийн  бүлэгт хамрагдсан нийт өрхийн эзлэх хувь  / нийт, дүүрэг, хороо, коуч, гол гишүүний хүйсээр / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_loan")]
+        public IActionResult GetHouseholdLoan()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdLoan());
+        }
+
     }
 }

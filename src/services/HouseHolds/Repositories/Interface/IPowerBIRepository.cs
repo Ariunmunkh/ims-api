@@ -124,5 +124,17 @@ namespace HouseHolds.Repositories
         /// <returns></returns>
         MResult GetHouseholdHouseholdgroup();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetCoachHouseholdgroup();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdLoan();
+
     }
 }
