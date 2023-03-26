@@ -91,6 +91,16 @@ namespace HouseHolds.Models
         /// нэр
         /// </summary>
         public string name { get; set; }
+
+        /// <summary>
+        /// Коуч
+        /// </summary>
+        public int coachid { get; set; }
+
+        /// <summary>
+        /// Нэгж хувьцааны үнэ
+        /// </summary>
+        public decimal unitprice { get; set; }
     }
 
     /// <summary>

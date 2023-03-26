@@ -146,6 +146,131 @@ updatedby=@updatedby");
 
         #endregion
 
+        #region householdgroup
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdgroupList()
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    householdgroup.id,
+    householdgroup.name,
+    householdgroup.coachid,
+    coach.name coachname,
+    householdgroup.unitprice,
+    DATE_FORMAT(householdgroup.updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    householdgroup
+left join coach on coach.coachid = householdgroup.coachid
+order by householdgroup.updated desc");
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdgroup(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    id,
+    name,
+    coachid,
+    unitprice,
+    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+FROM
+    householdgroup
+where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetHouseholdgroup(householdgroup request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from householdgroup");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText(@"insert into householdgroup
+(id,
+name,
+coachid,
+unitprice,
+updatedby)
+values
+(@id,
+@name,
+@coachid,
+@unitprice,
+@updatedby) 
+on duplicate key update 
+name=@name,
+coachid=@coachid,
+unitprice=@unitprice,
+updated=current_timestamp,
+updatedby=@updatedby");
+
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
+            cmd.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteHouseholdgroup(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("select count(1) too from household where householdgroupid = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable data && data.Rows.Count > 0 && Convert.ToDecimal(data.Rows[0]["too"]) > 0)
+                return new MResult { rettype = 1, retmsg = "Өрхийн бүртгэлд ашигласан тул устгах боломжгүй." };
+
+            cmd.CommandText("delete from householdgroup where id = @id");
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        #endregion
 
         #region Relationship
 

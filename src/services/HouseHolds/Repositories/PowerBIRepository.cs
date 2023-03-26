@@ -37,7 +37,7 @@ namespace HouseHolds.Repositories
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     household.coachid,
     COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname
@@ -63,7 +63,7 @@ where household.status = 1");
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
     household.coachid,
@@ -99,7 +99,7 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) B
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
     household.coachid,
@@ -135,7 +135,7 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) B
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
     household.coachid,
@@ -171,7 +171,7 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) <
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
     household.coachid,
@@ -206,7 +206,7 @@ and not exists (select null from householdmember b where b.relationshipid = 2 an
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     COALESCE(coach.name,'Коучид харьяалагдаагүй өрх') coachname,
     household.coachid,
@@ -242,7 +242,7 @@ where household.status = 1");
             cmd.CommandText(@"select
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
 
     household.coachid,
@@ -278,7 +278,7 @@ where household.status = 1");
             cmd.CommandText(@"SELECT 
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     household.coachid,
     COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
@@ -320,7 +320,7 @@ WHERE
             cmd.CommandText(@"SELECT 
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     household.coachid,
     COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
@@ -363,7 +363,7 @@ WHERE
             cmd.CommandText(@"SELECT 
     household.householdid,
     household.districtid,
-    district.name districtname,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     household.coachid,
     COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
@@ -378,13 +378,360 @@ WHERE
         else 'Хоосон'
     end membergender,
     householdvisit.mediatedservicetypeid,
-    mediatedservicetype.name mediatedservicetypename
+    COALESCE(mediatedservicetype.name,'Хэрэгцээ бүртгээгүй') mediatedservicetypename
 FROM
     household
         inner JOIN
     mediatedactivity ON mediatedactivity.householdid = household.householdid
         LEFT JOIN
     mediatedservicetype ON mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdBusiness()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    improvement.businessid,
+    COALESCE(business.name,'Бизнесээ сонгоогүй') businessname
+FROM
+    household
+        left JOIN
+    improvement ON improvement.householdid = household.householdid
+        LEFT JOIN
+    business ON business.id = improvement.businessid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdBusinessType()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    improvement.subbranchid,
+    case 
+        when improvement.subbranchid in (3, 4, 5) then subbranch.name 
+        when improvement.subbranchid in (3, 4, 5) then 'Бусад' 
+        else 'Бизнесээ сонгоогүй'
+    end subbranchname
+FROM
+    household
+        left JOIN
+    improvement ON improvement.householdid = household.householdid
+        LEFT JOIN
+    subbranch ON subbranch.id = improvement.subbranchid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdInvestment()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname
+FROM
+    household
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and exists(select null from investment where investment.householdid = household.householdid)");
+            return connector.Execute(ref cmd, false);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdInvestmentPrice()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    investment.totalprice
+FROM
+    household
+        inner JOIN
+    investment ON investment.householdid = household.householdid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdLivelihoodTraining()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
+FROM
+    household
+       inner JOIN
+    training ON training.householdid = household.householdid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = training.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and training.trainingtypeid = 3");
+            return connector.Execute(ref cmd, false);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdTechnicalSkillsTraining()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
+FROM
+    household
+       inner JOIN
+    training ON training.householdid = household.householdid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = training.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and training.trainingtypeid = 1");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdImprovement()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    improvement.subbranchid,
+    COALESCE(subbranch.name,'Бизнесээ сонгоогүй') subbranchname
+FROM
+    household
+        left JOIN
+    improvement ON improvement.householdid = household.householdid
+        LEFT JOIN
+    subbranch ON subbranch.id = improvement.subbranchid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdBasicFinancialTraining()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
+FROM
+    household
+       inner JOIN
+    training ON training.householdid = household.householdid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = training.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and training.trainingtypeid = 6");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdHouseholdgroup()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    household.householdgroupid,
+    COALESCE(householdgroup.name,'Бүлэгт ороогүй өрх') householdgroupname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender
+FROM
+    household
+        left JOIN
+    householdgroup ON householdgroup.id = household.householdgroupid
         LEFT JOIN
     householdmember ON householdmember.memberid = household.memberid
         LEFT JOIN

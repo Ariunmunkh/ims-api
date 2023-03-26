@@ -40,6 +40,37 @@ namespace HouseHolds.Repositories
 
         #endregion
 
+        #region Householdgroup
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdgroupList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetHouseholdgroup(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetHouseholdgroup(householdgroup request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteHouseholdgroup(int id);
+
+        #endregion
+
         #region Relationship
 
         /// <summary>
@@ -71,7 +102,7 @@ namespace HouseHolds.Repositories
 
         #endregion
 
-        #region Relationship
+        #region DropDown
 
         /// <summary>
         /// 

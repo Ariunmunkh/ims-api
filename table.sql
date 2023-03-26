@@ -29,9 +29,13 @@ create table householdgroup
 (
 id int not null,
 name varchar(200),
+coachid int,
+unitprice decimal,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (id)
+PRIMARY KEY (id),
+INDEX ind_householdgroup_coachid (coachid),  
+CONSTRAINT fk_householdgroup_coachid FOREIGN KEY (coachid) REFERENCES coach(coachid)
 );
 create table district
 (

@@ -71,6 +71,53 @@ namespace HouseHolds.Controllers
 
         #endregion
 
+        #region Householdgroup
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_householdgroup_list")]
+        public IActionResult GetHouseholdgroupList()
+        {
+            return Ok(_BaseRepository.GetHouseholdgroupList());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_householdgroup")]
+        public IActionResult GetHouseholdgroup(int id)
+        {
+            return Ok(_BaseRepository.GetHouseholdgroup(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_householdgroup")]
+        public IActionResult SetHouseholdgroup([FromBody] householdgroup request)
+        {
+            return Ok(_BaseRepository.SetHouseholdgroup(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_householdgroup")]
+        public IActionResult DeleteHouseholdgroup(int id)
+        {
+            return Ok(_BaseRepository.DeleteHouseholdgroup(id));
+        }
+
+        #endregion
+        
         #region relationship
 
         /// <summary>

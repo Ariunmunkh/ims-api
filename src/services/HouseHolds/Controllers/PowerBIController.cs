@@ -124,5 +124,95 @@ namespace HouseHolds.Controllers
             return Ok(_PowerBIRepository.GetHouseholdServices());
         }
 
+        /// <summary>
+        /// Бизнесээ сонгосон нийт гол гишүүний тоо, эзлэх хувь%,  хүйсээр, /нийт, дүүрэг, хороо, коуч -ээр /
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_business")]
+        public IActionResult GetHouseholdBusiness()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdBusiness());
+        }
+
+        /// <summary>
+        /// Сонгосон бизнесийн төрлүүд: үйлдвэрлэл, үйлчилгээ, худалдаа эзлэх хувиар / нийт, дүүрэг, хороо, коучээр / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_business_type")]
+        public IActionResult GetHouseholdBusinessType()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdBusinessType());
+        }
+
+        /// <summary>
+        /// Нийт тоног төхөөрөмжийн дэмжлэг авсан өрхийн  тоо  /нийт, дүүрэг, хороо, коуч  / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_investment")]
+        public IActionResult GetHouseholdInvestment()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdInvestment());
+        }
+
+        /// <summary>
+        /// Нийт хүлээлгэн өгсөн тоног төхөөрөмжийн нийт үнэ болон дундаж  үнэ  / нийт, дүүрэг, хороо, коуч / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_investment_price")]
+        public IActionResult GetHouseholdInvestmentPrice()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdInvestmentPrice());
+        }
+
+        /// <summary>
+        /// Амьжиргааг дэмжих сургалтанд хамрагдсан гол гишүүдийн  тоо,  хүйсээр / нийт, дүүрэг, хороо, коуч, сургалтын нэр , төрөл, сургалт зохион байгуулсан сараар/ 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_livelihood_training")]
+        public IActionResult GetHouseholdLivelihoodTraining()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdLivelihoodTraining());
+        }
+
+        /// <summary>
+        /// Техникийн ур чадвар олгох сургалтанд хамрагдсан  хүний тоо, хүйсээр, өрхөөр  / нийт, дүүрэг, хороо, коуч, сургалтын төрөл , сургалт зохион байгуулсан сар / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_technical_skills_training")]
+        public IActionResult GetHouseholdTechnicalSkillsTraining()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdTechnicalSkillsTraining());
+        }
+
+        /// <summary>
+        /// Аж ахуй эрхлэлтийг дэд салбараар бизнес эрхлэгчдийн тоо, хүйсээр / нийт, дүүрэг, хороо, коуч , дэд салбарын төрлөөр өрхийг оруулах/
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_improvement")]
+        public IActionResult GetHouseholdImprovement()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdImprovement());
+        }
+
+        /// <summary>
+        /// Санхүүгийн анхан шатны сургалтанд хамрагдсан өрхийн гол гишүүний тоо, эзлэх хувь%,  хүйсээр /нийт, дүүрэг, хороо, коуч , сургалтын нэр, сар /
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_basic_financial_training")]
+        public IActionResult GetHouseholdBasicFinancialTraining()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdBasicFinancialTraining());
+        }
+
+        /// <summary>
+        /// Дундын хадгаламжийн бүлэгт хамрагдсан хүний тоо, гол гишүүний хүйсээр / нийт, дүүрэг, хороо, коуч /
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_householdgroup")]
+        public IActionResult GetHouseholdHouseholdgroup()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdHouseholdgroup());
+        }
+
     }
 }

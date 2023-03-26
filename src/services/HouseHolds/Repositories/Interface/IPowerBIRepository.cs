@@ -33,13 +33,13 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <returns></returns>
         MResult GetHouseholdMember5Count();
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         MResult GetHouseholdMemberSingleCount();
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -70,6 +70,59 @@ namespace HouseHolds.Repositories
         /// <returns></returns>
         MResult GetHouseholdServices();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdBusiness();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdBusinessType();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdInvestment();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdInvestmentPrice();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdLivelihoodTraining();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdTechnicalSkillsTraining();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdImprovement();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdBasicFinancialTraining();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdHouseholdgroup();
 
     }
 }
