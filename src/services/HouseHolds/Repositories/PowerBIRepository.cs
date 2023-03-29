@@ -377,7 +377,7 @@ WHERE
         when householdmember.gender = 1 then 'Эмэгтэй'
         else 'Хоосон'
     end membergender,
-    householdvisit.mediatedservicetypeid,
+    mediatedactivity.mediatedservicetypeid,
     COALESCE(mediatedservicetype.name,'Хэрэгцээ бүртгээгүй') mediatedservicetypename
 FROM
     household
