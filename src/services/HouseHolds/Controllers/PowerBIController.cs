@@ -234,5 +234,35 @@ namespace HouseHolds.Controllers
             return Ok(_PowerBIRepository.GetHouseholdLoan());
         }
 
+        /// <summary>
+        /// Амьдрах ухааны сургалтад хамрагдсан өрхийн гол гишүүдийн тоо, хүйсээр / нийт, дүүрэг, хороо, коуч , сургалтын нэр, үйл ажиллагааны нэр , сар / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_life_skills_training")]
+        public IActionResult GetHouseholdlifeSkillsTraining()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdlifeSkillsTraining());
+        }
+
+        /// <summary>
+        /// Өрхийг идэвхижүүлэх үйл ажиллагаанд хамрагдсан өрхийн гол гишүүдийн тоо, хүйсээр  / нийт, дүүрэг, хороо, коуч, үйл ажиллагааны нэр, сар /
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_training")]
+        public IActionResult GetHouseholdTraining()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdTraining());
+        }
+
+        /// <summary>
+        /// Айлчиллын хувь /дүүрэг, хороо, коуч, /дотроо сараар//
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_visit")]
+        public IActionResult GetHouseholdVisit()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdVisit());
+        }
+
     }
 }

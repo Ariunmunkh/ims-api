@@ -60,7 +60,16 @@ where household.status = 1");
         public MResult GetHouseholdMember1855Count()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (select
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -85,7 +94,7 @@ FROM
     district ON district.districtid = household.districtid
         LEFT JOIN
     coach ON coach.coachid = household.coachid
-where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) BETWEEN 18 AND 55");
+where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) BETWEEN 18 AND 55) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -96,7 +105,16 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) B
         public MResult GetHouseholdMember617Count()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (select
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -121,7 +139,7 @@ FROM
     district ON district.districtid = household.districtid
         LEFT JOIN
     coach ON coach.coachid = household.coachid
-where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) BETWEEN 6 AND 17");
+where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) BETWEEN 6 AND 17) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -132,7 +150,16 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) B
         public MResult GetHouseholdMember5Count()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (select
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -157,7 +184,7 @@ FROM
     district ON district.districtid = household.districtid
         LEFT JOIN
     coach ON coach.coachid = household.coachid
-where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) < 6");
+where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) < 6) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -168,7 +195,16 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) <
         public MResult GetHouseholdMemberSingleCount()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select
+            cmd.CommandText(@"select tbl.*, 
+case when headage < 6 then '0-5 нас'
+when headage between 6 and 17 then '6-17 нас'
+when headage between 18 and 25 then '18-25 нас'
+when headage between 26 and 35 then '26-35 нас'
+when headage between 36 and 45 then '36-45 нас'
+when headage between 46 and 55 then '46-55 нас'
+when headage > 55 then '55-аас дээш' 
+end agecategory
+from (select
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -192,7 +228,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 where household.status = 1 
-and not exists (select null from householdmember b where b.relationshipid = 2 and b.householdid = household.householdid group by b.householdid having count(1)>0)");
+and not exists (select null from householdmember b where b.relationshipid = 2 and b.householdid = household.householdid group by b.householdid having count(1)>0))tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -203,7 +239,16 @@ and not exists (select null from householdmember b where b.relationshipid = 2 an
         public MResult GetHouseholdMemberAvg()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (select
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -228,7 +273,7 @@ FROM
     district ON district.districtid = household.districtid
         LEFT JOIN
     coach ON coach.coachid = household.coachid
-where household.status = 1");
+where household.status = 1)tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -239,7 +284,16 @@ where household.status = 1");
         public MResult GetHouseholdParticipant()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (select
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -264,7 +318,7 @@ FROM
     district ON district.districtid = household.districtid
         LEFT JOIN
     coach ON coach.coachid = household.coachid
-where household.status = 1");
+where household.status = 1)tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -275,7 +329,16 @@ where household.status = 1");
         public MResult GetHouseholdParticipantDisabled()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -306,7 +369,7 @@ FROM
     coach ON coach.coachid = household.coachid
 WHERE
     household.status = 1
-        AND householdmember.healthconditionid IN (2 , 3, 4, 5)");
+        AND householdmember.healthconditionid IN (2 , 3, 4, 5)) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -317,7 +380,16 @@ WHERE
         public MResult GetHouseholdNeeds()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -349,7 +421,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -360,7 +432,16 @@ WHERE
         public MResult GetHouseholdServices()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -392,7 +473,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -403,7 +484,16 @@ WHERE
         public MResult GetHouseholdBusiness()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -435,7 +525,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -446,7 +536,16 @@ WHERE
         public MResult GetHouseholdBusinessType()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -482,7 +581,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -546,7 +645,16 @@ WHERE
         public MResult GetHouseholdLivelihoodTraining()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -575,7 +683,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1 and training.trainingtypeid = 3");
+    household.status = 1 and training.trainingtypeid = 3) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -586,7 +694,16 @@ WHERE
         public MResult GetHouseholdTechnicalSkillsTraining()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -615,7 +732,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1 and training.trainingtypeid = 1");
+    household.status = 1 and training.trainingtypeid = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -626,7 +743,16 @@ WHERE
         public MResult GetHouseholdImprovement()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -658,7 +784,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -669,7 +795,16 @@ WHERE
         public MResult GetHouseholdBasicFinancialTraining()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -698,7 +833,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1 and training.trainingtypeid = 6");
+    household.status = 1 and training.trainingtypeid = 6) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -709,7 +844,16 @@ WHERE
         public MResult GetHouseholdHouseholdgroup()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -739,7 +883,7 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 
@@ -779,7 +923,16 @@ WHERE
         public MResult GetHouseholdLoan()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
     household.householdid,
     household.districtid,
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
@@ -798,11 +951,15 @@ WHERE
         when householdmember.gender = 1 then 'Эмэгтэй'
         else 'Хоосон'
     end membergender,
-    loan.amount
+    loan.amount,
+    loan.loanpurposeid,
+    loanpurpose.name loanpurposename
 FROM
     household
         inner JOIN
     loan ON loan.householdid = household.householdid
+        left join
+    loanpurpose on loanpurpose.id = loan.loanpurposeid
         left JOIN
     householdgroup ON householdgroup.id = household.householdgroupid
         LEFT JOIN
@@ -812,7 +969,169 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1");
+    household.status = 1) tbl");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdlifeSkillsTraining()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
+FROM
+    household
+       inner JOIN
+    training ON training.householdid = household.householdid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = training.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and training.trainingtypeid = 7) tbl");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdTraining()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    training.trainingtypeid,
+    trainingtype.name trainingtypename,
+    training.trainingandactivityid,
+    trainingandactivity.name trainingandactivityname,
+    training.organizationid,
+    organization.name organizationname
+FROM
+    household
+       inner JOIN
+    training ON training.householdid = household.householdid
+        left join 
+    trainingtype on trainingtype.id = training.trainingtypeid
+        left join 
+    trainingandactivity on trainingandactivity.id = training.trainingandactivityid
+        left join 
+    organization on organization.id = training.organizationid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = training.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1) tbl");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdVisit()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    householdvisit.mediatedservicetypeid,
+    mediatedservicetype.name mediatedservicetypename
+FROM
+    household
+        inner JOIN
+    householdvisit ON householdvisit.householdid = household.householdid
+        LEFT JOIN
+    mediatedservicetype ON mediatedservicetype.id = householdvisit.mediatedservicetypeid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = household.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1) tbl");
             return connector.Execute(ref cmd, false);
         }
 

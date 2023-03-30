@@ -136,5 +136,23 @@ namespace HouseHolds.Repositories
         /// <returns></returns>
         MResult GetHouseholdLoan();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdlifeSkillsTraining();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdTraining();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetHouseholdVisit();
+
     }
 }
