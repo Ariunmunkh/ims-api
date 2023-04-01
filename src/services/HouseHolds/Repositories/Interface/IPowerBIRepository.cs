@@ -146,6 +146,12 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
+        MResult GetHouseholdIncomeAndExpenditureRecords();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         MResult GetHouseholdTraining();
 
         /// <summary>

@@ -245,6 +245,16 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
+        /// Өрхийн орлого, зарлагын бүртгэлээ тогтмол хөтөлж буй өрхийн тоо /нийт, дүүрэг, хороо, коуч / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_income_and_expenditure_records")]
+        public IActionResult GetHouseholdIncomeAndExpenditureRecords()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdIncomeAndExpenditureRecords());
+        }
+
+        /// <summary>
         /// Өрхийг идэвхижүүлэх үйл ажиллагаанд хамрагдсан өрхийн гол гишүүдийн тоо, хүйсээр  / нийт, дүүрэг, хороо, коуч, үйл ажиллагааны нэр, сар /
         /// </summary>
         /// <returns></returns>
