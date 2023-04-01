@@ -4,6 +4,7 @@ using LConnection.Model;
 using System.Data;
 using HouseHolds.Models;
 using System;
+using System.Collections.Generic;
 
 namespace HouseHolds.Repositories
 {
@@ -295,27 +296,48 @@ updatedby=@updatedby");
             cmd.CommandText(@"SELECT 
     householdvisit.visitid,
     householdvisit.householdid,
-    DATE_FORMAT(householdvisit.visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
+    DATE_FORMAT(householdvisit.visitdate,
+            '%Y-%m-%d %H:%i:%s') visitdate,
     householdvisit.memberid,
     householdmember.name membername,
-    householdvisit.mediatedservicetypeid,
-    mediatedservicetype.name mediatedservicetypename,
+    CASE
+        WHEN householdvisit.incomeexpenditurerecord = FALSE THEN 'Үгүй'
+        WHEN householdvisit.incomeexpenditurerecord = TRUE THEN 'Тийм'
+        ELSE 'Хоосон'
+    END incomeexpenditurerecord,
     district.name districtname,
     household.section,
     householdvisit.coachid,
     coach.name coachname,
     householdvisit.note,
-    DATE_FORMAT(householdvisit.updated, '%Y-%m-%d %H:%i:%s') updated
+    householdvisit_needs.name mediatedservicetypename,
+    DATE_FORMAT(householdvisit.updated,
+            '%Y-%m-%d %H:%i:%s') updated
 FROM
     householdvisit
-left join household on household.householdid = householdvisit.householdid
-left join district on district.districtid = household.districtid
-left join householdmember on householdmember.memberid = householdvisit.memberid
-left join mediatedservicetype on mediatedservicetype.id = householdvisit.mediatedservicetypeid
-left join coach on coach.coachid = householdvisit.coachid
-where (householdvisit.householdid = @householdid or 0 = @householdid)
-  and (household.coachid = @coachid or 0 = @coachid)
-order by householdvisit.visitdate desc");
+        LEFT JOIN
+    (SELECT 
+        householdvisit_needs.visitid,
+            GROUP_CONCAT(mediatedservicetype.name
+                SEPARATOR ', ') name
+    FROM
+        householdvisit_needs
+    LEFT JOIN mediatedservicetype ON mediatedservicetype.id = householdvisit_needs.mediatedservicetypeid
+    GROUP BY householdvisit_needs.visitid) householdvisit_needs ON householdvisit_needs.visitid = householdvisit.visitid
+        LEFT JOIN
+    household ON household.householdid = householdvisit.householdid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = householdvisit.memberid
+        LEFT JOIN
+    coach ON coach.coachid = householdvisit.coachid
+WHERE
+    (householdvisit.householdid = @householdid
+        OR 0 = @householdid)
+        AND (household.coachid = @coachid
+        OR 0 = @coachid)
+ORDER BY householdvisit.visitdate DESC");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
@@ -334,7 +356,7 @@ order by householdvisit.visitdate desc");
     householdid,
     DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     memberid,
-    mediatedservicetypeid,
+    incomeexpenditurerecord,
     coachid,
     note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
@@ -342,7 +364,32 @@ FROM
     householdvisit
 where visitid = @visitid");
             cmd.AddParam("@visitid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            DataTable retdata = result.retdata as DataTable;
+
+            cmd.CommandText("select * from householdvisit_needs where visitid = @visitid");
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable needsdata && needsdata.Rows.Count > 0)
+            {
+                List<object> needslist = new List<object>();
+                foreach (DataRow dr in needsdata.Rows)
+                {
+                    needslist.Add(dr["mediatedservicetypeid"]);
+                }
+                if (retdata.Rows.Count > 0)
+                {
+                    retdata.Columns.Add("mediatedservicetypeid", typeof(object));
+                    retdata.Rows[0]["mediatedservicetypeid"] = needslist;
+                }
+            }
+
+            return new MResult { retdata = retdata };
         }
 
         /// <summary>
@@ -352,37 +399,44 @@ where visitid = @visitid");
         /// <returns></returns>
         public MResult SetHouseholdVisit(householdvisit request)
         {
-
-            MCommand cmd = connector.PopCommand();
-            MResult result;
-
-            if (request.visitid == 0)
+            try
             {
-                cmd.CommandText(@"select coalesce(max(visitid),0)+1 newid from householdvisit");
-                result = connector.Execute(ref cmd, false);
-                if (result.rettype != 0)
-                    return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                MCommand cmd = connector.PopCommand();
+                MResult result;
+
+                if (request.visitid == 0)
                 {
-                    request.visitid = Convert.ToInt32(data.Rows[0]["newid"]);
+                    cmd.CommandText(@"select coalesce(max(visitid),0)+1 newid from householdvisit");
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+                    if (result.retdata is DataTable data && data.Rows.Count > 0)
+                    {
+                        request.visitid = Convert.ToInt32(data.Rows[0]["newid"]);
+                    }
                 }
-            }
 
-            if (request.visitdate.ToString("HH:mm:ss").Equals("00:00:00"))
-            {
-                DateTime now = DateTime.Now;
-                request.visitdate.AddHours(now.Hour);
-                request.visitdate.AddMinutes(now.Minute);
-                request.visitdate.AddSeconds(now.Second);
-            }
+                if (request.visitdate.ToString("HH:mm:ss").Equals("00:00:00"))
+                {
+                    DateTime now = DateTime.Now;
+                    request.visitdate.AddHours(now.Hour);
+                    request.visitdate.AddMinutes(now.Minute);
+                    request.visitdate.AddSeconds(now.Second);
+                }
 
-            cmd.CommandText(@"insert into householdvisit
+                if (!request.incomeexpenditurerecord.HasValue)
+                {
+                    request.incomeexpenditurerecord = false;
+                }
+
+                connector.BeginTransaction();
+                cmd.CommandText(@"insert into householdvisit
 (visitid,
 householdid,
 visitdate,
 memberid,
-mediatedservicetypeid,
 coachid,
+incomeexpenditurerecord,
 note,
 updatedby)
 values
@@ -390,34 +444,71 @@ values
 @householdid,
 @visitdate,
 @memberid,
-@mediatedservicetypeid,
 @coachid,
+@incomeexpenditurerecord,
 @note,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 visitdate=@visitdate,
 memberid=@memberid,
-mediatedservicetypeid=@mediatedservicetypeid,
 coachid=@coachid,
+incomeexpenditurerecord=@incomeexpenditurerecord,
 note=@note,
 updated=current_timestamp,
 updatedby=@updatedby");
 
-            cmd.AddParam("@visitid", DbType.Int32, request.visitid, ParameterDirection.Input);
-            cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
-            cmd.AddParam("@visitdate", DbType.DateTime, request.visitdate, ParameterDirection.Input);
-            cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
-            cmd.AddParam("@mediatedservicetypeid", DbType.Int32, request.mediatedservicetypeid, ParameterDirection.Input);
-            cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
-            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@visitid", DbType.Int32, request.visitid, ParameterDirection.Input);
+                cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+                cmd.AddParam("@visitdate", DbType.DateTime, request.visitdate, ParameterDirection.Input);
+                cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+                cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
+                cmd.AddParam("@incomeexpenditurerecord", DbType.Boolean, request.incomeexpenditurerecord, ParameterDirection.Input);
+                cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-            result = connector.Execute(ref cmd, false);
-            if (result.rettype != 0)
-                return result;
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                {
+                    connector.RollbackTransaction();
+                    return result;
+                }
 
-            return new MResult { retdata = request.visitid };
+                cmd.CommandText("delete from householdvisit_needs where visitid = @visitid");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                {
+                    connector.RollbackTransaction();
+                    return result;
+                }
+
+                if (request.mediatedservicetypeid != null && request.mediatedservicetypeid.Length > 0)
+                {
+                    cmd.CommandText("insert into householdvisit_needs (visitid, mediatedservicetypeid,updatedby) values(@visitid, @mediatedservicetypeid,@updatedby)");
+                    cmd.AddParam("@mediatedservicetypeid", DbType.Int32, ParameterDirection.Input);
+
+                    foreach (int mediatedservicetypeid in request.mediatedservicetypeid)
+                    {
+                        cmd.SetParamValue("@mediatedservicetypeid", mediatedservicetypeid);
+                        result = connector.Execute(ref cmd, false);
+                        if (result.rettype != 0)
+                        {
+                            connector.RollbackTransaction();
+                            return result;
+                        }
+                    }
+                }
+                connector.CommitTransaction();
+                return new MResult { retdata = request.visitid };
+
+            }
+            catch (Exception ex)
+            {
+                if (connector != null && connector.Transacted)
+                    connector.RollbackTransaction();
+
+                return new MResult { rettype = 1, retmsg = ex.Message, retdata = ex };
+            }
         }
 
         /// <summary>

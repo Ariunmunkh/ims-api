@@ -97,7 +97,12 @@ namespace HouseHolds.Models
         /// <summary>
         /// Холбон зуучилсан үйлчилгээний төрөл
         /// </summary>
-        public int? mediatedservicetypeid { get; set; }
+        public int[] mediatedservicetypeid { get; set; }
+
+        /// <summary>
+        /// Өрхийн орлого, зарлагын бүртгэлээ тогтмол хөтөлсөн эсэх
+        /// </summary>
+        public bool? incomeexpenditurerecord { get; set; }
 
         /// <summary>
         /// Айлчилсан хүний нэр /Коучийн дугаар/
