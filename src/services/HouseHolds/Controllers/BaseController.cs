@@ -117,7 +117,7 @@ namespace HouseHolds.Controllers
         }
 
         #endregion
-        
+
         #region relationship
 
         /// <summary>
@@ -214,6 +214,19 @@ namespace HouseHolds.Controllers
         }
 
         #endregion
+
+
+
+        /// <summary>
+        /// Холбон зуучилсан үйлчилгээний төрөл авах
+        /// </summary>
+        /// <param name="id">householdid</param>
+        /// <returns></returns>
+        [HttpGet("get_mediatedservicetype")]
+        public IActionResult GetMediatedservicetype(int id)
+        {
+            return Ok(_BaseRepository.GetMediatedservicetype(id));
+        }
 
         /// <summary>
         /// 

@@ -139,6 +139,13 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetMediatedservicetype(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         Task<MResult> GetSurvey();
 

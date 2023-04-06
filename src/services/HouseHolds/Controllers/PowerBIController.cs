@@ -235,16 +235,6 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// Амьдрах ухааны сургалтад хамрагдсан өрхийн гол гишүүдийн тоо, хүйсээр / нийт, дүүрэг, хороо, коуч , сургалтын нэр, үйл ажиллагааны нэр , сар / 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("get_household_life_skills_training")]
-        public IActionResult GetHouseholdlifeSkillsTraining()
-        {
-            return Ok(_PowerBIRepository.GetHouseholdlifeSkillsTraining());
-        }
-
-        /// <summary>
         /// Өрхийн орлого, зарлагын бүртгэлээ тогтмол хөтөлж буй өрхийн тоо /нийт, дүүрэг, хороо, коуч / 
         /// </summary>
         /// <returns></returns>
@@ -252,6 +242,16 @@ namespace HouseHolds.Controllers
         public IActionResult GetHouseholdIncomeAndExpenditureRecords()
         {
             return Ok(_PowerBIRepository.GetHouseholdIncomeAndExpenditureRecords());
+        }
+
+        /// <summary>
+        /// Амьдрах ухааны сургалтад хамрагдсан өрхийн гол гишүүдийн тоо, хүйсээр / нийт, дүүрэг, хороо, коуч , сургалтын нэр, үйл ажиллагааны нэр , сар / 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_household_life_skills_training")]
+        public IActionResult GetHouseholdlifeSkillsTraining()
+        {
+            return Ok(_PowerBIRepository.GetHouseholdlifeSkillsTraining());
         }
 
         /// <summary>

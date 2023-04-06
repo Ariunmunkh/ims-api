@@ -979,55 +979,6 @@ WHERE
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetHouseholdlifeSkillsTraining()
-        {
-            MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select tbl.*, 
-case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
-when memberage between 18 and 25 then '18-25 нас'
-when memberage between 26 and 35 then '26-35 нас'
-when memberage between 36 and 45 then '36-45 нас'
-when memberage between 46 and 55 then '46-55 нас'
-when memberage > 55 then '55-аас дээш' 
-end agecategory
-from (SELECT 
-    household.householdid,
-    household.districtid,
-    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
-    household.section,
-    household.coachid,
-    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
-    householdmember.memberid,
-    householdmember.name membername,
-    TIMESTAMPDIFF(YEAR,
-        householdmember.birthdate,
-        CURDATE()) memberage,
-    case
-        when householdmember.gender = 0 then 'Эрэгтэй'
-        when householdmember.gender = 1 then 'Эмэгтэй'
-        else 'Хоосон'
-    end membergender,
-    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
-FROM
-    household
-       inner JOIN
-    training ON training.householdid = household.householdid
-        LEFT JOIN
-    householdmember ON householdmember.memberid = training.memberid
-        LEFT JOIN
-    district ON district.districtid = household.districtid
-        LEFT JOIN
-    coach ON coach.coachid = household.coachid
-WHERE
-    household.status = 1 and training.trainingtypeid = 7) tbl");
-            return connector.Execute(ref cmd, false);
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public MResult GetHouseholdIncomeAndExpenditureRecords()
         {
             MCommand cmd = connector.PopCommand();
@@ -1074,6 +1025,55 @@ FROM
     coach ON coach.coachid = household.coachid
 WHERE
     household.status = 1) tbl");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetHouseholdlifeSkillsTraining()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '6-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate
+FROM
+    household
+       inner JOIN
+    training ON training.householdid = household.householdid
+        LEFT JOIN
+    householdmember ON householdmember.memberid = training.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and training.trainingtypeid = 7) tbl");
             return connector.Execute(ref cmd, false);
         }
 

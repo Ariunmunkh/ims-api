@@ -168,11 +168,14 @@ updatedby=@updatedby");
     project.name projectname,
     coach.districtid,
     district.name districtname,
+    coach.section,
+    household.householdcount,
     DATE_FORMAT(coach.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     coach
 left join project on project.id = coach.projectid
 left join district on district.districtid = coach.districtid
+left join (select household.coachid, count(1) householdcount from household group by household.coachid) household on household.coachid = coach.coachid
 order by coach.name asc");
             return connector.Execute(ref cmd, false);
 
@@ -192,12 +195,27 @@ order by coach.name asc");
     phone,
     coach.projectid,
     districtid,
+    section section1,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     coach
 where coachid = @coachid");
             cmd.AddParam("@coachid", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable data && data.Rows.Count > 0)
+            {
+                data.Columns.Add("section", typeof(object));
+                if (!string.IsNullOrEmpty(data.Rows[0]["section1"].ToString()))
+                    data.Rows[0]["section"] = data.Rows[0]["section1"].ToString().Split(',');
+                else
+                    data.Rows[0]["section"] = new List<string> { };
+                return new MResult { retdata = data };
+            }
+
+            return new MResult { };
         }
 
         /// <summary>
@@ -229,6 +247,7 @@ name,
 phone,
 projectid,
 districtid,
+section,
 updatedby)
 values
 (@coachid,
@@ -236,12 +255,14 @@ values
 @phone,
 @projectid,
 @districtid,
+@section,
 @updatedby) 
 on duplicate key update 
 name=@name,
 phone=@phone,
 projectid=@projectid,
 districtid=@districtid,
+section=@section,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -250,6 +271,7 @@ updatedby=@updatedby");
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
             cmd.AddParam("@projectid", DbType.Int32, request.projectid, ParameterDirection.Input);
             cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
+            cmd.AddParam("@section", DbType.String, request.section != null ? string.Join(",", request.section) : string.Empty, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -305,10 +327,16 @@ updatedby=@updatedby");
         WHEN householdvisit.incomeexpenditurerecord = TRUE THEN 'Тийм'
         ELSE 'Хоосон'
     END incomeexpenditurerecord,
+    CASE
+        WHEN householdvisit.developmentplan = FALSE THEN 'Үгүй'
+        WHEN householdvisit.developmentplan = TRUE THEN 'Тийм'
+        ELSE 'Хоосон'
+    END developmentplan,
     district.name districtname,
     household.section,
     householdvisit.coachid,
     coach.name coachname,
+    householdvisit.decisionandaction,
     householdvisit.note,
     householdvisit_needs.name mediatedservicetypename,
     DATE_FORMAT(householdvisit.updated,
@@ -357,6 +385,8 @@ ORDER BY householdvisit.visitdate DESC");
     DATE_FORMAT(visitdate, '%Y-%m-%d %H:%i:%s') visitdate,
     memberid,
     incomeexpenditurerecord,
+    developmentplan,
+    decisionandaction,
     coachid,
     note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
@@ -437,6 +467,8 @@ visitdate,
 memberid,
 coachid,
 incomeexpenditurerecord,
+developmentplan,
+decisionandaction,
 note,
 updatedby)
 values
@@ -446,6 +478,8 @@ values
 @memberid,
 @coachid,
 @incomeexpenditurerecord,
+@developmentplan,
+@decisionandaction,
 @note,
 @updatedby) 
 on duplicate key update 
@@ -454,6 +488,8 @@ visitdate=@visitdate,
 memberid=@memberid,
 coachid=@coachid,
 incomeexpenditurerecord=@incomeexpenditurerecord,
+developmentplan=@developmentplan,
+decisionandaction=@decisionandaction,
 note=@note,
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -464,6 +500,8 @@ updatedby=@updatedby");
                 cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
                 cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
                 cmd.AddParam("@incomeexpenditurerecord", DbType.Boolean, request.incomeexpenditurerecord, ParameterDirection.Input);
+                cmd.AddParam("@developmentplan", DbType.Boolean, request.developmentplan, ParameterDirection.Input);
+                cmd.AddParam("@decisionandaction", DbType.String, request.decisionandaction, ParameterDirection.Input);
                 cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
                 cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 

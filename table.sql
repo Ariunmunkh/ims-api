@@ -25,18 +25,6 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
-create table householdgroup
-(
-id int not null,
-name varchar(200),
-coachid int,
-unitprice decimal,
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id),
-INDEX ind_householdgroup_coachid (coachid),  
-CONSTRAINT fk_householdgroup_coachid FOREIGN KEY (coachid) REFERENCES coach(coachid)
-);
 create table district
 (
 districtid int not null, 
@@ -44,6 +32,21 @@ name varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (districtid)
+);
+create table householdgroup
+(
+id int not null,
+name varchar(200),
+districtid int,
+coachid int,
+unitprice decimal,
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id),
+INDEX ind_householdgroup_districtid (districtid),  
+CONSTRAINT fk_householdgroup_districtid FOREIGN KEY (districtid) REFERENCES district(districtid),
+INDEX ind_householdgroup_coachid (coachid),  
+CONSTRAINT fk_householdgroup_coachid FOREIGN KEY (coachid) REFERENCES coach(coachid)
 );
 create table relationship
 (
@@ -184,6 +187,7 @@ name varchar(200),
 phone varchar(20),
 projectid int,
 districtid int,
+section varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (coachid),
@@ -199,6 +203,8 @@ memberid int,
 coachid int,
 mediatedservicetypeid int,
 incomeexpenditurerecord bool,
+developmentplan bool,
+decisionandaction varchar(2000),
 note varchar(2000),
 updated timestamp default current_timestamp,
 updatedby int,  

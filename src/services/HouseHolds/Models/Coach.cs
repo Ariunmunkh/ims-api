@@ -67,6 +67,11 @@ namespace HouseHolds.Models
         /// Сум, Дүүрэг
         /// </summary>
         public int? districtid { get; set; }
+
+        /// <summary>
+        /// Хороо
+        /// </summary>
+        public string[] section { get; set; }
     }
 
     /// <summary>zl
@@ -105,6 +110,11 @@ namespace HouseHolds.Models
         public bool? incomeexpenditurerecord { get; set; }
 
         /// <summary>
+        /// Өрхийн хөгжлийн төлөвлөгөө боловсруулсан эсэх
+        /// </summary>
+        public bool? developmentplan { get; set; }
+
+        /// <summary>
         /// Айлчилсан хүний нэр /Коучийн дугаар/
         /// </summary>
         public int coachid { get; set; }
@@ -113,6 +123,11 @@ namespace HouseHolds.Models
         /// Тайлбар
         /// </summary>
         public string note { get; set; }
+
+        /// <summary>
+        /// Шийдвэрлэсэн байдал, авах арга хэмжээ
+        /// </summary>
+        public string decisionandaction { get; set; }
 
     }
 

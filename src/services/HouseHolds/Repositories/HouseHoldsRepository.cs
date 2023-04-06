@@ -147,15 +147,15 @@ where latitude is not null and longitude is not null
     ROUND((data.h1 + data.h2 + data.h3) / 3, 1) r1,
     ROUND((data.h4 + data.h5) / 2, 1) r2,
     ROUND((data.h6 + data.h7) / 2, 1) r3,
-    ROUND((data.h8 + data.h9 + data.h10 + data.h11 + data.h12 + data.h13) / 6,
+    ROUND((data.h8 + data.h9 + data.h12 + data.h13) / 6,
             1) r4,
-    ROUND((data.h1 + data.h2 + data.h3 + data.h4 + data.h5 + data.h6 + data.h7 + data.h8 + data.h9 + data.h10 + data.h11 + data.h12 + data.h13) / 13,
+    ROUND((data.h1 + data.h2 + data.h3 + data.h4 + data.h5 + data.h6 + data.h7 + data.h8 + data.h9 + data.h12 + data.h13) / 13,
             1) r5,
 80 r0
 FROM
     (SELECT 
         householdsurvey.dugaar,
-        'Асуумж '||dugaar name,
+        'Үнэлгээ '||dugaar name,
             COUNT(householdsurvey.householdid) householdcount,
             COALESCE(AVG(h1), 0) h1,
             COALESCE(AVG(h2), 0) h2,
@@ -166,8 +166,6 @@ FROM
             COALESCE(AVG(h7), 0) h7,
             COALESCE(AVG(h8), 0) h8,
             COALESCE(AVG(h9), 0) h9,
-            COALESCE(AVG(h10), 0) h10,
-            COALESCE(AVG(h11), 0) h11,
             COALESCE(AVG(h12), 0) h12,
             COALESCE(AVG(h13), 0) h13
     FROM

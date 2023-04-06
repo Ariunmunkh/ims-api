@@ -426,6 +426,7 @@ order by updated desc", type));
             cmd.CommandText(string.Format(@"SELECT 
     id,
     name,
+    '{0}' type,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     {0}
@@ -560,6 +561,32 @@ updatedby=@updatedby", request.type));
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetMediatedservicetype(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    mediatedservicetype.id, mediatedservicetype.name
+FROM
+    mediatedservicetype
+WHERE
+    EXISTS( SELECT 
+            NULL
+        FROM
+            householdvisit
+                INNER JOIN
+            householdvisit_needs ON householdvisit_needs.visitid = householdvisit.visitid
+        WHERE
+            householdvisit_needs.mediatedservicetypeid = mediatedservicetype.id
+                AND householdvisit.householdid = @id)");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
 
         /// <summary>
         /// 

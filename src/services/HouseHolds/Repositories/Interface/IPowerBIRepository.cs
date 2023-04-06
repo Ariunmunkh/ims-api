@@ -140,13 +140,13 @@ namespace HouseHolds.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetHouseholdlifeSkillsTraining();
+        MResult GetHouseholdIncomeAndExpenditureRecords();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetHouseholdIncomeAndExpenditureRecords();
+        MResult GetHouseholdlifeSkillsTraining();
 
         /// <summary>
         /// 
