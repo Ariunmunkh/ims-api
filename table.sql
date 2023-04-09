@@ -61,6 +61,7 @@ create table household
 (
 householdid int not null, 
 status int default 0,
+isactive bool default true,
 numberof int,
 name varchar(200),
 headmemberid int,
@@ -120,6 +121,14 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+create table basicneeds
+(
+id int not null,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 create table employmentstatus
 (
 id int not null,
@@ -149,6 +158,7 @@ create table householdmember
 memberid int not null, 
 householdid int,
 name varchar(200),
+regno varchar(50),
 relationshipid int,
 birthdate datetime,
 gender int,
@@ -205,6 +215,7 @@ mediatedservicetypeid int,
 incomeexpenditurerecord bool,
 developmentplan bool,
 decisionandaction varchar(2000),
+basicneedsnote varchar(2000),
 note varchar(2000),
 updated timestamp default current_timestamp,
 updatedby int,  
@@ -219,6 +230,7 @@ create table householdvisit_needs
 id int not null AUTO_INCREMENT,
 visitid int,
 mediatedservicetypeid int,
+basicneedsid int,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id),
@@ -250,7 +262,7 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
-create table trainingtype
+create table trainingcategory
 (
 id int not null,
 name varchar(200),
@@ -258,7 +270,25 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+create table trainingtype
+(
+id int not null,
+trainingcategoryid int,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 create table trainingandactivity
+(
+id int not null,
+trainingtypeid int,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table formoftraining
 (
 id int not null,
 name varchar(200),
@@ -345,6 +375,7 @@ householdid int,
 loandate datetime,
 amount decimal,
 loanpurposeid int,
+loanpurposenote varchar(2000),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (entryid),
@@ -371,9 +402,11 @@ create table training
 entryid int not null,
 householdid int,
 trainingdate datetime,
+trainingcategoryid int,
 trainingtypeid int,
 trainingandactivityid int,
 organizationid int,
+formoftrainingid int,
 duration decimal,
 isjoin bool,
 memberid int,

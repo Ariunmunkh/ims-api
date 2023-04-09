@@ -35,20 +35,37 @@ namespace HouseHolds.Repositories
         /// <param name="status"></param>
         /// <param name="group"></param>
         /// <param name="districtid"></param>
+        /// <param name="isactive"></param>
         /// <returns></returns>
-        public MResult GetHouseHoldList(int coachid, int status, int group, int districtid)
+        public MResult GetHouseHoldList(int coachid, int status, int group, int districtid, int isactive)
         {
-
+            string wherestr = string.Empty;
+            switch (isactive)
+            {
+                case 0:
+                    wherestr = string.Empty;
+                    break;
+                case 1:
+                    wherestr = " and household.isactive = true";
+                    break;
+                case 2:
+                    wherestr = " and household.isactive = false";
+                    break;
+            }
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT 
+            cmd.CommandText(string.Format(@"SELECT 
     household.householdid,
     household.numberof,
-    household.name,
-    case
-        when householdmember.gender = 0 then 'Эрэгтэй'
-        when householdmember.gender = 1 then 'Эмэгтэй'
-        else 'Хоосон'
-    end gender,
+    head.name headname,
+    head.regno headregno,
+    TIMESTAMPDIFF(YEAR,
+        head.birthdate,
+        CURDATE()) headage,
+    householdmember.name,
+    householdmember.regno,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) age,
     household.householdgroupid,
     householdgroup.name householdgroupname,
     district.name districtname,
@@ -56,10 +73,12 @@ namespace HouseHolds.Repositories
     household.address,
     household.phone,
     householdstatus.name householdstatus,
-    household.coachid
+    household.coachid,
+    household.isactive
 FROM
     household
 left join householdmember on householdmember.memberid = household.memberid
+left join householdmember head on head.memberid = household.headmemberid
 left join district on district.districtid = household.districtid
 left join householdstatus on householdstatus.id = household.status
 LEFT JOIN householdgroup ON householdgroup.id = household.householdgroupid
@@ -67,7 +86,8 @@ where (household.coachid = @coachid or 0 = @coachid)
 and household.status = @status 
 and (household.householdgroupid = @group or 0 = @group)
 and (household.districtid = @districtid or 0 = @districtid)
-order by household.updated desc");
+{0}
+order by household.updated desc", wherestr));
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, status, ParameterDirection.Input);
             cmd.AddParam("@group", DbType.Int32, group, ParameterDirection.Input);
@@ -222,6 +242,7 @@ FROM
     household.coachid,
     household.latitude,
     household.longitude,
+    household.isactive,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     household
@@ -281,6 +302,7 @@ status,
 coachid,
 latitude,
 longitude,
+isactive,
 updatedby)
 values
 (@householdid,
@@ -295,6 +317,7 @@ values
 @coachid,
 @latitude,
 @longitude,
+@isactive,
 @updatedby) 
 on duplicate key update 
 numberof=@numberof,
@@ -308,6 +331,7 @@ status=@status,
 coachid=@coachid,
 latitude=@latitude,
 longitude=@longitude,
+isactive=@isactive,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -323,6 +347,7 @@ updatedby=@updatedby");
             cmd.AddParam("@coachid", DbType.Int32, request.coachid, ParameterDirection.Input);
             cmd.AddParam("@latitude", DbType.String, request.latitude, ParameterDirection.Input);
             cmd.AddParam("@longitude", DbType.String, request.longitude, ParameterDirection.Input);
+            cmd.AddParam("@isactive", DbType.Boolean, request.isactive, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, true);
@@ -395,6 +420,7 @@ WHERE
     householdmember.memberid,
     householdmember.householdid,
     householdmember.name,
+    householdmember.regno,
     householdmember.relationshipid,
     relationship.name relationshipname,
     date_format(householdmember.birthdate, '%Y-%m-%d') birthdate,
@@ -447,6 +473,7 @@ order by householdmember.birthdate asc");
     memberid,
     householdid,
     name,
+    regno,
     relationshipid,
     date_format(birthdate, '%Y-%m-%d') birthdate,
     gender,
@@ -490,6 +517,7 @@ where memberid = @memberid");
 (memberid,
 householdid,
 name,
+regno,
 relationshipid,
 birthdate,
 gender,
@@ -503,6 +531,7 @@ values
 (@memberid,
 @householdid,
 @name,
+@regno,
 @relationshipid,
 @birthdate,
 @gender,
@@ -515,6 +544,7 @@ values
 on duplicate key update 
 householdid=@householdid,
 name=@name,
+regno=@regno,
 relationshipid=@relationshipid,
 birthdate=@birthdate,
 gender=@gender,
@@ -529,6 +559,7 @@ updatedby=@updatedby");
             cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@regno", DbType.String, request.regno, ParameterDirection.Input);
             cmd.AddParam("@relationshipid", DbType.Int32, request.relationshipid, ParameterDirection.Input);
             cmd.AddParam("@birthdate", DbType.DateTime, request.birthdate, ParameterDirection.Input);
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);

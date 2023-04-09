@@ -404,9 +404,8 @@ updatedby=@updatedby");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(string.Format(@"SELECT 
-    id,
-    name,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    {0}.*,
+    '{0}' type
 FROM
     {0}
 order by updated desc", type));
@@ -424,10 +423,8 @@ order by updated desc", type));
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(string.Format(@"SELECT 
-    id,
-    name,
-    '{0}' type,
-    DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
+    {0}.*,
+    '{0}' type
 FROM
     {0}
 where id = @id", type));

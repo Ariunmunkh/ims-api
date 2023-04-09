@@ -296,6 +296,22 @@ namespace HouseHolds.Models
     }
 
     /// <summary>
+    /// Өрхийн үндсэн хэрэгцээ
+    /// </summary>
+    public class basicneeds
+    {
+        /// <summary>
+        /// дугаар
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// нэр
+        /// </summary>
+        public string name { get; set; }
+    }
+    
+    /// <summary>
     /// Холбон зуучилсан үйлчилгээний төрөл 
     /// </summary>
     public class mediatedservicetype

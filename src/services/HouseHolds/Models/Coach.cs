@@ -105,6 +105,16 @@ namespace HouseHolds.Models
         public int[] mediatedservicetypeid { get; set; }
 
         /// <summary>
+        /// Өрхийн үндсэн хэрэгцээ
+        /// </summary>
+        public int[] basicneedsid { get; set; }
+
+        /// <summary>
+        /// Үндсэн хэрэгцээний тайлбар
+        /// </summary>
+        public string basicneedsnote { get; set; }
+
+        /// <summary>
         /// Өрхийн орлого, зарлагын бүртгэлээ тогтмол хөтөлсөн эсэх
         /// </summary>
         public bool? incomeexpenditurerecord { get; set; }
@@ -200,6 +210,11 @@ namespace HouseHolds.Models
         /// Зээлийн зориулалт
         /// </summary>
         public int loanpurposeid { get; set; }
+
+        /// <summary>
+        /// Зээлийн зориулалтын тайлбар
+        /// </summary>
+        public string loanpurposenote { get; set; }
     }
 
     /// <summary>
@@ -256,17 +271,27 @@ namespace HouseHolds.Models
         public DateTime trainingdate { get; set; }
 
         /// <summary>
+        /// Сургалтын үндсэн чиглэл
+        /// </summary>
+        public int trainingcategoryid { get; set; }
+
+        /// <summary>
         /// Сургалтын төрөл
         /// </summary>
         public int trainingtypeid { get; set; }
 
         /// <summary>
-        /// Зохион байгуулагдсан сургалт, үйл ажиллагааны нэр
+        /// Сургалтын нэр
         /// </summary>
         public int trainingandactivityid { get; set; }
 
         /// <summary>
-        /// Сургалт, үйл ажиллагаа зохион байгуулсан байгууллагын нэр
+        /// Сургалтын явагдсан хэлбэр
+        /// </summary>
+        public int formoftrainingid { get; set; }
+
+        /// <summary>
+        /// Сургалт өгсөн байгууллага/ажилтан
         /// </summary>
         public int organizationid { get; set; }
 

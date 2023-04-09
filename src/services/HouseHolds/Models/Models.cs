@@ -72,6 +72,11 @@ namespace HouseHolds.Models
         /// Жагсаалтнаас шинэ 
         /// </summary>
         public bool? isnew { get; set; }
+
+        /// <summary>
+        /// Хөтөлбөрийн өрхийн хувьд Идэвхитэй
+        /// </summary>
+        public bool? isactive { get; set; }
     }
 
     /// <summary>
@@ -93,6 +98,11 @@ namespace HouseHolds.Models
         /// Өрхийн гишүүний нэр 
         /// </summary>
         public string name { get; set; }
+
+        /// <summary>
+        /// регистр
+        /// </summary>
+        public string regno { get; set; }
 
         /// <summary>
         /// Өрхийн тэргүүнтэй ямар хамааралтай болох

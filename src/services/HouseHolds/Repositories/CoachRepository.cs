@@ -337,8 +337,9 @@ updatedby=@updatedby");
     householdvisit.coachid,
     coach.name coachname,
     householdvisit.decisionandaction,
+    householdvisit.basicneedsnote,
     householdvisit.note,
-    householdvisit_needs.name mediatedservicetypename,
+    householdvisit_needs.name basicneedsname,
     DATE_FORMAT(householdvisit.updated,
             '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -346,11 +347,11 @@ FROM
         LEFT JOIN
     (SELECT 
         householdvisit_needs.visitid,
-            GROUP_CONCAT(mediatedservicetype.name
+            GROUP_CONCAT(basicneeds.name
                 SEPARATOR ', ') name
     FROM
         householdvisit_needs
-    LEFT JOIN mediatedservicetype ON mediatedservicetype.id = householdvisit_needs.mediatedservicetypeid
+    LEFT JOIN basicneeds ON basicneeds.id = householdvisit_needs.basicneedsid
     GROUP BY householdvisit_needs.visitid) householdvisit_needs ON householdvisit_needs.visitid = householdvisit.visitid
         LEFT JOIN
     household ON household.householdid = householdvisit.householdid
@@ -387,6 +388,7 @@ ORDER BY householdvisit.visitdate DESC");
     incomeexpenditurerecord,
     developmentplan,
     decisionandaction,
+    basicneedsnote,
     coachid,
     note,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
@@ -410,12 +412,12 @@ where visitid = @visitid");
                 List<object> needslist = new List<object>();
                 foreach (DataRow dr in needsdata.Rows)
                 {
-                    needslist.Add(dr["mediatedservicetypeid"]);
+                    needslist.Add(dr["basicneedsid"]);
                 }
                 if (retdata.Rows.Count > 0)
                 {
-                    retdata.Columns.Add("mediatedservicetypeid", typeof(object));
-                    retdata.Rows[0]["mediatedservicetypeid"] = needslist;
+                    retdata.Columns.Add("basicneedsid", typeof(object));
+                    retdata.Rows[0]["basicneedsid"] = needslist;
                 }
             }
 
@@ -469,6 +471,7 @@ coachid,
 incomeexpenditurerecord,
 developmentplan,
 decisionandaction,
+basicneedsnote,
 note,
 updatedby)
 values
@@ -480,6 +483,7 @@ values
 @incomeexpenditurerecord,
 @developmentplan,
 @decisionandaction,
+@basicneedsnote,
 @note,
 @updatedby) 
 on duplicate key update 
@@ -490,6 +494,7 @@ coachid=@coachid,
 incomeexpenditurerecord=@incomeexpenditurerecord,
 developmentplan=@developmentplan,
 decisionandaction=@decisionandaction,
+basicneedsnote=@basicneedsnote,
 note=@note,
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -502,6 +507,7 @@ updatedby=@updatedby");
                 cmd.AddParam("@incomeexpenditurerecord", DbType.Boolean, request.incomeexpenditurerecord, ParameterDirection.Input);
                 cmd.AddParam("@developmentplan", DbType.Boolean, request.developmentplan, ParameterDirection.Input);
                 cmd.AddParam("@decisionandaction", DbType.String, request.decisionandaction, ParameterDirection.Input);
+                cmd.AddParam("@basicneedsnote", DbType.String, request.basicneedsnote, ParameterDirection.Input);
                 cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
                 cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
@@ -520,14 +526,14 @@ updatedby=@updatedby");
                     return result;
                 }
 
-                if (request.mediatedservicetypeid != null && request.mediatedservicetypeid.Length > 0)
+                if (request.basicneedsid != null && request.basicneedsid.Length > 0)
                 {
-                    cmd.CommandText("insert into householdvisit_needs (visitid, mediatedservicetypeid,updatedby) values(@visitid, @mediatedservicetypeid,@updatedby)");
-                    cmd.AddParam("@mediatedservicetypeid", DbType.Int32, ParameterDirection.Input);
+                    cmd.CommandText("insert into householdvisit_needs (visitid, basicneedsid,updatedby) values(@visitid, @basicneedsid,@updatedby)");
+                    cmd.AddParam("@basicneedsid", DbType.Int32, ParameterDirection.Input);
 
-                    foreach (int mediatedservicetypeid in request.mediatedservicetypeid)
+                    foreach (int basicneedsid in request.basicneedsid)
                     {
-                        cmd.SetParamValue("@mediatedservicetypeid", mediatedservicetypeid);
+                        cmd.SetParamValue("@basicneedsid", basicneedsid);
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
                         {
@@ -729,6 +735,7 @@ updatedby=@updatedby");
     loan.householdid,
     DATE_FORMAT(loan.loandate, '%Y-%m-%d %H:%i:%s') loandate,
     FORMAT(loan.amount,2) amount,
+    loan.loanpurposenote,
     loan.loanpurposeid,
     loanpurpose.name loanpurpose,
     household.name householdname,
@@ -762,6 +769,7 @@ order by loan.loandate desc");
     DATE_FORMAT(loandate, '%Y-%m-%d %H:%i:%s') loandate,
     amount,
     loanpurposeid,
+    loanpurposenote,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     loan
@@ -807,6 +815,7 @@ householdid,
 loandate,
 amount,
 loanpurposeid,
+loanpurposenote,
 updatedby)
 values
 (@entryid,
@@ -814,12 +823,14 @@ values
 @loandate,
 @amount,
 @loanpurposeid,
+@loanpurposenote,
 @updatedby) 
 on duplicate key update 
 householdid=@householdid,
 loandate=@loandate,
 amount=@amount,
 loanpurposeid=@loanpurposeid,
+loanpurposenote=@loanpurposenote,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -828,6 +839,7 @@ updatedby=@updatedby");
             cmd.AddParam("@loandate", DbType.DateTime, request.loandate, ParameterDirection.Input);
             cmd.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
             cmd.AddParam("@loanpurposeid", DbType.Int32, request.loanpurposeid, ParameterDirection.Input);
+            cmd.AddParam("@loanpurposenote", DbType.String, request.loanpurposenote, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
@@ -1008,10 +1020,14 @@ updatedby=@updatedby");
     training.entryid,
     training.householdid,
     DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    training.trainingcategoryid,
+    trainingcategory.name trainingcategoryname,
     training.trainingtypeid,
     trainingtype.name trainingtype,
     training.trainingandactivityid,
     trainingandactivity.name trainingandactivity,
+    training.formoftrainingid,
+    formoftraining.name formoftrainingname,
     training.organizationid,
     organization.name organization,
     training.duration,
@@ -1022,6 +1038,15 @@ updatedby=@updatedby");
     end isjoin,
     training.memberid,
     householdmember.name membername,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end gender,
+    case
+        when householdmember.isparticipant = 0 then 'Үгүй'
+        else 'Тийм'
+    end isparticipant,
     district.name districtname,
     household.section,
     DATE_FORMAT(training.updated, '%Y-%m-%d %H:%i:%s') updated
@@ -1030,8 +1055,10 @@ FROM
 left join household on household.householdid = training.householdid
 left join district on district.districtid = household.districtid
 left join householdmember on householdmember.memberid = training.memberid
+left join trainingcategory on trainingcategory.id = training.trainingcategoryid
 left join trainingtype on trainingtype.id = training.trainingtypeid
 left join trainingandactivity on trainingandactivity.id = training.trainingandactivityid
+left join formoftraining on formoftraining.id = training.formoftrainingid
 left join organization on organization.id = training.organizationid
 where (training.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
@@ -1053,8 +1080,10 @@ order by training.trainingdate desc");
     entryid,
     householdid,
     DATE_FORMAT(trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    trainingcategoryid,
     trainingtypeid,
     trainingandactivityid,
+    formoftrainingid,
     organizationid,
     duration,
     isjoin,
@@ -1102,8 +1131,10 @@ where entryid = @entryid");
 (entryid,
 householdid,
 trainingdate,
+trainingcategoryid,
 trainingtypeid,
 trainingandactivityid,
+formoftrainingid,
 organizationid,
 duration,
 isjoin,
@@ -1113,8 +1144,10 @@ values
 (@entryid,
 @householdid,
 @trainingdate,
+@trainingcategoryid,
 @trainingtypeid,
 @trainingandactivityid,
+@formoftrainingid,
 @organizationid,
 @duration,
 @isjoin,
@@ -1123,8 +1156,10 @@ values
 on duplicate key update 
 householdid=@householdid,
 trainingdate=@trainingdate,
+trainingcategoryid=@trainingcategoryid,
 trainingtypeid=@trainingtypeid,
 trainingandactivityid=@trainingandactivityid,
+formoftrainingid=@formoftrainingid,
 organizationid=@organizationid,
 duration=@duration,
 isjoin=@isjoin,
@@ -1135,8 +1170,10 @@ updatedby=@updatedby");
             cmd.AddParam("@entryid", DbType.Int32, request.entryid, ParameterDirection.Input);
             cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
             cmd.AddParam("@trainingdate", DbType.DateTime, request.trainingdate, ParameterDirection.Input);
+            cmd.AddParam("@trainingcategoryid", DbType.Int32, request.trainingcategoryid, ParameterDirection.Input);
             cmd.AddParam("@trainingtypeid", DbType.Int32, request.trainingtypeid, ParameterDirection.Input);
             cmd.AddParam("@trainingandactivityid", DbType.Int32, request.trainingandactivityid, ParameterDirection.Input);
+            cmd.AddParam("@formoftrainingid", DbType.Int32, request.formoftrainingid, ParameterDirection.Input);
             cmd.AddParam("@organizationid", DbType.Int32, request.organizationid, ParameterDirection.Input);
             cmd.AddParam("@duration", DbType.Decimal, request.duration, ParameterDirection.Input);
             cmd.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
