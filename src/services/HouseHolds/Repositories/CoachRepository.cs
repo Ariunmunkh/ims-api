@@ -1710,6 +1710,7 @@ updatedby=@updatedby");
     householdmember.name membername,
     district.name districtname,
     household.section,
+    coach.name coachname,
     DATE_FORMAT(mediatedactivity.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     mediatedactivity
@@ -1719,6 +1720,7 @@ left join district on district.districtid = household.districtid
 left join mediatedservicetype on mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
 left join intermediaryorganization on intermediaryorganization.id = mediatedactivity.intermediaryorganizationid
 left join proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
+left join coach on coach.id = household.coachid
 where (mediatedactivity.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by mediatedactivity.mediateddate desc");

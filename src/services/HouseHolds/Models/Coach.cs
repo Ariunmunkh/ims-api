@@ -461,24 +461,24 @@ namespace HouseHolds.Models
         public int householdid { get; set; }
 
         /// <summary>
-        /// Огноо
+        /// Үйлчилгээ авсан огноо
         /// </summary>
         public DateTime mediateddate { get; set; }
 
         /// <summary>
-        /// Холбон зуучилсан үйлчилгээний төрөл
+        /// Үйлчилгээний төрөл
         /// </summary>
         public int mediatedservicetypeid { get; set; }
 
         /// <summary>
-        /// Холбон зуучилсан байгууллагын нэр
-        /// </summary>
-        public int intermediaryorganizationid { get; set; }
-
-        /// <summary>
-        /// Холбон зуучилсан үйлчилгээний нэр
+        /// Үйлчилгээний нэр
         /// </summary>
         public int proxyserviceid { get; set; }
+
+        /// <summary>
+        /// Үйлчилгээ үзүүлсэн байгууллага / ажилтан 
+        /// </summary>
+        public int intermediaryorganizationid { get; set; }
 
         /// <summary>
         /// Үйлчилгээнд холбогдсон өрхийн гишүүний нэр

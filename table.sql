@@ -211,7 +211,6 @@ householdid int,
 visitdate datetime,
 memberid int,
 coachid int,
-mediatedservicetypeid int,
 incomeexpenditurerecord bool,
 developmentplan bool,
 decisionandaction varchar(2000),
@@ -229,15 +228,12 @@ create table householdvisit_needs
 (
 id int not null AUTO_INCREMENT,
 visitid int,
-mediatedservicetypeid int,
 basicneedsid int,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id),
 INDEX ind_householdvisit_needs_visitid (visitid),  
-CONSTRAINT fk_householdvisit_needs_visitid FOREIGN KEY (visitid) REFERENCES householdvisit(visitid),
-INDEX ind_householdvisit_needs_mediatedservicetypeid (mediatedservicetypeid),  
-CONSTRAINT fk_householdvisit_needs_mediatedservicetypeid FOREIGN KEY (mediatedservicetypeid) REFERENCES mediatedservicetype(id)
+CONSTRAINT fk_householdvisit_needs_visitid FOREIGN KEY (visitid) REFERENCES householdvisit(visitid)
 );
 create table meetingattendance
 (
@@ -347,20 +343,22 @@ PRIMARY KEY (id)
 create table mediatedservicetype
 (
 id int not null,
-name varchar(200),
-updated timestamp default current_timestamp,
-updatedby int,  
-PRIMARY KEY (id)
-);
-create table intermediaryorganization
-(
-id int not null,
+mediatedservicecategoryid int,
 name varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
 create table proxyservice
+(
+id int not null,
+mediatedservicetypeid int,
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+create table intermediaryorganization
 (
 id int not null,
 name varchar(200),
@@ -490,8 +488,8 @@ entryid int not null,
 householdid int,
 mediateddate datetime,
 mediatedservicetypeid int,
-intermediaryorganizationid int,
 proxyserviceid int,
+intermediaryorganizationid int,
 memberid int,
 updated timestamp default current_timestamp,
 updatedby int,  
