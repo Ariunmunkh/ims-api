@@ -592,13 +592,17 @@ updatedby=@updatedby");
     meetingattendance.quantity,
     meetingattendance.amount,
     FORMAT(meetingattendance.amount,2) famount,
-    household.name householdname,
+    householdmember.name,
+    householdmember.regno,
     district.name districtname,
     household.section,
+    householdgroup.name householdgroupname,
     DATE_FORMAT(meetingattendance.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     meetingattendance
 left join household on household.householdid = meetingattendance.householdid
+LEFT JOIN householdmember ON householdmember.memberid = household.memberid
+LEFT JOIN householdgroup ON householdgroup.id = household.householdgroupid
 left join district on district.districtid = household.districtid
 where (meetingattendance.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
