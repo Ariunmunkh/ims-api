@@ -456,6 +456,7 @@ where visitid = @visitid");
                     request.visitdate.AddSeconds(now.Second);
                 }
 
+                request.visitdate = Convert.ToDateTime(DateTime.Now.Year + request.visitdate.ToString(".MM.dd HH:mm:ss"));
                 if (!request.incomeexpenditurerecord.HasValue)
                 {
                     request.incomeexpenditurerecord = false;
@@ -666,6 +667,7 @@ where entryid = @entryid");
                 request.meetingdate.AddSeconds(now.Second);
             }
 
+            request.meetingdate = Convert.ToDateTime(DateTime.Now.Year + request.meetingdate.ToString(".MM.dd HH:mm:ss"));
             cmd.CommandText(@"insert into meetingattendance
 (entryid,
 householdid,
@@ -812,7 +814,7 @@ where entryid = @entryid");
                 request.loandate.AddMinutes(now.Minute);
                 request.loandate.AddSeconds(now.Second);
             }
-
+            request.loandate = Convert.ToDateTime(DateTime.Now.Year + request.loandate.ToString(".MM.dd HH:mm:ss"));
             cmd.CommandText(@"insert into loan
 (entryid,
 householdid,
@@ -956,6 +958,7 @@ where entryid = @entryid");
                 request.repaymentdate.AddSeconds(now.Second);
             }
 
+            request.repaymentdate = Convert.ToDateTime(DateTime.Now.Year + request.repaymentdate.ToString(".MM.dd HH:mm:ss"));
             cmd.CommandText(@"insert into loanrepayment
 (entryid,
 householdid,
@@ -1130,6 +1133,7 @@ where entryid = @entryid");
                 request.trainingdate.AddMinutes(now.Minute);
                 request.trainingdate.AddSeconds(now.Second);
             }
+            request.trainingdate = Convert.ToDateTime(DateTime.Now.Year + request.trainingdate.ToString(".MM.dd HH:mm:ss"));
 
             cmd.CommandText(@"insert into training
 (entryid,
@@ -1297,6 +1301,7 @@ where entryid = @entryid");
                 request.plandate.AddMinutes(now.Minute);
                 request.plandate.AddSeconds(now.Second);
             }
+            request.plandate = Convert.ToDateTime(DateTime.Now.Year + request.plandate.ToString(".MM.dd HH:mm:ss"));
 
             cmd.CommandText(@"insert into improvement
 (entryid,
@@ -1450,6 +1455,7 @@ where entryid = @entryid");
                 request.investmentdate.AddMinutes(now.Minute);
                 request.investmentdate.AddSeconds(now.Second);
             }
+            request.investmentdate = Convert.ToDateTime(DateTime.Now.Year + request.investmentdate.ToString(".MM.dd HH:mm:ss"));
 
             cmd.CommandText(@"insert into investment
 (entryid,
@@ -1619,6 +1625,7 @@ where entryid = @entryid");
                 request.supportdate.AddMinutes(now.Minute);
                 request.supportdate.AddSeconds(now.Second);
             }
+            request.supportdate = Convert.ToDateTime(DateTime.Now.Year + request.supportdate.ToString(".MM.dd HH:mm:ss"));
 
             cmd.CommandText(@"insert into othersupport
 (entryid,
@@ -1724,7 +1731,7 @@ left join district on district.districtid = household.districtid
 left join mediatedservicetype on mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
 left join intermediaryorganization on intermediaryorganization.id = mediatedactivity.intermediaryorganizationid
 left join proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
-left join coach on coach.id = household.coachid
+left join coach on coach.coachid = household.coachid
 where (mediatedactivity.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
 order by mediatedactivity.mediateddate desc");
@@ -1786,6 +1793,7 @@ where entryid = @entryid");
                 request.mediateddate.AddMinutes(now.Minute);
                 request.mediateddate.AddSeconds(now.Second);
             }
+            request.mediateddate = Convert.ToDateTime(DateTime.Now.Year + request.mediateddate.ToString(".MM.dd HH:mm:ss"));
 
             cmd.CommandText(@"insert into mediatedactivity
 (entryid,
