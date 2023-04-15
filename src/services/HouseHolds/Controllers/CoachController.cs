@@ -124,11 +124,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_householdvisit_list")]
-        public IActionResult GetHouseholdVisitList(int id, int coachid)
+        public IActionResult GetHouseholdVisitList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetHouseholdVisitList(id, coachid));
+            return Ok(_CoachRepository.GetHouseholdVisitList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -173,11 +174,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_meetingattendance_list")]
-        public IActionResult GetmeetingattendanceList(int id, int coachid)
+        public IActionResult GetmeetingattendanceList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetmeetingattendanceList(id, coachid));
+            return Ok(_CoachRepository.GetmeetingattendanceList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -222,11 +224,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_loan_list")]
-        public IActionResult GetloanList(int id, int coachid)
+        public IActionResult GetloanList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetloanList(id, coachid));
+            return Ok(_CoachRepository.GetloanList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -271,11 +274,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_loanrepayment_list")]
-        public IActionResult GetloanrepaymentList(int id, int coachid)
+        public IActionResult GetloanrepaymentList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetloanrepaymentList(id, coachid));
+            return Ok(_CoachRepository.GetloanrepaymentList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -320,11 +324,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_training_list")]
-        public IActionResult GettrainingList(int id, int coachid)
+        public IActionResult GettrainingList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GettrainingList(id, coachid));
+            return Ok(_CoachRepository.GettrainingList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -369,11 +374,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_improvement_list")]
-        public IActionResult GetimprovementList(int id, int coachid)
+        public IActionResult GetimprovementList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetimprovementList(id, coachid));
+            return Ok(_CoachRepository.GetimprovementList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -418,11 +424,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_investment_list")]
-        public IActionResult GetinvestmentList(int id, int coachid)
+        public IActionResult GetinvestmentList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetinvestmentList(id, coachid));
+            return Ok(_CoachRepository.GetinvestmentList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -467,11 +474,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_othersupport_list")]
-        public IActionResult GetothersupportList(int id, int coachid)
+        public IActionResult GetothersupportList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetothersupportList(id, coachid));
+            return Ok(_CoachRepository.GetothersupportList(id, coachid, districtid));
         }
 
         /// <summary>
@@ -516,11 +524,12 @@ namespace HouseHolds.Controllers
         /// </summary>
         /// <param name="id">householdid</param>
         /// <param name="coachid">coachid</param>
+        /// <param name="districtid">districtid</param>
         /// <returns></returns>
         [HttpGet("get_mediatedactivity_list")]
-        public IActionResult GetmediatedactivityList(int id, int coachid)
+        public IActionResult GetmediatedactivityList(int id, int coachid, int districtid)
         {
-            return Ok(_CoachRepository.GetmediatedactivityList(id, coachid));
+            return Ok(_CoachRepository.GetmediatedactivityList(id, coachid, districtid));
         }
 
         /// <summary>

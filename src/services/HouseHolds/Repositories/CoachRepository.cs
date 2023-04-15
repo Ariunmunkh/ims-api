@@ -311,8 +311,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetHouseholdVisitList(int id, int coachid)
+        public MResult GetHouseholdVisitList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -361,14 +362,13 @@ FROM
     householdmember ON householdmember.memberid = householdvisit.memberid
         LEFT JOIN
     coach ON coach.coachid = householdvisit.coachid
-WHERE
-    (householdvisit.householdid = @householdid
-        OR 0 = @householdid)
-        AND (household.coachid = @coachid
-        OR 0 = @coachid)
+WHERE (householdvisit.householdid = @householdid OR 0 = @householdid)
+  AND (household.coachid = @coachid OR 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 ORDER BY householdvisit.visitdate DESC");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -578,8 +578,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetmeetingattendanceList(int id, int coachid)
+        public MResult GetmeetingattendanceList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -607,9 +608,11 @@ LEFT JOIN householdgroup ON householdgroup.id = household.householdgroupid
 left join district on district.districtid = household.districtid
 where (meetingattendance.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by meetingattendance.meetingdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -732,8 +735,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetloanList(int id, int coachid)
+        public MResult GetloanList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -755,9 +759,11 @@ left join district on district.districtid = household.districtid
 left join loanpurpose on loanpurpose.id = loan.loanpurposeid
 where (loan.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by loan.loandate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -879,8 +885,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetloanrepaymentList(int id, int coachid)
+        public MResult GetloanrepaymentList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -899,9 +906,11 @@ left join household on household.householdid = loanrepayment.householdid
 left join district on district.districtid = household.districtid
 where (loanrepayment.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by loanrepayment.repaymentdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1019,8 +1028,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GettrainingList(int id, int coachid)
+        public MResult GettrainingList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -1069,9 +1079,11 @@ left join formoftraining on formoftraining.id = training.formoftrainingid
 left join organization on organization.id = training.organizationid
 where (training.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by training.trainingdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1219,8 +1231,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetimprovementList(int id, int coachid)
+        public MResult GetimprovementList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -1243,9 +1256,11 @@ left join business on business.id = improvement.businessid
 left join subbranch on subbranch.id = improvement.subbranchid
 where (improvement.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by improvement.plandate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1363,8 +1378,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetinvestmentList(int id, int coachid)
+        public MResult GetinvestmentList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -1393,9 +1409,11 @@ left join assetreceivedtype on assetreceivedtype.id = investment.assetreceivedty
 left join assetreceived on assetreceived.id = investment.assetreceivedid
 where (investment.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by investment.investmentdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1533,8 +1551,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetothersupportList(int id, int coachid)
+        public MResult GetothersupportList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -1563,9 +1582,11 @@ left join supportreceivedtype on supportreceivedtype.id = othersupport.supportre
 left join sponsoringorganization on sponsoringorganization.id = othersupport.sponsoringorganizationid
 where (othersupport.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by othersupport.supportdate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -1703,8 +1724,9 @@ updatedby=@updatedby");
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetmediatedactivityList(int id, int coachid)
+        public MResult GetmediatedactivityList(int id, int coachid, int districtid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
@@ -1734,9 +1756,11 @@ left join proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
 left join coach on coach.coachid = household.coachid
 where (mediatedactivity.householdid = @householdid or 0 = @householdid)
   and (household.coachid = @coachid or 0 = @coachid)
+  and (household.districtid = @districtid or 0 = @districtid)
 order by mediatedactivity.mediateddate desc");
             cmd.AddParam("@householdid", DbType.Int32, id, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 

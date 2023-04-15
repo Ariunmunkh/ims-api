@@ -42,5 +42,10 @@ namespace Systems.Models
         /// Коуч
         /// </summary>
         public int? coachid { get; set; }
+
+        /// <summary>
+        /// Дүүрэг
+        /// </summary>
+        public int? districtid { get; set; }
     }
 }

@@ -115,6 +115,7 @@ namespace Systems.Repositories
             string email = string.Empty;
             string roleid = string.Empty;
             string coachid = string.Empty;
+            string districtid = string.Empty;
 
             if (data.Rows.Count > 0)
             {
@@ -122,6 +123,7 @@ namespace Systems.Repositories
                 email = data.Rows[0]["email"].ToString();
                 roleid = data.Rows[0]["roleid"].ToString();
                 coachid = data.Rows[0]["coachid"].ToString();
+                districtid = data.Rows[0]["districtid"].ToString();
             }
 
             var claims = new Claim[]
@@ -130,6 +132,7 @@ namespace Systems.Repositories
                     new Claim("email", email),
                     new Claim("roleid", roleid),
                     new Claim("coachid", coachid),
+                    new Claim("districtid", districtid),
                     new Claim(JwtRegisteredClaimNames.Sub, username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)

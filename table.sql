@@ -5,6 +5,7 @@ email varchar(200) not null,
 password varchar(500) not null,
 roleid int,
 coachid int,
+districtid int,
 updated timestamp default current_timestamp,
 updatedby int,
 PRIMARY KEY (userid)

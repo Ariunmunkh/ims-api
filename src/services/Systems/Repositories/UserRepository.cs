@@ -41,14 +41,18 @@ namespace Systems.Repositories
     tbluser.coachid,
     coach.name coachname,
     coach.phone,
+    tbluser.districtid,
     district.name districtname,
+case when tbluser.roleid = 2 then district.name
+     when tbluser.roleid = 3 then coach.name
+     else null end rolename,
     date_format(tbluser.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     tbluser
  LEFT JOIN coach 
    ON coach.coachid = tbluser.coachid
  left join district
-   on district.districtid = coach.districtid
+   on district.districtid = tbluser.districtid
 ORDER BY tbluser.username");
             return connector.Execute(ref cmd, false);
 
@@ -69,6 +73,7 @@ ORDER BY tbluser.username");
     tbluser.email,
     tbluser.roleid,
     tbluser.coachid,
+    tbluser.districtid,
     coach.name,
     coach.phone,
     coach.districtid,
@@ -114,13 +119,14 @@ WHERE
             }
 
             cmd.CommandText(string.Format(@"INSERT INTO tbluser
-  (userid, username, email, password, roleid, coachid)
+  (userid, username, email, password, roleid, coachid, districtid)
 values
-  (@userid, @username, @email, @password, @roleid, @coachid) 
+  (@userid, @username, @email, @password, @roleid, @coachid, @districtid) 
 ON DUPLICATE KEY UPDATE 
 username = @username, 
 roleid = @roleid, 
 coachid = @coachid, 
+districtid = @districtid, 
 email = @email, {0}
 updated = current_timestamp", updatepasssql));
             cmd.AddParam("@userid", DbType.Int32, tbluser.userid, ParameterDirection.Input);
@@ -129,6 +135,7 @@ updated = current_timestamp", updatepasssql));
             cmd.AddParam("@password", DbType.String, tbluser.encryptpass, ParameterDirection.Input);
             cmd.AddParam("@roleid", DbType.Int32, tbluser.roleid, ParameterDirection.Input);
             cmd.AddParam("@coachid", DbType.Int32, tbluser.coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, tbluser.districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 

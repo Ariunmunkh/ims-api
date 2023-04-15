@@ -77,8 +77,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetHouseholdVisitList(int id, int coachid);
+        MResult GetHouseholdVisitList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -110,8 +111,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetmeetingattendanceList(int id, int coachid);
+        MResult GetmeetingattendanceList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -143,8 +145,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetloanList(int id, int coachid);
+        MResult GetloanList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -176,8 +179,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetloanrepaymentList(int id, int coachid);
+        MResult GetloanrepaymentList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -209,8 +213,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GettrainingList(int id, int coachid);
+        MResult GettrainingList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -242,8 +247,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetimprovementList(int id, int coachid);
+        MResult GetimprovementList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -275,8 +281,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetinvestmentList(int id, int coachid);
+        MResult GetinvestmentList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -308,8 +315,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetothersupportList(int id, int coachid);
+        MResult GetothersupportList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
@@ -341,8 +349,9 @@ namespace HouseHolds.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetmediatedactivityList(int id, int coachid);
+        MResult GetmediatedactivityList(int id, int coachid, int districtid);
 
         /// <summary>
         /// 
