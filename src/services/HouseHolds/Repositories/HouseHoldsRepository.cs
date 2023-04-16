@@ -74,7 +74,8 @@ namespace HouseHolds.Repositories
     household.phone,
     householdstatus.name householdstatus,
     household.coachid,
-    household.isactive
+    household.isactive,
+    household.reason
 FROM
     household
 left join householdmember on householdmember.memberid = household.memberid
@@ -233,6 +234,7 @@ FROM
                        and a.householdid = household.householdid) name,
     household.householdgroupid,
     householdgroup.name householdgroupname,
+    householdgroup.unitprice,
     household.districtid,
     district.name districtname,
     household.section,
@@ -243,6 +245,7 @@ FROM
     household.latitude,
     household.longitude,
     household.isactive,
+    household.reason,
     DATE_FORMAT(household.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     household
@@ -303,6 +306,7 @@ coachid,
 latitude,
 longitude,
 isactive,
+reason,
 updatedby)
 values
 (@householdid,
@@ -318,6 +322,7 @@ values
 @latitude,
 @longitude,
 @isactive,
+@reason,
 @updatedby) 
 on duplicate key update 
 numberof=@numberof,
@@ -332,6 +337,7 @@ coachid=@coachid,
 latitude=@latitude,
 longitude=@longitude,
 isactive=@isactive,
+reason=@reason,
 updated=current_timestamp,
 updatedby=@updatedby");
 
@@ -348,6 +354,7 @@ updatedby=@updatedby");
             cmd.AddParam("@latitude", DbType.String, request.latitude, ParameterDirection.Input);
             cmd.AddParam("@longitude", DbType.String, request.longitude, ParameterDirection.Input);
             cmd.AddParam("@isactive", DbType.Boolean, request.isactive, ParameterDirection.Input);
+            cmd.AddParam("@reason", DbType.String, request.reason, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, true);
@@ -437,6 +444,10 @@ WHERE
         when householdmember.isparticipant = 0 then 'Үгүй'
         else 'Тийм'
     end isparticipant,
+    case
+        when householdmember.isxeb = 0 then 'Үгүй'
+        else 'Тийм'
+    end isxeb,
     householdmember.educationdegreeid,
     educationdegree.name educationdegree,
     householdmember.employmentstatusid,
@@ -479,6 +490,7 @@ order by householdmember.birthdate asc");
     gender,
     istogether,
     isparticipant,
+    isxeb,
     educationdegreeid,
     employmentstatusid,
     healthconditionid,
@@ -523,6 +535,7 @@ birthdate,
 gender,
 istogether,
 isparticipant,
+isxeb,
 educationdegreeid,
 employmentstatusid,
 healthconditionid,
@@ -537,6 +550,7 @@ values
 @gender,
 @istogether,
 @isparticipant,
+@isxeb,
 @educationdegreeid,
 @employmentstatusid,
 @healthconditionid,
@@ -550,6 +564,7 @@ birthdate=@birthdate,
 gender=@gender,
 istogether=@istogether,
 isparticipant=@isparticipant,
+isxeb=@isxeb,
 educationdegreeid=@educationdegreeid,
 employmentstatusid=@employmentstatusid,
 healthconditionid=@healthconditionid,
@@ -565,6 +580,7 @@ updatedby=@updatedby");
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             cmd.AddParam("@istogether", DbType.Boolean, request.istogether, ParameterDirection.Input);
             cmd.AddParam("@isparticipant", DbType.Boolean, request.isparticipant, ParameterDirection.Input);
+            cmd.AddParam("@isxeb", DbType.Boolean, request.isxeb, ParameterDirection.Input);
             cmd.AddParam("@educationdegreeid", DbType.Int32, request.educationdegreeid, ParameterDirection.Input);
             cmd.AddParam("@employmentstatusid", DbType.Int32, request.employmentstatusid, ParameterDirection.Input);
             cmd.AddParam("@healthconditionid", DbType.Int32, request.healthconditionid, ParameterDirection.Input);
@@ -574,6 +590,16 @@ updatedby=@updatedby");
             if (result.rettype != 0)
                 return result;
 
+            if (request.isxeb.HasValue && request.isxeb.Value)
+            {
+                cmd.CommandText(@"update householdmember set isxeb = 0 where householdid = @householdid and memberid <> @memberid");
+                cmd.ClearParam();
+                cmd.AddParam("@memberid", DbType.Int32, request.memberid, ParameterDirection.Input);
+                cmd.AddParam("@householdid", DbType.Int32, request.householdid, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, true);
+                if (result.rettype != 0)
+                    return result;
+            }
             if (request.isparticipant)
             {
                 cmd.CommandText(@"update householdmember set isparticipant = 0 where householdid = @householdid and memberid <> @memberid");

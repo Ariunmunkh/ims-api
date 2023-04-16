@@ -77,6 +77,11 @@ namespace HouseHolds.Models
         /// Хөтөлбөрийн өрхийн хувьд Идэвхитэй
         /// </summary>
         public bool? isactive { get; set; }
+
+        /// <summary>
+        /// Шалтгаан
+        /// </summary>
+        public string reason { get; set; }
     }
 
     /// <summary>
@@ -119,6 +124,11 @@ namespace HouseHolds.Models
         /// </summary>
         public int? gender { get; set; }
 
+        /// <summary>
+        /// ХЭБ-д бүртгэлтэй эсэх
+        /// </summary>
+        public bool? isxeb { get; set; }
+        
         /// <summary>
         /// Гол оролцогч
         /// </summary>

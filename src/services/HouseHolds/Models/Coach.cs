@@ -176,6 +176,11 @@ namespace HouseHolds.Models
         public int quantity { get; set; }
 
         /// <summary>
+        /// Нэг хувьцааны үнэ
+        /// </summary>
+        public decimal unitprice { get; set; }
+
+        /// <summary>
         /// Хуримтлуулсан мөнгөн дүн
         /// </summary>
         public decimal amount { get; set; }

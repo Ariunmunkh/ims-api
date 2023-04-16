@@ -592,6 +592,7 @@ updatedby=@updatedby");
         else 'Тийм'
     end isjoin,
     meetingattendance.quantity,
+    meetingattendance.unitprice,
     meetingattendance.amount,
     FORMAT(meetingattendance.amount,2) famount,
     householdmember.name,
@@ -630,6 +631,7 @@ order by meetingattendance.meetingdate desc");
     DATE_FORMAT(meetingdate, '%Y-%m-%d %H:%i:%s') meetingdate,
     isjoin,
     quantity,
+    unitprice,
     amount,
     DATE_FORMAT(updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
@@ -677,6 +679,7 @@ householdid,
 meetingdate,
 isjoin,
 quantity,
+unitprice,
 amount,
 updatedby)
 values
@@ -685,6 +688,7 @@ values
 @meetingdate,
 @isjoin,
 @quantity,
+@unitprice,
 @amount,
 @updatedby) 
 on duplicate key update 
@@ -692,6 +696,7 @@ householdid=@householdid,
 meetingdate=@meetingdate,
 isjoin=@isjoin,
 quantity=@quantity,
+unitprice=@unitprice,
 amount=@amount,
 updated=current_timestamp,
 updatedby=@updatedby");
@@ -701,6 +706,7 @@ updatedby=@updatedby");
             cmd.AddParam("@meetingdate", DbType.DateTime, request.meetingdate, ParameterDirection.Input);
             cmd.AddParam("@isjoin", DbType.Boolean, request.isjoin, ParameterDirection.Input);
             cmd.AddParam("@quantity", DbType.Int32, request.quantity, ParameterDirection.Input);
+            cmd.AddParam("@unitprice", DbType.Decimal, request.unitprice, ParameterDirection.Input);
             cmd.AddParam("@amount", DbType.Decimal, request.amount, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
