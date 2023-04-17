@@ -62,7 +62,7 @@ where household.status = 1");
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -107,7 +107,7 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) B
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -152,7 +152,7 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) B
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -197,7 +197,7 @@ where household.status = 1 AND TIMESTAMPDIFF(YEAR,member.birthdate, CURDATE()) <
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when headage < 6 then '0-5 нас'
-when headage between 6 and 17 then '6-17 нас'
+when headage between 6 and 17 then '06-17 нас'
 when headage between 18 and 25 then '18-25 нас'
 when headage between 26 and 35 then '26-35 нас'
 when headage between 36 and 45 then '36-45 нас'
@@ -241,7 +241,7 @@ and not exists (select null from householdmember b where b.relationshipid = 2 an
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -286,7 +286,7 @@ where household.status = 1)tbl");
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -331,7 +331,7 @@ where household.status = 1)tbl");
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -382,7 +382,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -406,8 +406,8 @@ from (SELECT
         when householdmember.gender = 1 then 'Эмэгтэй'
         else 'Хоосон'
     end membergender,
-    householdvisit_needs.mediatedservicetypeid,
-    mediatedservicetype.name mediatedservicetypename
+    householdvisit_needs.basicneedsid,
+    basicneeds.name basicneedsname
 FROM
     household
         inner JOIN
@@ -415,7 +415,7 @@ FROM
         left join 
     householdvisit_needs on householdvisit_needs.visitid = householdvisit.visitid
         LEFT JOIN
-    mediatedservicetype ON mediatedservicetype.id = householdvisit_needs.mediatedservicetypeid
+    basicneeds ON basicneeds.id = householdvisit_needs.basicneedsid
         LEFT JOIN
     householdmember ON householdmember.memberid = household.memberid
         LEFT JOIN
@@ -436,7 +436,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -488,7 +488,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -540,7 +540,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -649,7 +649,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -698,7 +698,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -747,7 +747,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -799,7 +799,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -848,7 +848,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -927,7 +927,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -984,7 +984,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -1037,7 +1037,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -1086,7 +1086,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
@@ -1147,7 +1147,7 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
 case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '6-17 нас'
+when memberage between 6 and 17 then '06-17 нас'
 when memberage between 18 and 25 then '18-25 нас'
 when memberage between 26 and 35 then '26-35 нас'
 when memberage between 36 and 45 then '36-45 нас'
