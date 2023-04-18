@@ -1080,8 +1080,9 @@ WHERE
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public MResult GetHouseholdTraining()
+        public MResult GetHouseholdTraining(int type)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"select tbl.*, 
@@ -1111,22 +1112,29 @@ from (SELECT
         else 'Хоосон'
     end membergender,
     DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
+    training.trainingcategoryid,
+    trainingcategory.name ""Сургалтын үндсэн чиглэл"",
     training.trainingtypeid,
-    trainingtype.name trainingtypename,
+    trainingtype.name ""Сургалтын төрөл"",
     training.trainingandactivityid,
-    trainingandactivity.name trainingandactivityname,
+    trainingandactivity.name ""Сургалтын нэр"",
     training.organizationid,
-    organization.name organizationname
+    organization.name ""Сургалт өгсөн байгууллага/ажилтан"",
+    training.formoftrainingid,
+    formoftraining.name ""Сургалтын явагдсан хэлбэр""
 FROM
-    household
-       inner JOIN
-    training ON training.householdid = household.householdid
+    training 
+    left join trainingcategory on trainingcategory.id = training.trainingcategoryid
         left join 
     trainingtype on trainingtype.id = training.trainingtypeid
         left join 
     trainingandactivity on trainingandactivity.id = training.trainingandactivityid
         left join 
     organization on organization.id = training.organizationid
+        left join 
+    formoftraining on formoftraining.id = training.formoftrainingid
+	   inner join 
+    household ON training.householdid = household.householdid
         LEFT JOIN
     householdmember ON householdmember.memberid = training.memberid
         LEFT JOIN
@@ -1134,7 +1142,71 @@ FROM
         LEFT JOIN
     coach ON coach.coachid = household.coachid
 WHERE
-    household.status = 1) tbl");
+    household.status = 1 and training.trainingcategoryid = @type) tbl");
+            cmd.AddParam("@type", DbType.Int32, type, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public MResult GetHouseholdMediatedactivity(int type)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"select tbl.*, 
+case when memberage < 6 then '0-5 нас'
+when memberage between 6 and 17 then '06-17 нас'
+when memberage between 18 and 25 then '18-25 нас'
+when memberage between 26 and 35 then '26-35 нас'
+when memberage between 36 and 45 then '36-45 нас'
+when memberage between 46 and 55 then '46-55 нас'
+when memberage > 55 then '55-аас дээш' 
+end agecategory
+from (SELECT 
+    household.householdid,
+    household.districtid,
+    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
+    household.section,
+    household.coachid,
+    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
+    householdmember.memberid,
+    householdmember.name membername,
+    TIMESTAMPDIFF(YEAR,
+        householdmember.birthdate,
+        CURDATE()) memberage,
+    case
+        when householdmember.gender = 0 then 'Эрэгтэй'
+        when householdmember.gender = 1 then 'Эмэгтэй'
+        else 'Хоосон'
+    end membergender,
+    DATE_FORMAT(mediatedactivity.mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
+    mediatedactivity.mediatedservicetypeid,
+    mediatedservicetype.name ""Үйлчилгээний төрөл"",
+    mediatedactivity.proxyserviceid,
+    proxyservice.name ""Үйлчилгээний нэр"",
+    mediatedactivity.intermediaryorganizationid,
+    intermediaryorganization.name ""Үйлчилгээ үзүүлсэн байгууллага / ажилтан""
+FROM
+    mediatedactivity 
+        left join 
+    mediatedservicetype on mediatedservicetype.id = mediatedactivity.mediatedservicetypeid
+        left join 
+    proxyservice on proxyservice.id = mediatedactivity.proxyserviceid
+        left join 
+    intermediaryorganization on intermediaryorganization.id = mediatedactivity.intermediaryorganizationid
+	   inner join 
+    household ON household.householdid = mediatedactivity.householdid 
+        LEFT JOIN
+    householdmember ON householdmember.memberid = mediatedactivity.memberid
+        LEFT JOIN
+    district ON district.districtid = household.districtid
+        LEFT JOIN
+    coach ON coach.coachid = household.coachid
+WHERE
+    household.status = 1 and mediatedactivity.mediatedservicetypeid = @type) tbl");
+            cmd.AddParam("@type", DbType.Int32, type, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 

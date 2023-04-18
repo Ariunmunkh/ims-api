@@ -151,8 +151,16 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="type"></param>
         /// <returns></returns>
-        MResult GetHouseholdTraining();
+        MResult GetHouseholdTraining(int type);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        MResult GetHouseholdMediatedactivity(int type);
 
         /// <summary>
         /// 

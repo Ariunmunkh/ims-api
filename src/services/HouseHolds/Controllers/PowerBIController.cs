@@ -255,13 +255,25 @@ namespace HouseHolds.Controllers
         }
 
         /// <summary>
-        /// Өрхийг идэвхижүүлэх үйл ажиллагаанд хамрагдсан өрхийн гол гишүүдийн тоо, хүйсээр  / нийт, дүүрэг, хороо, коуч, үйл ажиллагааны нэр, сар /
+        /// Сургалт
         /// </summary>
+        /// <param name="type">1 Нийгмийн хамгаалал 2 Санхүүгийн оролцоо 3 Амьжиргааг дэмжих 4 Нийгмийн чадавхжилт</param>
         /// <returns></returns>
         [HttpGet("get_household_training")]
-        public IActionResult GetHouseholdTraining()
+        public IActionResult GetHouseholdTraining(int type)
         {
-            return Ok(_PowerBIRepository.GetHouseholdTraining());
+            return Ok(_PowerBIRepository.GetHouseholdTraining(type));
+        }
+
+        /// <summary>
+        /// Холбон зуучилсан үйл ажиллагаа
+        /// </summary>
+        /// <param name="type">1 Нийгмийн хамгаалал 2 Амьжиргааг дэмжих 3 Санхүүгийн оролцоо 4 Нийгмийн чадавхжилт</param>
+        /// <returns></returns>
+        [HttpGet("get_household_mediatedactivity")]
+        public IActionResult GetHouseholdMediatedactivity(int type)
+        {
+            return Ok(_PowerBIRepository.GetHouseholdMediatedactivity(type));
         }
 
         /// <summary>

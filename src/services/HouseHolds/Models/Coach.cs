@@ -308,7 +308,7 @@ namespace HouseHolds.Models
         /// <summary>
         /// Өрхөөс уг сургалтад хамрагдсан эсэх
         /// </summary>
-        public bool isjoin { get; set; }
+        public bool? isjoin { get; set; }
 
         /// <summary>
         /// Сургалт, үйл ажиллагаанд хамрагдсан өрхийн гишүүний нэр
