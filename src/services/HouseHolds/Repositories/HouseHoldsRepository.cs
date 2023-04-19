@@ -69,6 +69,9 @@ namespace HouseHolds.Repositories
     household.householdgroupid,
     householdgroup.name householdgroupname,
     district.name districtname,
+xeb.name xebname,
+xeb.regno xebregno,
+relationship.name xebrelationship,
     household.section,
     household.address,
     household.phone,
@@ -80,6 +83,8 @@ FROM
     household
 left join householdmember on householdmember.memberid = household.memberid
 left join householdmember head on head.memberid = household.headmemberid
+left join householdmember xeb on xeb.memberid = household.xebmemberid
+left join relationship on relationship.relationshipid = xeb.relationshipid
 left join district on district.districtid = household.districtid
 left join householdstatus on householdstatus.id = household.status
 LEFT JOIN householdgroup ON householdgroup.id = household.householdgroupid

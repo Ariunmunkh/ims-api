@@ -151,8 +151,10 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        public MResult GetHouseholdgroupList()
+        public MResult GetHouseholdgroupList(int coachid, int districtid)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -166,7 +168,11 @@ updatedby=@updatedby");
 FROM
     householdgroup
 left join coach on coach.coachid = householdgroup.coachid
+where (householdgroup.coachid = @coachid or 0 = @coachid)
+  and (householdgroup.districtid = @districtid or 0 = @districtid)
 order by householdgroup.updated desc");
+            cmd.AddParam("@coachid", DbType.Int32, coachid, ParameterDirection.Input);
+            cmd.AddParam("@districtid", DbType.Int32, districtid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }

@@ -45,8 +45,10 @@ namespace HouseHolds.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
-        MResult GetHouseholdgroupList();
+        MResult GetHouseholdgroupList(int coachid,int districtid);
 
         /// <summary>
         /// 

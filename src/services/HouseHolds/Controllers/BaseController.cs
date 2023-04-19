@@ -76,11 +76,13 @@ namespace HouseHolds.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="coachid"></param>
+        /// <param name="districtid"></param>
         /// <returns></returns>
         [HttpGet("get_householdgroup_list")]
-        public IActionResult GetHouseholdgroupList()
+        public IActionResult GetHouseholdgroupList(int coachid, int districtid)
         {
-            return Ok(_BaseRepository.GetHouseholdgroupList());
+            return Ok(_BaseRepository.GetHouseholdgroupList(coachid, districtid));
         }
 
         /// <summary>
