@@ -515,9 +515,9 @@ from (SELECT
     improvement.businessid,
     COALESCE(business.name,'Бизнесээ сонгоогүй') businessname
 FROM
-    household
-        left JOIN
-    improvement ON improvement.householdid = household.householdid
+    improvement
+        inner JOIN
+    household ON household.householdid = improvement.householdid
         LEFT JOIN
     business ON business.id = improvement.businessid
         LEFT JOIN
@@ -625,6 +625,7 @@ WHERE
     COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
     household.section,
     household.coachid,
+    investment.entryid,
     COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
     investment.totalprice
 FROM
@@ -1111,6 +1112,7 @@ from (SELECT
         when householdmember.gender = 1 then 'Эмэгтэй'
         else 'Хоосон'
     end membergender,
+    training.entryid,
     DATE_FORMAT(training.trainingdate, '%Y-%m-%d %H:%i:%s') trainingdate,
     training.trainingcategoryid,
     trainingcategory.name ""Сургалтын үндсэн чиглэл"",
@@ -1181,6 +1183,7 @@ from (SELECT
         when householdmember.gender = 1 then 'Эмэгтэй'
         else 'Хоосон'
     end membergender,
+    mediatedactivity.entryid,
     DATE_FORMAT(mediatedactivity.mediateddate, '%Y-%m-%d %H:%i:%s') mediateddate,
     mediatedactivity.mediatedservicetypeid,
     mediatedservicetype.name ""Үйлчилгээний төрөл"",
@@ -1217,49 +1220,37 @@ WHERE
         public MResult GetHouseholdVisit()
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"select tbl.*, 
-case when memberage < 6 then '0-5 нас'
-when memberage between 6 and 17 then '06-17 нас'
-when memberage between 18 and 25 then '18-25 нас'
-when memberage between 26 and 35 then '26-35 нас'
-when memberage between 36 and 45 then '36-45 нас'
-when memberage between 46 and 55 then '46-55 нас'
-when memberage > 55 then '55-аас дээш' 
-end agecategory
-from (SELECT 
-    household.householdid,
-    household.districtid,
-    COALESCE(district.name,'Дүүрэг сонгоогүй өрх') districtname,
-    household.section,
-    household.coachid,
-    COALESCE(coach.name, 'Коучид харьяалагдаагүй өрх') coachname,
-    householdmember.memberid,
-    householdmember.name membername,
-    TIMESTAMPDIFF(YEAR,
-        householdmember.birthdate,
-        CURDATE()) memberage,
-    case
-        when householdmember.gender = 0 then 'Эрэгтэй'
-        when householdmember.gender = 1 then 'Эмэгтэй'
-        else 'Хоосон'
-    end membergender,
-    householdvisit.mediatedservicetypeid,
-    mediatedservicetype.name mediatedservicetypename,
-    DATE_FORMAT(householdvisit.visitdate, '%Y-%m-%d %H:%i:%s') visitdate
+            cmd.CommandText(@"SELECT 
+    a.coachid,
+    b.coachname,
+    b.districtid,
+    b.districtname,
+    a.visitdate,
+    a.visitcount,
+    b.householdcount - a.visitcount AS nonecount,
+    b.householdcount
 FROM
-    household
-        inner JOIN
-    householdvisit ON householdvisit.householdid = household.householdid
+    (SELECT 
+        coachid,
+            DATE_FORMAT(householdvisit.visitdate, '%Y-%m') visitdate,
+            COUNT(DISTINCT householdid) visitcount
+    FROM
+        householdvisit
+    GROUP BY coachid , DATE_FORMAT(householdvisit.visitdate, '%Y-%m')) a
         LEFT JOIN
-    mediatedservicetype ON mediatedservicetype.id = householdvisit.mediatedservicetypeid
-        LEFT JOIN
-    householdmember ON householdmember.memberid = household.memberid
-        LEFT JOIN
-    district ON district.districtid = household.districtid
-        LEFT JOIN
-    coach ON coach.coachid = household.coachid
-WHERE
-    household.status = 1) tbl");
+    (SELECT 
+        coach.coachid,
+            coach.name coachname,
+            district.districtid,
+            district.name districtname,
+            COUNT(1) householdcount
+    FROM
+        household
+    INNER JOIN coach ON coach.coachid = household.coachid
+    LEFT JOIN district ON district.districtid = coach.districtid
+    WHERE
+        household.status = 1
+    GROUP BY coach.coachid , coach.name , district.districtid , district.name) b ON a.coachid = b.coachid");
             return connector.Execute(ref cmd, false);
         }
 
