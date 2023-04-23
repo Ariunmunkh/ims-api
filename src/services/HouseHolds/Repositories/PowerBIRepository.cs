@@ -1250,7 +1250,8 @@ FROM
     LEFT JOIN district ON district.districtid = coach.districtid
     WHERE
         household.status = 1
-    GROUP BY coach.coachid , coach.name , district.districtid , district.name) b ON a.coachid = b.coachid");
+    GROUP BY coach.coachid , coach.name , district.districtid , district.name) b ON a.coachid = b.coachid
+ORDER BY a.visitdate asc");
             return connector.Execute(ref cmd, false);
         }
 

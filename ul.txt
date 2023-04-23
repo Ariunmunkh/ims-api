@@ -5,12 +5,12 @@ ssh-keygen
 ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
-ssh-copy-id -i ~/.ssh/id_rsa root@157.230.46.90
+ssh-copy-id -i ~/.ssh/id_rsa root@165.22.105.125
 p@ssW0rd
 r@dcr0ss
 fw*+!*Q%G^AA@a$&
 
-export DOCKER_HOST=ssh://root@157.230.46.90
+export DOCKER_HOST=ssh://root@165.22.105.125
 
 docker stop 2d946ba0a560
 docker rmi -f 2d946ba0a560
@@ -21,20 +21,21 @@ docker system prune -a
 docker image prune -a
 service docker restart
 
-export DOCKER_HOST=ssh://root@157.230.46.90
+export DOCKER_HOST=ssh://root@165.22.105.125
 cd D:/PROJECTS_TFS/dms-api
 docker-compose build
 docker-compose up -d
 
-export DOCKER_HOST=ssh://root@157.230.46.90
+export DOCKER_HOST=ssh://root@165.22.105.125
 cd D:/PROJECTS_TFS/dms-api
 docker-compose build households
 docker-compose up -d households
 
-export DOCKER_HOST=ssh://root@157.230.46.90
+export DOCKER_HOST=ssh://root@165.22.105.125
 cd D:/PROJECTS_TFS/dms-ui
 docker-compose build
 docker-compose up -d
 
-dms.digitalocean@gmail.com
+old:dms.digitalocean@gmail.com
+digitalocean.dms@gmail.com
 r@dcr0ss
