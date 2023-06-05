@@ -36,6 +36,5 @@ cd D:/PROJECTS_TFS/dms-ui
 docker-compose build
 docker-compose up -d
 
-old:dms.digitalocean@gmail.com
-digitalocean.dms@gmail.com
+ims.redcross@gmail.com
 r@dcr0ss
