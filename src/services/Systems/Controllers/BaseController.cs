@@ -55,7 +55,7 @@ namespace Systems.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("set_dropdown_item")]
-        public IActionResult SetDropDownItem([FromBody] dropdownitem request)
+        public IActionResult SetDropDownItem([FromBody] DropDownItem request)
         {
             return Ok(_BaseRepository.SetDropDownItem(request));
         }
