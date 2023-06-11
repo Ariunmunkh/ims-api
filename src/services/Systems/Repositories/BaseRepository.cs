@@ -2,7 +2,7 @@
 using Connection.Model;
 using LConnection.Model;
 using System.Data;
-using HouseHolds.Models;
+using Systems.Models;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace HouseHolds.Repositories
+namespace Systems.Repositories
 {
     /// <summary>
     /// 
@@ -609,7 +609,7 @@ WHERE
 
                     MResult result;
                     MCommand cmd = connector.PopCommand();
-                    cmd.CommandText(@"insert into householdsurvey
+                    cmd.CommandText(@"insert into Systemsurvey
 (householdid,
 dugaar,
 h1,
@@ -766,7 +766,7 @@ values
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT
     household.status,
-    householdstatus.name statusname,
+    Systemstatus.name statusname,
     COALESCE(household.districtid,-1) districtid,
     COALESCE(district.name,'Хоосон') districtname,
     COALESCE(household.section,-1) section,
@@ -779,13 +779,13 @@ values
 FROM
     household
         LEFT JOIN
-    householdstatus ON householdstatus.id = household.status
+    Systemstatus ON Systemstatus.id = household.status
         LEFT JOIN
     district ON district.districtid = household.districtid
         LEFT JOIN
     householdgroup ON householdgroup.id = household.householdgroupid
         LEFT JOIN
-    coach ON coach.coachid = household.coachid" + (issurvey ? " where exists (select null from householdsurvey where householdsurvey.householdid = household.householdid)" : string.Empty));
+    coach ON coach.coachid = household.coachid" + (issurvey ? " where exists (select null from Systemsurvey where Systemsurvey.householdid = household.householdid)" : string.Empty));
             MResult result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
@@ -798,7 +798,7 @@ FROM
                 DataRow[] sections;
                 DataRow[] groups;
                 DataRow[] coachs;
-                DataRow[] households;
+                DataRow[] Systems;
                 using (DataSet ds = new DataSet())
                 {
                     ds.Tables.Add(data.DefaultView.ToTable("status", true, "status", "statusname"));
@@ -849,13 +849,13 @@ FROM
 
                                         List<object> householdlist = new List<object>();
 
-                                        households = ds.Tables["household"].Select("status='" + status["status"] + "' and districtid='" + districts[i]["districtid"] + "' and section='" + sections[j]["section"] + "' and householdgroupid='" + groups[k]["householdgroupid"] + "' and coachid = '" + coachs[m]["coachid"] + "'");
-                                        for (int n = households.Length - 1; n >= 0; n--)
+                                        Systems = ds.Tables["household"].Select("status='" + status["status"] + "' and districtid='" + districts[i]["districtid"] + "' and section='" + sections[j]["section"] + "' and householdgroupid='" + groups[k]["householdgroupid"] + "' and coachid = '" + coachs[m]["coachid"] + "'");
+                                        for (int n = Systems.Length - 1; n >= 0; n--)
                                         {
                                             Hashtable hht = new Hashtable();
-                                            hht.Add("key", households[n]["householdid"]);
-                                            hht.Add("name", households[n]["name"]);
-                                            ds.Tables["household"].Rows.Remove(households[n]);
+                                            hht.Add("key", Systems[n]["householdid"]);
+                                            hht.Add("name", Systems[n]["name"]);
+                                            ds.Tables["household"].Rows.Remove(Systems[n]);
                                             householdlist.Add(hht);
                                         }
 

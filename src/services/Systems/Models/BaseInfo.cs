@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HouseHolds.Models
+namespace Systems.Models
 {
 
     /// <summary>
@@ -64,7 +64,7 @@ namespace HouseHolds.Models
     /// <summary>
     /// Өрхийн статус
     /// </summary>
-    public class householdstatus
+    public class Systemstatus
     {
         /// <summary>
         /// дугаар

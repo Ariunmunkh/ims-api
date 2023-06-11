@@ -1,8 +1,8 @@
 ﻿using Connection.Model;
-using HouseHolds.Models;
+using Systems.Models;
 using System.Threading.Tasks;
 
-namespace HouseHolds.Repositories
+namespace Systems.Repositories
 {
     /// <summary>
     /// 

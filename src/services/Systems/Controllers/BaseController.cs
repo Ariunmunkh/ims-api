@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using HouseHolds.Models;
-using HouseHolds.Repositories;
+using Systems.Models;
+using Systems.Repositories;
 using System.Threading.Tasks;
 
-namespace HouseHolds.Controllers
+namespace Systems.Controllers
 {
     /// <summary>
     /// 

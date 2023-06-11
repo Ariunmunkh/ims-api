@@ -40,6 +40,7 @@ namespace Systems
             ConfigureConsul(services);
             services.AddTransient<ISystemsRepository, SystemsRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBaseRepository, BaseRepository>();
             services.AddScoped(service => new DWConnector());
             services.ConfigureSwagger("Systems", "v1");
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
