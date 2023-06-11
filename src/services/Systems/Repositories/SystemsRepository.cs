@@ -114,16 +114,14 @@ namespace Systems.Repositories
             string username = string.Empty;
             string email = string.Empty;
             string roleid = string.Empty;
-            string coachid = string.Empty;
-            string districtid = string.Empty;
+            string volunteerid = string.Empty;
 
             if (data.Rows.Count > 0)
             {
                 username = data.Rows[0]["username"].ToString();
                 email = data.Rows[0]["email"].ToString();
                 roleid = data.Rows[0]["roleid"].ToString();
-                coachid = data.Rows[0]["coachid"].ToString();
-                districtid = data.Rows[0]["districtid"].ToString();
+                volunteerid = data.Rows[0]["volunteerid"].ToString();
             }
 
             var claims = new Claim[]
@@ -131,8 +129,7 @@ namespace Systems.Repositories
                     new Claim("username", username),
                     new Claim("email", email),
                     new Claim("roleid", roleid),
-                    new Claim("coachid", coachid),
-                    new Claim("districtid", districtid),
+                    new Claim("volunteerid", volunteerid),
                     new Claim(JwtRegisteredClaimNames.Sub, username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)

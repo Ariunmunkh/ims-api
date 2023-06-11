@@ -39,13 +39,9 @@ namespace Systems.Models
         public int roleid { get; set; }
 
         /// <summary>
-        /// Коуч
+        /// Сайн дурын идэвхтэн
         /// </summary>
-        public int? coachid { get; set; }
+        public int? volunteerid { get; set; }
 
-        /// <summary>
-        /// Дүүрэг
-        /// </summary>
-        public int? districtid { get; set; }
     }
 }

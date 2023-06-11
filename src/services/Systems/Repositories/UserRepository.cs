@@ -38,21 +38,13 @@ namespace Systems.Repositories
     tbluser.email,
     tbluser.password,
     tbluser.roleid,
-    tbluser.coachid,
-    coach.name coachname,
-    coach.phone,
-    tbluser.districtid,
-    district.name districtname,
-case when tbluser.roleid = 2 then district.name
-     when tbluser.roleid = 3 then coach.name
-     else null end rolename,
+    tbluser.volunteerid,
+    volunteer.firstname volunteername,
     date_format(tbluser.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     tbluser
- LEFT JOIN coach 
-   ON coach.coachid = tbluser.coachid
- left join district
-   on district.districtid = tbluser.districtid
+ LEFT JOIN volunteer 
+   ON volunteer.id = tbluser.volunteerid
 ORDER BY tbluser.username");
             return connector.Execute(ref cmd, false);
 
@@ -68,20 +60,9 @@ ORDER BY tbluser.username");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    tbluser.userid,
-    tbluser.username,
-    tbluser.email,
-    tbluser.roleid,
-    tbluser.coachid,
-    tbluser.districtid,
-    coach.name,
-    coach.phone,
-    coach.districtid,
-    tbluser.updated
+    tbluser.*
 FROM
     tbluser
-        LEFT JOIN
-    coach ON coach.coachid = tbluser.coachid
 WHERE
     tbluser.userid = @userid");
             cmd.AddParam("@userid", DbType.Int32, userid, ParameterDirection.Input);
@@ -119,14 +100,13 @@ WHERE
             }
 
             cmd.CommandText(string.Format(@"INSERT INTO tbluser
-  (userid, username, email, password, roleid, coachid, districtid)
+  (userid, username, email, password, roleid, volunteerid)
 values
-  (@userid, @username, @email, @password, @roleid, @coachid, @districtid) 
+  (@userid, @username, @email, @password, @roleid, @volunteerid) 
 ON DUPLICATE KEY UPDATE 
 username = @username, 
 roleid = @roleid, 
-coachid = @coachid, 
-districtid = @districtid, 
+volunteerid = @volunteerid, 
 email = @email, {0}
 updated = current_timestamp", updatepasssql));
             cmd.AddParam("@userid", DbType.Int32, tbluser.userid, ParameterDirection.Input);
@@ -134,8 +114,7 @@ updated = current_timestamp", updatepasssql));
             cmd.AddParam("@email", DbType.String, tbluser.email, ParameterDirection.Input);
             cmd.AddParam("@password", DbType.String, tbluser.encryptpass, ParameterDirection.Input);
             cmd.AddParam("@roleid", DbType.Int32, tbluser.roleid, ParameterDirection.Input);
-            cmd.AddParam("@coachid", DbType.Int32, tbluser.coachid, ParameterDirection.Input);
-            cmd.AddParam("@districtid", DbType.Int32, tbluser.districtid, ParameterDirection.Input);
+            cmd.AddParam("@volunteerid", DbType.Int32, tbluser.volunteerid, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 

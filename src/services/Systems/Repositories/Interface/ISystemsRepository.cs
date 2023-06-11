@@ -11,9 +11,9 @@ namespace Systems.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="authBody"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        MResult GetUserInfo(authbody authBody);
+        MResult GetUserInfo(authbody request);
 
         /// <summary>
         /// 
