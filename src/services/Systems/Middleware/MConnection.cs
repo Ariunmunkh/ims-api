@@ -14,15 +14,12 @@ namespace Systems.Middleware
     public class MConnection
     {
         private readonly RequestDelegate requestDeletegate;
-        private readonly IConfiguration configuration;
 
         /// <summary>Initializes a new instance of the <see cref="MConnection"/> class.</summary>
         /// <param name="_requestDelegate">The request delegate.</param>
-        /// <param name="_configuration"></param>
-        public MConnection(RequestDelegate _requestDelegate, IConfiguration _configuration)
+        public MConnection(RequestDelegate _requestDelegate)
         {
             requestDeletegate = _requestDelegate;
-            configuration = _configuration;
         }
 
         /// <summary>Invokes the specified context.</summary>
@@ -30,11 +27,11 @@ namespace Systems.Middleware
         /// <param name="con">The connection object</param>
         public async Task Invoke(HttpContext context, DWConnector con)
         {
-            string connectionString = "Server=db-mysql-nyc1-74664-do-user-13983227-0.b.db.ondigitalocean.com;" +
+            string connectionString = "Server=db-mysql-sgp1-44386-do-user-14144760-0.b.db.ondigitalocean.com;" +
                 "Port=25060;" +
                 "Database=defaultdb;" +
                 "Uid=doadmin;" +
-                "Pwd=AVNS_N00ALi-0_CPKIn-Kw8r;";
+                "Pwd=AVNS_NkdmPrZeUIjNMe4-h3B;";
 
             con.ReloadConnectionString(connectionString);
             using (var c = con.Initialize())

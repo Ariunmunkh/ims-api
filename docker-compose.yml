@@ -7,13 +7,6 @@ services:
     command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
     hostname: consul
     container_name: consul
-
-  households:
-    image: households:latest
-    build:
-      context: .
-      dockerfile: src/services/HouseHolds/Dockerfile
-    container_name: households
     
   systems:
     image: systems:latest

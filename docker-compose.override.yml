@@ -1,16 +1,6 @@
 version: '3.4'
 
 services:
-  households:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
-      - ServiceConfig__serviceAddress=http://households:80
-      - ServiceConfig__serviceName=households
-      - ServiceConfig__serviceId=households-v1
-    ports:
-      - "80"
-      
   systems:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -20,6 +10,8 @@ services:
       - ServiceConfig__serviceId=systems-v1
     ports:
       - "80"
+    depends_on:
+    - api.gateway
 
   api.gateway:
     environment:

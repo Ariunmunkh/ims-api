@@ -68,7 +68,6 @@ namespace API.Gateway
                     app.UseCors("CorsPolicy");
                     app.UseMvc().UseSwagger().UseSwaggerUI(c =>
                     {
-                        c.SwaggerEndpoint("/households/docs/swagger.json", "HouseHolds");
                         c.SwaggerEndpoint("/systems/docs/swagger.json", "Systems");
                     });
                     app.UseOcelot().Wait();

@@ -1,27 +1,10 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/record/{everything}",
-      "DownstreamScheme": "http",
-      "ServiceName": "households",
-      "UpstreamPathTemplate": "/api/record/{everything}",
-      "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": null,
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/swagger/v1/swagger.json",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/households/docs/swagger.json",
-      "ServiceName": "households"
-    },
-    {
-      "DownstreamPathTemplate": "/api/systems/{everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "ServiceName": "systems",
-      "UpstreamPathTemplate": "/api/systems/{everything}",
+      "UpstreamPathTemplate": "/api/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": null,
