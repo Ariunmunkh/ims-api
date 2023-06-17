@@ -3,6 +3,7 @@ using Connection.Model;
 using Infrastructure;
 using LConnection.Model;
 using System;
+using System.Collections;
 using System.Data;
 using Systems.Models;
 
@@ -70,11 +71,11 @@ WHERE
         public MResult SetVolunteer(Volunteer request)
         {
             MCommand cmd = connector.PopCommand();
-
+            MResult result;
             if (request.id == 0)
             {
                 cmd.CommandText(@"select coalesce(max(id),0)+1 newid from volunteer");
-                MResult result = connector.Execute(ref cmd, false);
+                result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
                 if (result.retdata is DataTable data && data.Rows.Count > 0)
@@ -135,7 +136,7 @@ divisionid=@divisionid,
 districtid=@districtid,
 address=@address,
 isdisabled=@isdisabled,
-updatedby=@updatedby) 
+updatedby=@updatedby, 
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@familyname", DbType.String, request.familyname, ParameterDirection.Input);
@@ -154,7 +155,11 @@ updated = current_timestamp");
             cmd.AddParam("@address", DbType.String, request.address, ParameterDirection.Input);
             cmd.AddParam("@isdisabled", DbType.Boolean, request.isdisabled, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
-            return connector.Execute(ref cmd, true);
+            result = connector.Execute(ref cmd, true);
+            if (result.rettype != 0)
+                return result;
+
+            return new MResult { retdata = new Hashtable { { "volunteerid", request.id } } };
         }
 
         /// <summary>
@@ -250,7 +255,7 @@ ON DUPLICATE KEY UPDATE
 relationshipid=@relationshipid,
 firstname=@firstname,
 phone=@phone,
-updatedby=@updatedby) 
+updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
@@ -357,7 +362,7 @@ voluntaryworkid=@voluntaryworkid,
 duration=@duration,
 voluntaryworkdate=@voluntaryworkdate,
 note=@note,
-updatedby=@updatedby) 
+updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
@@ -468,7 +473,7 @@ trainingdate=@trainingdate,
 location=@location,
 duration=@duration,
 note=@note,
-updatedby=@updatedby) 
+updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
@@ -573,7 +578,7 @@ ON DUPLICATE KEY UPDATE
 skillsid=@skillsid,
 skillslevelid=@skillslevelid,
 note=@note,
-updatedby=@updatedby) 
+updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
@@ -680,7 +685,7 @@ membershipid=@membershipid,
 begindate=@begindate,
 enddate=@enddate,
 note=@note,
-updatedby=@updatedby) 
+updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
@@ -788,7 +793,7 @@ assistanceid=@assistanceid,
 projectname=@projectname,
 assistancedate=@assistancedate,
 note=@note,
-updatedby=@updatedby) 
+updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
