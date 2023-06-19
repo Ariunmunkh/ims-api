@@ -97,6 +97,7 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+drop table volunteer;
 /*Сайн дурын идэвхтэн*/
 create table volunteer
 (
@@ -109,7 +110,6 @@ regno varchar(200),/*Регистрийн дугаар*/
 birthday date,/*Төрсөн огноо*/
 phone varchar(200),/*Утасны дугаар*/
 isvolunteer bool,/*Сайн дурын идэвхтэн эсэх*/
-membershipid int,/**/
 isblooddonor bool,/*Цусны доонор эсэх*/
 bloodgroupid int,/*Цусны бүлэг*/
 countryid int,/*Улс*/

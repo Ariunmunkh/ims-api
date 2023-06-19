@@ -15,7 +15,7 @@ namespace Systems.Models
         /// <summary>
         /// Эцэг бүртгэлийн дугаар
         /// </summary>
-        public int headid { get; set; }
+        public int? headid { get; set; }
 
         /// <summary>
         /// Нэр
@@ -52,7 +52,7 @@ namespace Systems.Models
         /// <summary>
         /// Хүйс
         /// </summary>
-        public int gender { get; set; }
+        public int? gender { get; set; }
         /// <summary>
         /// Регистрийн дугаар
         /// </summary>
@@ -142,11 +142,11 @@ namespace Systems.Models
         /// <summary>
         /// Сайн дурын ажлын төрөл
         /// </summary>
-        public int voluntaryworkid { get; set; }
+        public int? voluntaryworkid { get; set; }
         /// <summary>
         /// Хугацаа
         /// </summary>
-        public int duration { get; set; }
+        public int? duration { get; set; }
         /// <summary>
         /// Огноо
         /// </summary>
@@ -173,7 +173,7 @@ namespace Systems.Models
         /// <summary>
         /// Сургалтын төрөл
         /// </summary>
-        public int trainingid { get; set; }
+        public int? trainingid { get; set; }
         /// <summary>
         /// Огноо
         /// </summary>
@@ -185,7 +185,7 @@ namespace Systems.Models
         /// <summary>
         /// Хугацаа
         /// </summary>
-        public int duration { get; set; }
+        public int? duration { get; set; }
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
@@ -207,11 +207,11 @@ namespace Systems.Models
         /// <summary>
         /// Ур чадварын төрөл
         /// </summary>
-        public int skillsid { get; set; }
+        public int? skillsid { get; set; }
         /// <summary>
         /// Ур чадварын түвшин
         /// </summary>
-        public int skillslevelid { get; set; }
+        public int? skillslevelid { get; set; }
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
@@ -234,7 +234,7 @@ namespace Systems.Models
         /// <summary>
         /// Гишүүнчлэлийн төрөл
         /// </summary>
-        public int membershipid { get; set; }
+        public int? membershipid { get; set; }
         /// <summary>
         /// Эхэлсэн
         /// </summary>
@@ -265,7 +265,7 @@ namespace Systems.Models
         /// <summary>
         /// Тусламжийн төрөл
         /// </summary>
-        public int assistanceid { get; set; }
+        public int? assistanceid { get; set; }
         /// <summary>
         /// Төслийн нэр
         /// </summary>

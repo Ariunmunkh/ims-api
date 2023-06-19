@@ -182,8 +182,9 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetEmergencyContactList()
+        public MResult GetEmergencyContactList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -191,7 +192,9 @@ updated = current_timestamp");
     emergencycontact.*
 FROM
     emergencycontact
+where emergencycontact.volunteerid = @id
 ORDER BY emergencycontact.firstname");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -286,8 +289,9 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetVolunteerVoluntaryWorkList()
+        public MResult GetVolunteerVoluntaryWorkList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -295,7 +299,9 @@ updated = current_timestamp");
     volunteervoluntarywork.*
 FROM
     volunteervoluntarywork
+where volunteervoluntarywork.volunteerid = @id
 ORDER BY volunteervoluntarywork.updated");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -394,8 +400,9 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetVolunteerTrainingList()
+        public MResult GetVolunteerTrainingList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -403,7 +410,9 @@ updated = current_timestamp");
     volunteertraining.*
 FROM
     volunteertraining
+where volunteertraining.volunteerid = @id
 ORDER BY volunteertraining.updated");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -505,8 +514,9 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetVolunteerSkillsList()
+        public MResult GetVolunteerSkillsList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -514,7 +524,9 @@ updated = current_timestamp");
     volunteerskills.*
 FROM
     volunteerskills
+where volunteerskills.volunteerid = @id
 ORDER BY volunteerskills.updated");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -609,8 +621,9 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetVolunteerMembershipList()
+        public MResult GetVolunteerMembershipList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -618,7 +631,9 @@ updated = current_timestamp");
     volunteermembership.*
 FROM
     volunteermembership
+where volunteermembership.volunteerid = @id
 ORDER BY volunteermembership.updated");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -717,8 +732,9 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetVolunteerAssistanceList()
+        public MResult GetVolunteerAssistanceList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -726,7 +742,9 @@ updated = current_timestamp");
     volunteerassistance.*
 FROM
     volunteerassistance
+where volunteerassistance.volunteerid = @id
 ORDER BY volunteerassistance.firstname");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }

@@ -42,7 +42,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetEmergencyContactList();
+        MResult GetEmergencyContactList(int id);
 
         /// <summary>
         /// 
@@ -71,7 +71,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerVoluntaryWorkList();
+        MResult GetVolunteerVoluntaryWorkList(int id);
 
         /// <summary>
         /// 
@@ -100,7 +100,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerTrainingList();
+        MResult GetVolunteerTrainingList(int id);
 
         /// <summary>
         /// 
@@ -129,7 +129,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerSkillsList();
+        MResult GetVolunteerSkillsList(int id);
 
         /// <summary>
         /// 
@@ -158,7 +158,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerMembershipList();
+        MResult GetVolunteerMembershipList(int id);
 
         /// <summary>
         /// 
@@ -187,7 +187,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerAssistanceList();
+        MResult GetVolunteerAssistanceList(int id);
 
         /// <summary>
         /// 

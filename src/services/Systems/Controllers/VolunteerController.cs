@@ -75,11 +75,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_EmergencyContact_list")]
-        public IActionResult GetEmergencyContactList()
+        public IActionResult GetEmergencyContactList(int id)
         {
-            return Ok(_VolunteerRepository.GetEmergencyContactList());
+            return Ok(_VolunteerRepository.GetEmergencyContactList(id));
         }
 
         /// <summary>
@@ -122,11 +123,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_VolunteerVoluntaryWork_list")]
-        public IActionResult GetVolunteerVoluntaryWorkList()
+        public IActionResult GetVolunteerVoluntaryWorkList(int id)
         {
-            return Ok(_VolunteerRepository.GetVolunteerVoluntaryWorkList());
+            return Ok(_VolunteerRepository.GetVolunteerVoluntaryWorkList(id));
         }
 
         /// <summary>
@@ -169,11 +171,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_VolunteerTraining_list")]
-        public IActionResult GetVolunteerTrainingList()
+        public IActionResult GetVolunteerTrainingList(int id)
         {
-            return Ok(_VolunteerRepository.GetVolunteerTrainingList());
+            return Ok(_VolunteerRepository.GetVolunteerTrainingList(id));
         }
 
         /// <summary>
@@ -216,11 +219,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_VolunteerSkills_list")]
-        public IActionResult GetVolunteerSkillsList()
+        public IActionResult GetVolunteerSkillsList(int id)
         {
-            return Ok(_VolunteerRepository.GetVolunteerSkillsList());
+            return Ok(_VolunteerRepository.GetVolunteerSkillsList(id));
         }
 
         /// <summary>
@@ -263,11 +267,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_VolunteerMembership_list")]
-        public IActionResult GetVolunteerMembershipList()
+        public IActionResult GetVolunteerMembershipList(int id)
         {
-            return Ok(_VolunteerRepository.GetVolunteerMembershipList());
+            return Ok(_VolunteerRepository.GetVolunteerMembershipList(id));
         }
 
         /// <summary>
@@ -310,11 +315,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_VolunteerAssistance_list")]
-        public IActionResult GetVolunteerAssistanceList()
+        public IActionResult GetVolunteerAssistanceList(int id)
         {
-            return Ok(_VolunteerRepository.GetVolunteerAssistanceList());
+            return Ok(_VolunteerRepository.GetVolunteerAssistanceList(id));
         }
 
         /// <summary>
