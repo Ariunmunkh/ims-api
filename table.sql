@@ -1,3 +1,24 @@
+/*Дунд шатны хорооны бүртгэл*/
+create table committee
+(
+id int not null, 
+name varchar(200),
+bossname varchar(200),
+phone varchar(200),
+location varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*Боловсролын түвшин*/
+create table educationlevel
+(
+id int not null, 
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*Гишүүнчлэл*/
 create table membership
 (

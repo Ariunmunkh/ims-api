@@ -26,7 +26,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <param name="_connector"></param>
-        public BaseRepository(DWConnector _connector )
+        public BaseRepository(DWConnector _connector)
         {
             connector = _connector;
         }
@@ -190,6 +190,155 @@ updatedby=@updatedby", request.type));
                 {
                     tablename = "Холбон зуучилсан үйл ажиллагаа";
                 }
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region Committee
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetCommitteeList()
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    committee.*
+FROM
+    committee
+order by updated desc");
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetCommittee(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    committee.*
+FROM
+    committee
+where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetCommittee(Committee request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from committee");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText("select count(1) too from committee where id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            {
+                cmd.CommandText(@"update committee set 
+name=@name,
+bossname=@bossname,
+phone=@phone,
+location=@location,
+updated=current_timestamp, 
+updatedby=@updatedby 
+where id = @id");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                cmd.AddParam("@bossname", DbType.String, request.bossname, ParameterDirection.Input);
+                cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
+                cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+            else
+            {
+                cmd.CommandText(@"insert into committee
+(id,
+name,
+bossname,
+phone,
+location,
+updatedby)
+values
+(@id,
+@name,
+@bossname,
+@phone,
+@location,
+@updatedby) 
+on duplicate key update 
+name=@name,
+bossname=@bossname,
+phone=@phone,
+location=@location,
+updated=current_timestamp,
+updatedby=@updatedby");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                cmd.AddParam("@bossname", DbType.String, request.bossname, ParameterDirection.Input);
+                cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
+                cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteCommittee(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from committee where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
                 result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
             }
             return result;

@@ -74,5 +74,52 @@ namespace Systems.Controllers
 
         #endregion
 
+        #region Committee
+
+        /// <summary>
+        /// Дунд шатны хорооны бүртгэл
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_Committee_list")]
+        public IActionResult GetCommitteeList()
+        {
+            return Ok(_BaseRepository.GetCommitteeList());
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны бүртгэл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_Committee")]
+        public IActionResult GetCommittee(int id)
+        {
+            return Ok(_BaseRepository.GetCommittee(id));
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны бүртгэл
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_Committee")]
+        public IActionResult SetCommittee([FromBody] Committee request)
+        {
+            return Ok(_BaseRepository.SetCommittee(request));
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны бүртгэл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_Committee")]
+        public IActionResult DeleteCommittee(int id)
+        {
+            return Ok(_BaseRepository.DeleteCommittee(id));
+        }
+
+        #endregion
+
     }
 }

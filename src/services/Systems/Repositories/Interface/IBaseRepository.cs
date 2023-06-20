@@ -43,5 +43,36 @@ namespace Systems.Repositories
 
         #endregion
 
+        #region Committee
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetCommitteeList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetCommittee(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetCommittee(Committee request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteCommittee(int id);
+
+        #endregion
+
     }
 }
