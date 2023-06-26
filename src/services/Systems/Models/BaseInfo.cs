@@ -60,7 +60,7 @@ namespace Systems.Models
         /// <summary>
         /// Төрсөн огноо
         /// </summary>
-        public DateTime birthday { get; set; }
+        public DateTime? birthday { get; set; }
         /// <summary>
         /// Утасны дугаар
         /// </summary>
@@ -77,6 +77,10 @@ namespace Systems.Models
         /// Цусны бүлэг
         /// </summary>
         public int? bloodgroupid { get; set; }
+        /// <summary>
+        /// Боловсролын түвшин
+        /// </summary>
+        public int? educationlevelid { get; set; }
         /// <summary>
         /// Улс
         /// </summary>
@@ -177,7 +181,7 @@ namespace Systems.Models
         /// <summary>
         /// Огноо
         /// </summary>
-        public DateTime trainingdate { get; set; }
+        public DateTime? trainingdate { get; set; }
         /// <summary>
         /// Хаана
         /// </summary>

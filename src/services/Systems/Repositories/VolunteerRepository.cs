@@ -96,6 +96,7 @@ phone,
 isvolunteer,
 isblooddonor,
 bloodgroupid,
+educationlevelid,
 countryid,
 divisionid,
 districtid,
@@ -114,6 +115,7 @@ values
 @isvolunteer,
 @isblooddonor,
 @bloodgroupid,
+@educationlevelid,
 @countryid,
 @divisionid,
 @districtid,
@@ -131,6 +133,7 @@ phone=@phone,
 isvolunteer=@isvolunteer,
 isblooddonor=@isblooddonor,
 bloodgroupid=@bloodgroupid,
+educationlevelid=@educationlevelid,
 countryid=@countryid,
 divisionid=@divisionid,
 districtid=@districtid,
@@ -149,6 +152,7 @@ updated = current_timestamp");
             cmd.AddParam("@isvolunteer", DbType.Boolean, request.isvolunteer, ParameterDirection.Input);
             cmd.AddParam("@isblooddonor", DbType.Boolean, request.isblooddonor, ParameterDirection.Input);
             cmd.AddParam("@bloodgroupid", DbType.Int32, request.bloodgroupid, ParameterDirection.Input);
+            cmd.AddParam("@educationlevelid", DbType.Int32, request.educationlevelid, ParameterDirection.Input);
             cmd.AddParam("@countryid", DbType.Int32, request.countryid, ParameterDirection.Input);
             cmd.AddParam("@divisionid", DbType.Int32, request.divisionid, ParameterDirection.Input);
             cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);

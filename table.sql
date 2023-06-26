@@ -133,6 +133,7 @@ phone varchar(200),/*Утасны дугаар*/
 isvolunteer bool,/*Сайн дурын идэвхтэн эсэх*/
 isblooddonor bool,/*Цусны доонор эсэх*/
 bloodgroupid int,/*Цусны бүлэг*/
+educationlevelid int,/*Боловсролын түвшин*/
 countryid int,/*Улс*/
 divisionid int,/*Аймаг, хот*/
 districtid int,/*Сум, дүүрэг*/
