@@ -254,6 +254,128 @@ namespace Systems.Models
     }
 
     /// <summary>
+    /// Сайн дурын идэвхтэн Боловсролын мэдээлэл
+    /// </summary>
+    public class VolunteerEducation
+    {
+        /// <summary>
+        /// Бүртгэлийн дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Сайн дурын идэвхтэн
+        /// </summary>
+        public int volunteerid { get; set; }
+
+        /// <summary>
+        /// Боловсролын түвшин
+        /// </summary>
+        public int educationlevelid { get; set; }
+
+        /// <summary>
+        /// Сургуулийн нэр
+        /// </summary>
+        public string schoolname { get; set; }
+
+        /// <summary>
+        /// Төгссөн эсэх
+        /// </summary>
+        public bool? isend { get; set; }
+        /// <summary>
+        /// Курс/Анги
+        /// </summary>
+        public int classlevel { get; set; }
+
+        /// <summary>
+        /// Мэрэгжил
+        /// </summary>
+        public string skill { get; set; }
+    }
+
+    /// <summary>
+    /// Сайн дурын идэвхтэн Эрхэлсэн ажил
+    /// </summary>
+    public class VolunteerEmployment
+    {
+        /// <summary>
+        /// Бүртгэлийн дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Сайн дурын идэвхтэн
+        /// </summary>
+        public int volunteerid { get; set; }
+        /// <summary>
+        /// Ажлын салбар
+        /// </summary>
+        public string employment { get; set; }
+        /// <summary>
+        /// Ажлын газар
+        /// </summary>
+        public string company { get; set; }
+        /// <summary>
+        /// Албан тушаал
+        /// </summary>
+        public string job { get; set; }
+        /// <summary>
+        /// Эхэлсэн огноо
+        /// </summary>
+        public DateTime? begindate { get; set; }
+        /// <summary>
+        /// Дууссан огноо
+        /// </summary>
+        public DateTime? enddate { get; set; }
+        /// <summary>
+        /// Нэмэлт мэдээлэл
+        /// </summary>
+        public string note { get; set; }
+    }
+
+    /// <summary>
+    /// Сайн дурын идэвхтэн Гадаад хэлний мэдлэг
+    /// </summary>
+    public class VolunteerLanguages
+    {
+        /// <summary>
+        /// Бүртгэлийн дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Сайн дурын идэвхтэн
+        /// </summary>
+        public int volunteerid { get; set; }
+
+        /// <summary>
+        /// Гадаад хэл
+        /// </summary>
+        public int languageid { get; set; }
+        /// <summary>
+        /// Гадаад хэл
+        /// </summary>
+        public int levelid { get; set; }
+        /// <summary>
+        /// Сурсан хугацаа /Жилээр/
+        /// </summary>
+        public int studyyear { get; set; }
+        /// <summary>
+        /// Түвшин шалгасан оноотой эсэх
+        /// </summary>
+        public bool? isscore { get; set; }
+        /// <summary>
+        /// Шалгалтын нэр
+        /// </summary>
+        public string testname { get; set; }
+        /// <summary>
+        /// Шалгалтын оноо
+        /// </summary>
+        public int testscore { get; set; }
+        /// <summary>
+        /// Нэмэлт мэдээлэл
+        /// </summary>
+        public string note { get; set; }
+
+    }
+    /// <summary>
     /// Сайн дурын идэвхтэн Тусламжийн мэдээлэл
     /// </summary>
     public class VolunteerAssistance

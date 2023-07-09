@@ -220,6 +220,35 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+/*Сайн дурын идэвхтэн Боловсролын мэдээлэл*/
+create table volunteereducation
+(
+id int not null, 
+volunteerid int,/*Сайн дурын идэвхтэн*/
+educationlevelid int,/*Боловсролын түвшин*/
+schoolname varchar(200),/*Сургуулийн нэр*/
+isend bool,/*Төгссөн эсэх*/
+classlevel int,/*Курс/Анги*/
+skill varchar(200),/*Мэрэгжил*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*Сайн дурын идэвхтэн Эрхэлсэн ажил*/
+create table volunteeremployment
+(
+id int not null, 
+volunteerid int,/*Сайн дурын идэвхтэн*/
+employment varchar(200),/*Ажлын салбар*/
+company varchar(200),/*Ажлын газар*/
+job varchar(200),/*Албан тушаал*/
+begindate date,/*Эхэлсэн огноо*/
+enddate date,/*Дууссан огноо*/
+note varchar(2000),/*Нэмэлт мэдээлэл*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*Хэрэглэгч*/
 create table tbluser(
 userid int not null, 

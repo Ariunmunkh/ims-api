@@ -732,6 +732,363 @@ updated = current_timestamp");
         }
         #endregion
 
+        #region VolunteerEducation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerEducationList(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteereducation.*
+FROM
+    volunteereducation
+where volunteereducation.volunteerid = @id
+ORDER BY volunteereducation.updated desc");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerEducation(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteereducation.*
+FROM
+    volunteereducation
+WHERE
+    volunteereducation.id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetVolunteerEducation(VolunteerEducation request)
+        {
+            MCommand cmd = connector.PopCommand();
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from volunteereducation");
+                MResult result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText(@"INSERT INTO volunteereducation
+  (id,
+volunteerid,
+educationlevelid,
+schoolname,
+isend,
+classlevel,
+skill,
+updatedby)
+values
+  (@id,
+@volunteerid,
+@educationlevelid,
+@schoolname,
+@isend,
+@classlevel,
+@skill,
+@updatedby) 
+ON DUPLICATE KEY UPDATE 
+educationlevelid=@educationlevelid,
+schoolname=@schoolname,
+isend=@isend,
+classlevel=@classlevel,
+skill=@skill,
+updatedby=@updatedby,
+updated = current_timestamp");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
+            cmd.AddParam("@educationlevelid", DbType.Int32, request.educationlevelid, ParameterDirection.Input);
+            cmd.AddParam("@schoolname", DbType.String, request.schoolname, ParameterDirection.Input);
+            cmd.AddParam("@isend", DbType.Boolean, request.isend, ParameterDirection.Input);
+            cmd.AddParam("@classlevel", DbType.Int32, request.classlevel, ParameterDirection.Input);
+            cmd.AddParam("@skill", DbType.String, request.skill, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteVolunteerEducation(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from volunteereducation where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+        #endregion
+
+        #region VolunteerEmployment
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerEmploymentList(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteeremployment.*
+FROM
+    volunteeremployment
+where volunteeremployment.volunteerid = @id
+ORDER BY volunteeremployment.updated desc");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerEmployment(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteeremployment.*
+FROM
+    volunteeremployment
+WHERE
+    volunteeremployment.id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetVolunteerEmployment(VolunteerEmployment request)
+        {
+            MCommand cmd = connector.PopCommand();
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from volunteeremployment");
+                MResult result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText(@"INSERT INTO volunteeremployment
+  (id,
+volunteerid,
+employment,
+company,
+job,
+begindate,
+enddate,
+note,
+updatedby)
+values
+  (@id,
+@volunteerid,
+@employment,
+@company,
+@job,
+@begindate,
+@enddate,
+@note,
+@updatedby) 
+ON DUPLICATE KEY UPDATE 
+employment=@employment,
+company=@company,
+job=@job,
+begindate=@begindate,
+enddate=@enddate,
+note=@note,
+updatedby=@updatedby,
+updated = current_timestamp");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
+            cmd.AddParam("@employment", DbType.String, request.employment, ParameterDirection.Input);
+            cmd.AddParam("@company", DbType.String, request.company, ParameterDirection.Input);
+            cmd.AddParam("@job", DbType.String, request.job, ParameterDirection.Input);
+            cmd.AddParam("@begindate", DbType.DateTime, request.begindate, ParameterDirection.Input);
+            cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
+            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteVolunteerEmployment(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from volunteeremployment where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+        #endregion
+
+        #region VolunteerLanguages
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerLanguagesList(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteerlanguages.*
+FROM
+    volunteerlanguages
+where volunteerlanguages.volunteerid = @id
+ORDER BY volunteerlanguages.updated desc");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerLanguages(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteerlanguages.*
+FROM
+    volunteerlanguages
+WHERE
+    volunteerlanguages.id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetVolunteerLanguages(VolunteerLanguages request)
+        {
+            MCommand cmd = connector.PopCommand();
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from volunteerlanguages");
+                MResult result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText(@"INSERT INTO volunteerlanguages
+  (id,
+volunteerid,
+languageid,
+levelid,
+studyyear,
+isscore,
+testname,
+testscore,
+note,
+updatedby)
+values
+  (@id,
+@volunteerid,
+@languageid,
+@levelid,
+@studyyear,
+@isscore,
+@testname,
+@testscore,
+@note,
+@updatedby) 
+ON DUPLICATE KEY UPDATE 
+languageid=@languageid,
+levelid=@levelid,
+studyyear=@studyyear,
+isscore=@isscore,
+testname=@testname,
+testscore=@testscore,
+note=@note,
+updatedby=@updatedby,
+updated = current_timestamp");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
+            cmd.AddParam("@languageid", DbType.Int32, request.languageid, ParameterDirection.Input);
+            cmd.AddParam("@levelid", DbType.Int32, request.levelid, ParameterDirection.Input);
+            cmd.AddParam("@studyyear", DbType.Int32, request.studyyear, ParameterDirection.Input);
+            cmd.AddParam("@isscore", DbType.Boolean, request.isscore, ParameterDirection.Input);
+            cmd.AddParam("@testname", DbType.String, request.testname, ParameterDirection.Input);
+            cmd.AddParam("@testscore", DbType.Int32, request.testscore, ParameterDirection.Input);
+            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteVolunteerLanguages(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from volunteerlanguages where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+        #endregion
+
         #region VolunteerAssistance
         /// <summary>
         /// 

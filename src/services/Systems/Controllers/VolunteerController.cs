@@ -310,6 +310,150 @@ namespace Systems.Controllers
 
         #endregion
 
+        #region VolunteerEducation
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_VolunteerEducation_list")]
+        public IActionResult GetVolunteerEducationList(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerEducationList(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_VolunteerEducation")]
+        public IActionResult GetVolunteerEducation(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerEducation(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_VolunteerEducation")]
+        public IActionResult SetVolunteerEducation([FromBody] VolunteerEducation request)
+        {
+            return Ok(_VolunteerRepository.SetVolunteerEducation(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_VolunteerEducation")]
+        public IActionResult DeleteVolunteerEducation(int id)
+        {
+            return Ok(_VolunteerRepository.DeleteVolunteerEducation(id));
+        }
+
+        #endregion
+
+        #region VolunteerEmployment
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_VolunteerEmployment_list")]
+        public IActionResult GetVolunteerEmploymentList(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerEmploymentList(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_VolunteerEmployment")]
+        public IActionResult GetVolunteerEmployment(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerEmployment(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_VolunteerEmployment")]
+        public IActionResult SetVolunteerEmployment([FromBody] VolunteerEmployment request)
+        {
+            return Ok(_VolunteerRepository.SetVolunteerEmployment(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_VolunteerEmployment")]
+        public IActionResult DeleteVolunteerEmployment(int id)
+        {
+            return Ok(_VolunteerRepository.DeleteVolunteerEmployment(id));
+        }
+
+        #endregion
+
+        #region VolunteerLanguages
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_VolunteerLanguages_list")]
+        public IActionResult GetVolunteerLanguagesList(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerLanguagesList(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_VolunteerLanguages")]
+        public IActionResult GetVolunteerLanguages(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerLanguages(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_VolunteerLanguages")]
+        public IActionResult SetVolunteerLanguages([FromBody] VolunteerLanguages request)
+        {
+            return Ok(_VolunteerRepository.SetVolunteerLanguages(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_VolunteerLanguages")]
+        public IActionResult DeleteVolunteerLanguages(int id)
+        {
+            return Ok(_VolunteerRepository.DeleteVolunteerLanguages(id));
+        }
+
+        #endregion
+
         #region VolunteerAssistance
 
         /// <summary>

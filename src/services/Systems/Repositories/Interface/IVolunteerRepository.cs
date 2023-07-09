@@ -182,6 +182,93 @@ namespace Systems.Repositories
         MResult DeleteVolunteerMembership(int id);
         #endregion
 
+        #region VolunteerEducation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetVolunteerEducationList(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetVolunteerEducation(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetVolunteerEducation(VolunteerEducation request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteVolunteerEducation(int id);
+        #endregion
+
+        #region VolunteerEmployment
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetVolunteerEmploymentList(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetVolunteerEmployment(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetVolunteerEmployment(VolunteerEmployment request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteVolunteerEmployment(int id);
+        #endregion
+
+        #region VolunteerLanguages
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetVolunteerLanguagesList(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetVolunteerLanguages(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetVolunteerLanguages(VolunteerLanguages request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteVolunteerLanguages(int id);
+        #endregion
+
         #region VolunteerAssistance
         /// <summary>
         /// 
