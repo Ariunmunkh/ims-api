@@ -193,9 +193,11 @@ updated = current_timestamp");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
+relationship.name relationship,
     emergencycontact.*
 FROM
     emergencycontact
+left join relationship on relationship.id = emergencycontact.relationshipid
 where emergencycontact.volunteerid = @id
 ORDER BY emergencycontact.firstname");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
