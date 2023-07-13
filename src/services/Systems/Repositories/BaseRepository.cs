@@ -93,47 +93,61 @@ where id = @id", type));
                 }
             }
 
-            cmd.CommandText(string.Format("select count(1) too from {0} where id = @id", request.type));
+            cmd.CommandText(string.Format("select * from {0} where id = @id", request.type));
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
 
             result = connector.Execute(ref cmd, false);
             if (result.rettype != 0)
                 return result;
 
-            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            if (result.retdata is DataTable cdata)
             {
-                cmd.CommandText(string.Format(@"update {0} set name=@name, updated=current_timestamp, updatedby=@updatedby where id = @id", request.type));
-                cmd.ClearParam();
-                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
-                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                bool ishead = cdata.Columns.Contains("headid");
 
-                result = connector.Execute(ref cmd, false);
-                if (result.rettype != 0)
-                    return result;
-            }
-            else
-            {
-                cmd.CommandText(string.Format(@"insert into {0}
+                if (cdata.Rows.Count > 0 && Convert.ToInt32(cdata.Rows[0]["id"]) == request.id)
+                {
+                    cmd.CommandText(string.Format(@"update {0} set 
+                                                           {1} 
+                                                           name=@name, 
+                                                           updated=current_timestamp, 
+                                                           updatedby=@updatedby 
+                                                     where id = @id", request.type, ishead ? "headid=@headid," : string.Empty));
+                    cmd.ClearParam();
+                    cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                    cmd.AddParam("@headid", DbType.Int32, request.headid, ParameterDirection.Input);
+                    cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+                }
+                else
+                {
+                    cmd.CommandText(string.Format(@"insert into {0}
 (id,
+{1}
 name,
 updatedby)
 values
 (@id,
+{2}
 @name,
 @updatedby) 
 on duplicate key update 
 name=@name,
 updated=current_timestamp,
-updatedby=@updatedby", request.type));
-                cmd.ClearParam();
-                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
-                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+updatedby=@updatedby", request.type, ishead ? "headid," : string.Empty, ishead ? "@headid," : string.Empty));
+                    cmd.ClearParam();
+                    cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                    cmd.AddParam("@headid", DbType.Int32, request.headid, ParameterDirection.Input);
+                    cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
-                result = connector.Execute(ref cmd, false);
-                if (result.rettype != 0)
-                    return result;
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+                }
             }
 
             return new MResult { retdata = request.id };
