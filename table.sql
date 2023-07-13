@@ -73,6 +73,15 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+/*Гадаад хэлний төрөл*/
+create table languages
+(
+id int not null, 
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*Ур чадвар*/
 create table skills
 (
@@ -244,6 +253,22 @@ company varchar(200),/*Ажлын газар*/
 job varchar(200),/*Албан тушаал*/
 begindate date,/*Эхэлсэн огноо*/
 enddate date,/*Дууссан огноо*/
+note varchar(2000),/*Нэмэлт мэдээлэл*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*Сайн дурын идэвхтэн Гадаад хэлний мэдлэг*/
+create table volunteerlanguages
+(
+id int not null, 
+volunteerid int,/*Сайн дурын идэвхтэн*/
+languageid int,/*Гадаад хэл*/
+levelid int,/*Түвшин*/
+studyyear int,/*Сурсан хугацаа /Жилээр/*/
+isscore bool,/*Түвшин шалгасан оноотой эсэх*/
+testname varchar(200),/*Шалгалтын нэр*/
+testscore int,/*Шалгалтын оноо*/
 note varchar(2000),/*Нэмэлт мэдээлэл*/
 updated timestamp default current_timestamp,
 updatedby int,  
