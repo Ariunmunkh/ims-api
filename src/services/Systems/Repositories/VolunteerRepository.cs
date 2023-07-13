@@ -300,9 +300,11 @@ updated = current_timestamp");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
+voluntarywork.name voluntarywork,
     volunteervoluntarywork.*
-FROM
-    volunteervoluntarywork
+FROM volunteervoluntarywork
+left join voluntarywork 
+on voluntarywork.id = volunteervoluntarywork.voluntaryworkid
 where volunteervoluntarywork.volunteerid = @id
 ORDER BY volunteervoluntarywork.updated");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
@@ -411,9 +413,11 @@ updated = current_timestamp");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
+training.name training,
     volunteertraining.*
 FROM
     volunteertraining
+left join training on training.id = volunteertraining.trainingid
 where volunteertraining.volunteerid = @id
 ORDER BY volunteertraining.updated");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
@@ -466,6 +470,7 @@ WHERE
   (id,
 volunteerid,
 trainingid,
+levelid,
 trainingdate,
 location,
 duration,
@@ -475,6 +480,7 @@ values
   (@id,
 @volunteerid,
 @trainingid,
+@levelid,
 @trainingdate,
 @location,
 @duration,
@@ -482,6 +488,7 @@ values
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
 trainingid=@trainingid,
+levelid=@levelid,
 trainingdate=@trainingdate,
 location=@location,
 duration=@duration,
@@ -491,6 +498,7 @@ updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
             cmd.AddParam("@trainingid", DbType.Int32, request.trainingid, ParameterDirection.Input);
+            cmd.AddParam("@levelid", DbType.Int32, request.levelid, ParameterDirection.Input);
             cmd.AddParam("@trainingdate", DbType.DateTime, request.trainingdate, ParameterDirection.Input);
             cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
             cmd.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
@@ -743,9 +751,11 @@ updated = current_timestamp");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
+educationlevel.name educationlevel,
     volunteereducation.*
 FROM
     volunteereducation
+left join educationlevel on educationlevel.id = volunteereducation.educationlevelid
 where volunteereducation.volunteerid = @id
 ORDER BY volunteereducation.updated desc");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
@@ -977,9 +987,11 @@ updated = current_timestamp");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
+languages.name languages,
     volunteerlanguages.*
 FROM
     volunteerlanguages
+left join languages on languages.id = volunteerlanguages.languageid
 where volunteerlanguages.volunteerid = @id
 ORDER BY volunteerlanguages.updated desc");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);

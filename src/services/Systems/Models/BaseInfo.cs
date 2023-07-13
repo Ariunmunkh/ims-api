@@ -179,6 +179,10 @@ namespace Systems.Models
         /// </summary>
         public int? trainingid { get; set; }
         /// <summary>
+        /// Түвшин
+        /// </summary>
+        public int? levelid { get; set; }
+        /// <summary>
         /// Огноо
         /// </summary>
         public DateTime? trainingdate { get; set; }

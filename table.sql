@@ -183,6 +183,7 @@ create table volunteertraining
 id int not null, 
 volunteerid int,/*Сайн дурын идэвхтэн*/
 trainingid int,/*Сургалтын төрөл*/
+levelid int,/*Түвшин*/
 trainingdate date,/*Огноо*/
 location varchar(200),/*Хаана*/
 duration int,/*Хугацаа*/
