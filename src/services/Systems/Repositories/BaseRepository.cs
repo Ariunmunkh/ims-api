@@ -43,7 +43,10 @@ namespace Systems.Repositories
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(string.Format(@"SELECT 
     {0}.*,
-    '{0}' type
+    '{0}' type,
+    {0}.id value,
+    {0}.name label,
+    {0}.name text
 FROM
     {0}
 order by updated desc", type));

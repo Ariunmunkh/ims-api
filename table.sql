@@ -36,6 +36,31 @@ updatedby int,
 PRIMARY KEY (id)
 );
 
+/*ДШХ-ны сарын тайлан*/
+create table committeereport
+(
+id int not null, 
+committeeid int not null, 
+reportdate date not null, 
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*ДШХ-ны сарын тайлан*/
+create table committeereportdtl
+(
+id int not null, 
+reportid int not null, 
+programid int not null, 
+indicatorid int not null, 
+agegroupid int not null, 
+male int,
+female int, 
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+
 /*Дунд шатны хорооны бүртгэл*/
 create table committee
 (
