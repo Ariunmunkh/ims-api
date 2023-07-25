@@ -3,9 +3,6 @@ create table program
 (
 id int not null, 
 name varchar(200),
-bossname varchar(200),
-phone varchar(200),
-location varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
@@ -16,9 +13,6 @@ create table indicator
 id int not null, 
 headid int,
 name varchar(200),
-bossname varchar(200),
-phone varchar(200),
-location varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
@@ -28,9 +22,6 @@ create table agegroup
 (
 id int not null, 
 name varchar(200),
-bossname varchar(200),
-phone varchar(200),
-location varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
