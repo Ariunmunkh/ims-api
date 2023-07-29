@@ -39,12 +39,16 @@ namespace Systems.Repositories
     tbluser.password,
     tbluser.roleid,
     tbluser.volunteerid,
+    tbluser.committeeid,
     volunteer.firstname volunteername,
+    committee.name committeename,
     date_format(tbluser.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     tbluser
  LEFT JOIN volunteer 
    ON volunteer.id = tbluser.volunteerid
+ LEFT JOIN committee 
+   ON committee.id = tbluser.committeeid
 ORDER BY tbluser.username");
             return connector.Execute(ref cmd, false);
 
@@ -106,7 +110,8 @@ values
 ON DUPLICATE KEY UPDATE 
 username = @username, 
 roleid = @roleid, 
-volunteerid = @volunteerid, 
+volunteerid = @volunteerid,
+committeeid = @committeeid,
 email = @email, {0}
 updated = current_timestamp", updatepasssql));
             cmd.AddParam("@userid", DbType.Int32, tbluser.userid, ParameterDirection.Input);
@@ -115,6 +120,7 @@ updated = current_timestamp", updatepasssql));
             cmd.AddParam("@password", DbType.String, tbluser.encryptpass, ParameterDirection.Input);
             cmd.AddParam("@roleid", DbType.Int32, tbluser.roleid, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, tbluser.volunteerid, ParameterDirection.Input);
+            cmd.AddParam("@committeeid", DbType.Int32, tbluser.committeeid, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 

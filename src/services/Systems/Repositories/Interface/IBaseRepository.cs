@@ -74,5 +74,36 @@ namespace Systems.Repositories
 
         #endregion
 
+        #region Project
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetProjectList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetProject(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetProject(Project request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteProject(int id);
+
+        #endregion
+
     }
 }

@@ -1,3 +1,16 @@
+/*Хэрэгжүүлж буй төсөл, хөтөлбөр*/
+create table project
+(
+id int not null, 
+programid int ,/*Хөтөлбөр*/
+name varchar(200),/*Төслийн нэр*/
+funder varchar(200),/*Санхүүжүүлэгч*/
+note varchar(2000),/*Төслийн товч мэдээлэл*/
+results varchar(2000),/*Хүрсэн үр дүн*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*Хөтөлбөр*/
 create table program
 (
@@ -336,6 +349,7 @@ username varchar(200) not null,
 password varchar(500) not null,
 email varchar(200),
 roleid int,
+committeeid int,
 volunteerid int,
 updated timestamp default current_timestamp,
 updatedby int,

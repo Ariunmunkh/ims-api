@@ -363,5 +363,161 @@ updatedby=@updatedby");
 
         #endregion
 
+        #region Project
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetProjectList()
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    project.*
+FROM
+    project
+order by updated desc");
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetProject(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    project.*
+FROM
+    project
+where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetProject(Project request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from project");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText("select count(1) too from project where id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            {
+                cmd.CommandText(@"update project set 
+programid =@programid,
+name =@name,
+funder =@funder,
+note =@note,
+results =@results,
+
+updated=current_timestamp, 
+updatedby=@updatedby 
+where id = @id");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@programid", DbType.Int32, request.programid, ParameterDirection.Input);
+                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                cmd.AddParam("@funder", DbType.String, request.funder, ParameterDirection.Input);
+                cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+                cmd.AddParam("@results", DbType.String, request.results, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+            else
+            {
+                cmd.CommandText(@"insert into project
+(id,
+programid,
+name,
+funder,
+note,
+results,
+updatedby)
+values
+(@id,
+@programid,
+@name,
+@funder,
+@note,
+@results,
+@updatedby) 
+on duplicate key update 
+programid=@programid,
+name=@name,
+funder=@funder,
+note=@note,
+results=@results,
+updated=current_timestamp,
+updatedby=@updatedby");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@programid", DbType.Int32, request.programid, ParameterDirection.Input);
+                cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+                cmd.AddParam("@funder", DbType.String, request.funder, ParameterDirection.Input);
+                cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+                cmd.AddParam("@results", DbType.String, request.results, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteProject(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from project where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            return result;
+        }
+
+        #endregion
+
     }
 }

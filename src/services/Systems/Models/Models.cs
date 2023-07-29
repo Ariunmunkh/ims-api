@@ -44,6 +44,11 @@ namespace Systems.Models
         /// </summary>
         public int? volunteerid { get; set; }
 
+        /// <summary>
+        /// Дунд шатны хорооны бүртгэл
+        /// </summary>
+        public int? committeeid { get; set; }
+
     }
 
     /// <summary>
@@ -137,5 +142,36 @@ namespace Systems.Models
         /// Эмэгтэй
         /// </summary>
         public int female { get; set; }
+    }
+
+    /// <summary>
+    /// Хэрэгжүүлж буй төсөл, хөтөлбөр
+    /// </summary>
+    public class Project
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Хөтөлбөр
+        /// </summary>
+        public int? programid { get; set; }
+        /// <summary>
+        /// Төслийн нэр
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// Санхүүжүүлэгч
+        /// </summary>
+        public string funder { get; set; }
+        /// <summary>
+        /// Төслийн товч мэдээлэл
+        /// </summary>
+        public string note { get; set; }
+        /// <summary>
+        /// Хүрсэн үр дүн
+        /// </summary>
+        public string results { get; set; }
     }
 }

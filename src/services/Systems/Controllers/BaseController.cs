@@ -121,5 +121,52 @@ namespace Systems.Controllers
 
         #endregion
 
+        #region Project
+
+        /// <summary>
+        /// Хэрэгжүүлж буй төсөл, хөтөлбөр
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_Project_list")]
+        public IActionResult GetProjectList()
+        {
+            return Ok(_BaseRepository.GetProjectList());
+        }
+
+        /// <summary>
+        /// Хэрэгжүүлж буй төсөл, хөтөлбөр
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_Project")]
+        public IActionResult GetProject(int id)
+        {
+            return Ok(_BaseRepository.GetProject(id));
+        }
+
+        /// <summary>
+        /// Хэрэгжүүлж буй төсөл, хөтөлбөр
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_Project")]
+        public IActionResult SetProject([FromBody] Project request)
+        {
+            return Ok(_BaseRepository.SetProject(request));
+        }
+
+        /// <summary>
+        /// Хэрэгжүүлж буй төсөл, хөтөлбөр
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_Project")]
+        public IActionResult DeleteProject(int id)
+        {
+            return Ok(_BaseRepository.DeleteProject(id));
+        }
+
+        #endregion
+
     }
 }
