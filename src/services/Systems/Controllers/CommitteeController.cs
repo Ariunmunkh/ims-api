@@ -29,11 +29,12 @@ namespace Systems.Controllers
         /// <summary>
         /// Дунд шатны хорооны сарын тайлан авах
         /// </summary>
+        /// <param name="committeeid">Дунд шатны хороо</param>
         /// <returns></returns>
         [HttpGet("get_report_list")]
-        public IActionResult GetRepoertList()
+        public IActionResult GetRepoertList(int committeeid)
         {
-            return Ok(_CommitteeRepository.GetRepoertList());
+            return Ok(_CommitteeRepository.GetRepoertList(committeeid));
         }
 
         /// <summary>

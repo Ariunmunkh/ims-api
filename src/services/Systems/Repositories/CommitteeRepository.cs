@@ -37,15 +37,23 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetRepoertList()
+        public MResult GetRepoertList(int committeeid)
         {
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    committeereport.*
+    committeereport.id,
+    committeereport.committeeid,
+    committee.name committee,
+    DATE_FORMAT(committeereport.reportdate, '%Y-%m') reportdate,
+    DATE_FORMAT(committeereport.updated, '%Y-%m-%d %H:%i:%s') updated
 FROM
     committeereport
+left join committee
+on committee.id = committeereport.committeeid
+where (committeereport.committeeid = @committeeid or 0 = @committeeid)
 order by reportdate desc");
+            cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
