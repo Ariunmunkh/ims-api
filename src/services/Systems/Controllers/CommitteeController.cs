@@ -136,7 +136,7 @@ namespace Systems.Controllers
         /// </summary>
         /// <param name="id">Дунд шатны хороо</param>
         /// <returns></returns>
-        [HttpGet("get_report")]
+        [HttpGet("get_CommitteeInfo")]
         public IActionResult GetCommitteeInfo(int id)
         {
             return Ok(_CommitteeRepository.GetCommitteeInfo(id));
