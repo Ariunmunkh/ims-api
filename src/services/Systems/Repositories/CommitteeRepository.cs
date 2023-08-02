@@ -61,8 +61,10 @@ order by reportdate desc");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
         /// <returns></returns>
-        public MResult GetRepoert(int id)
+        public MResult GetRepoert(int committeeid, DateTime reportdate)
         {
             using (DataSet ds = new DataSet())
             {
@@ -71,8 +73,10 @@ order by reportdate desc");
     committeereportdtl.*
 FROM
     committeereportdtl
-where committeereportdtl.reportid = @reportid");
-                cmd.AddParam("@reportid", DbType.Int32, id, ParameterDirection.Input);
+inner join committeereport on committeereport.id = committeereportdtl.reportid
+where committeereport.committeeid = @committeeid and committeereport.reportdate = @reportdate");
+                cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
+                cmd.AddParam("@reportdate", DbType.DateTime, reportdate, ParameterDirection.Input);
                 MResult result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;

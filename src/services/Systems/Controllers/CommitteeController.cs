@@ -40,12 +40,13 @@ namespace Systems.Controllers
         /// <summary>
         /// Дунд шатны хорооны сарын тайлан дэлгэрэнгүй авах
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
         /// <returns></returns>
         [HttpGet("get_report")]
-        public IActionResult GetRepoert(int id)
+        public IActionResult GetRepoert(int committeeid, DateTime reportdate)
         {
-            return Ok(_CommitteeRepository.GetRepoert(id));
+            return Ok(_CommitteeRepository.GetRepoert(committeeid, reportdate));
         }
 
         /// <summary>

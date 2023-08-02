@@ -20,9 +20,10 @@ namespace Systems.Repositories
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
         /// <returns></returns>
-        MResult GetRepoert(int id);
+        MResult GetRepoert(int committeeid, DateTime reportdate);
 
         /// <summary>
         /// 

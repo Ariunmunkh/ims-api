@@ -31,12 +31,39 @@ namespace Systems.Models
     /// <summary>
     /// Сайн дурын идэвхтэн
     /// </summary>
+    public class UVolunteer
+    {
+        /// <summary>
+        /// Бүртгэлийн дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+        /// <summary>
+        /// Төлөв
+        /// </summary>
+        public int status { get; set; }
+    }
+    
+    /// <summary>
+    /// Сайн дурын идэвхтэн
+    /// </summary>
     public class Volunteer
     {
         /// <summary>
         /// Бүртгэлийн дугаар
         /// </summary>
         public int id { get; set; }
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+        /// <summary>
+        /// Төлөв
+        /// </summary>
+        public int status { get; set; }
         /// <summary>
         /// Ургийн овог
         /// </summary>

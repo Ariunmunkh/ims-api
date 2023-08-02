@@ -303,6 +303,8 @@ divisionid int,/*Аймаг, хот*/
 districtid int,/*Сум, дүүрэг*/
 address varchar(2000),/*гудамж, байр, орц*/
 isdisabled bool,/*Хөгжлийн бэрхшээлтэй иргэн эсэх*/
+committeeid int,/*Дунд шатны хороо*/
+status int,/*Төлөв*/
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)

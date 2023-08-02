@@ -40,7 +40,14 @@ namespace Systems.Repositories
                 request.encryptpass = Infrastructure.Utility.EncryptPass(request.password);
 
                 MCommand cmd = connector.PopCommand();
-                cmd.CommandText("select * from tbluser where username = @username");
+                cmd.CommandText(@"SELECT 
+    tbluser.*, committee.name committee
+FROM
+    tbluser
+        LEFT JOIN
+    committee ON committee.id = tbluser.committeeid
+WHERE
+    tbluser.username = @username");
                 cmd.AddParam("@username", DbType.String, request.username, ParameterDirection.Input);
                 MResult result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -116,6 +123,7 @@ namespace Systems.Repositories
             string roleid = string.Empty;
             string volunteerid = string.Empty;
             string committeeid = string.Empty;
+            string committee = string.Empty;
 
             if (data.Rows.Count > 0)
             {
@@ -124,6 +132,7 @@ namespace Systems.Repositories
                 roleid = data.Rows[0]["roleid"].ToString();
                 volunteerid = data.Rows[0]["volunteerid"].ToString();
                 committeeid = data.Rows[0]["committeeid"].ToString();
+                committee = data.Rows[0]["committee"].ToString();
             }
 
             var claims = new Claim[]
@@ -133,6 +142,7 @@ namespace Systems.Repositories
                     new Claim("roleid", roleid),
                     new Claim("volunteerid", volunteerid),
                     new Claim("committeeid", committeeid),
+                    new Claim("committee", committee),
                     new Claim(JwtRegisteredClaimNames.Sub, username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)

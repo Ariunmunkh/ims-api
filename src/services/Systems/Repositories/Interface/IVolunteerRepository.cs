@@ -27,6 +27,13 @@ namespace Systems.Repositories
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        MResult UpdateVolunteer(UVolunteer request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         MResult SetVolunteer(Volunteer request);
 
         /// <summary>

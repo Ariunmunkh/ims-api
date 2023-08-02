@@ -86,6 +86,8 @@ WHERE
 
             cmd.CommandText(@"INSERT INTO volunteer
   (id,
+committeeid,
+status,
 familyname,
 firstname,
 lastname,
@@ -105,6 +107,8 @@ isdisabled,
 updatedby)
 values
   (@id,
+@committeeid,
+@status,
 @familyname,
 @firstname,
 @lastname,
@@ -123,6 +127,8 @@ values
 @isdisabled,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
+committeeid=@committeeid,
+status=@status,
 familyname=@familyname,
 firstname=@firstname,
 lastname=@lastname,
@@ -142,6 +148,8 @@ isdisabled=@isdisabled,
 updatedby=@updatedby, 
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+            cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
             cmd.AddParam("@familyname", DbType.String, request.familyname, ParameterDirection.Input);
             cmd.AddParam("@firstname", DbType.String, request.firstname, ParameterDirection.Input);
             cmd.AddParam("@lastname", DbType.String, request.lastname, ParameterDirection.Input);
@@ -164,6 +172,44 @@ updated = current_timestamp");
                 return result;
 
             return new MResult { retdata = new Hashtable { { "volunteerid", request.id } } };
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult UpdateVolunteer(UVolunteer request)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"UPDATE volunteer 
+SET 
+    committeeid = @committeeid,
+    status = @status,
+    updatedby = @updatedby,
+    updated = CURRENT_TIMESTAMP
+WHERE
+    id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+            cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, true);
+            if (result.rettype != 0)
+                return result;
+
+            cmd.CommandText(@"UPDATE tbluser 
+SET 
+    committeeid = @committeeid,
+    updatedby = @updatedby,
+    updated = CURRENT_TIMESTAMP
+WHERE
+    volunteerid = @volunteerid");
+            cmd.ClearParam();
+            cmd.AddParam("@volunteerid", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
         }
 
         /// <summary>

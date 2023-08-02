@@ -51,6 +51,17 @@ namespace Systems.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [HttpPost("update_Volunteer")]
+        public IActionResult UpdateVolunteer([FromBody] UVolunteer request)
+        {
+            return Ok(_VolunteerRepository.UpdateVolunteer(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("set_Volunteer")]
         public IActionResult SetVolunteer([FromBody] Volunteer request)
         {
