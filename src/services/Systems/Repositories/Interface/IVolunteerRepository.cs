@@ -13,7 +13,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerList();
+        MResult GetVolunteerList(int id);
 
         /// <summary>
         /// 
@@ -78,7 +78,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetVolunteerVoluntaryWorkList(int id);
+        MResult GetVolunteerVoluntaryWorkList(int? id, int? committeeid);
 
         /// <summary>
         /// 
@@ -93,6 +93,13 @@ namespace Systems.Repositories
         /// <param name="request"></param>
         /// <returns></returns>
         MResult SetVolunteerVoluntaryWork(VolunteerVoluntaryWork request);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult UpdateVolunteerVoluntaryWork(UVolunteerVoluntaryWork request);
 
         /// <summary>
         /// 

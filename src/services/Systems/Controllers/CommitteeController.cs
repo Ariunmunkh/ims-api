@@ -135,7 +135,7 @@ namespace Systems.Controllers
         /// <summary>
         /// Дунд шатны хорооны талаарх мэдээлэл
         /// </summary>
-        /// <param name="id">Дунд шатны хороо</param>
+        /// <param name="id">Дунд шатны хорооны дугаар</param>
         /// <returns></returns>
         [HttpGet("get_CommitteeInfo")]
         public IActionResult GetCommitteeInfo(int id)
@@ -157,12 +157,59 @@ namespace Systems.Controllers
         /// <summary>
         /// Дунд шатны хорооны талаарх мэдээлэл
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Дунд шатны хорооны дугаар</param>
         /// <returns></returns>
         [HttpDelete("delete_CommitteeInfo")]
         public IActionResult DeleteCommitteeInfo(int id)
         {
             return Ok(_CommitteeRepository.DeleteCommitteeInfo(id));
+        }
+
+        #endregion
+        
+        #region committeeactivity
+
+        /// <summary>
+        /// Дунд шатны хорооны талаарх мэдээлэл
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_committeeactivity_list")]
+        public IActionResult GetcommitteeactivityList()
+        {
+            return Ok(_CommitteeRepository.GetcommitteeactivityList());
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны талаарх мэдээлэл
+        /// </summary>
+        /// <param name="id">Дунд шатны хороо</param>
+        /// <returns></returns>
+        [HttpGet("get_committeeactivity")]
+        public IActionResult Getcommitteeactivity(int id)
+        {
+            return Ok(_CommitteeRepository.Getcommitteeactivity(id));
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны талаарх мэдээлэл
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_committeeactivity")]
+        public IActionResult Setcommitteeactivity([FromBody] committeeactivity request)
+        {
+            return Ok(_CommitteeRepository.Setcommitteeactivity(request));
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны талаарх мэдээлэл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_committeeactivity")]
+        public IActionResult Deletecommitteeactivity(int id)
+        {
+            return Ok(_CommitteeRepository.Deletecommitteeactivity(id));
         }
 
         #endregion

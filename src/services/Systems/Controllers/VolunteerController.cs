@@ -28,11 +28,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id">Дунд шатны хороо</param>
         /// <returns></returns>
         [HttpGet("get_Volunteer_list")]
-        public IActionResult GetVolunteerList()
+        public IActionResult GetVolunteerList(int id)
         {
-            return Ok(_VolunteerRepository.GetVolunteerList());
+            return Ok(_VolunteerRepository.GetVolunteerList(id));
         }
 
         /// <summary>
@@ -134,12 +135,13 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Сайн дурын идэвхтэй</param>
+        /// <param name="committeeid">Дунд шатны хороо</param>
         /// <returns></returns>
         [HttpGet("get_VolunteerVoluntaryWork_list")]
-        public IActionResult GetVolunteerVoluntaryWorkList(int id)
+        public IActionResult GetVolunteerVoluntaryWorkList(int? id, int? committeeid)
         {
-            return Ok(_VolunteerRepository.GetVolunteerVoluntaryWorkList(id));
+            return Ok(_VolunteerRepository.GetVolunteerVoluntaryWorkList(id, committeeid));
         }
 
         /// <summary>
@@ -162,6 +164,17 @@ namespace Systems.Controllers
         public IActionResult SetVolunteerVoluntaryWork([FromBody] VolunteerVoluntaryWork request)
         {
             return Ok(_VolunteerRepository.SetVolunteerVoluntaryWork(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("update_VolunteerVoluntaryWork")]
+        public IActionResult UpdateVolunteerVoluntaryWork([FromBody] UVolunteerVoluntaryWork request)
+        {
+            return Ok(_VolunteerRepository.UpdateVolunteerVoluntaryWork(request));
         }
 
         /// <summary>

@@ -475,7 +475,92 @@ namespace Systems.Models
         /// Бусад хөрөнгө /зөөврийн болон суурийн компьютер, принтер гэх мэтийг дурдах/
         /// </summary>
         public string c2_16 { get; set; }
+        /// <summary>
+        /// Анхан шатны хорооны талаарх мэдээлэл 
+        /// </summary>
+        public CommitteeInfoDtl[] committeeinfodtl { get; set; }
     }
 
+    /// <summary>
+    /// Анхан шатны хорооны талаарх мэдээлэл 
+    /// </summary>
+    public class CommitteeInfoDtl
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+        /// <summary>
+        /// Сум/Хороо дахь анхан шатны хорооны нэр
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// Тэмдэг
+        /// </summary>
+        public bool? isnote { get; set; }
+        /// <summary>
+        /// Банкны данс
+        /// </summary>
+        public bool? isbank { get; set; }
+    }
+
+    /// <summary>
+    /// ҮЙЛ АЖИЛЛАГААНЫ ТАЛААРХ МЭДЭЭЛЭЛ
+    /// </summary>
+    public class committeeactivity
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+        /// <summary>
+        /// Хэрэгжүүлж байсан төслийн нэр, хугацаа, үндсэн үйл ажиллагаа, үр дүнгийн тухай 2-3 өгүүлбэрт багтаах /2020 оноос хойшхи/
+        /// </summary>
+        public string c3_3 { get; set; }
+        /// <summary>
+        /// Нөөц хөгжүүлэх, орлого нэмэгдүүлэх чиглэлээр хийгддэг үйл ажиллагаа /Үйл ажиллагааг жагсааж оруулах/
+        /// </summary>
+        public string c3_4 { get; set; }
+
+        /// <summary>
+        /// Байгууллагын хөгжлийн талаарх мэдээлэл 
+        /// </summary>
+        public committeeactivitydtl[] committeeactivitydtl { get; set; }
+    }
+
+    /// <summary>
+    /// Байгууллагын хөгжлийн талаарх мэдээлэл 
+    /// </summary>
+    public class committeeactivitydtl
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+        /// <summary>
+        /// Овог, нэр
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// Албан тушаал
+        /// </summary>
+        public string job { get; set; }
+        /// <summary>
+        /// Гишүүний төрөл
+        /// </summary>
+        public string type { get; set; }
+    }
 
 }

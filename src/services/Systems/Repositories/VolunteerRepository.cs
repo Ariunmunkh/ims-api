@@ -30,15 +30,20 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetVolunteerList()
+        public MResult GetVolunteerList(int id)
         {
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    volunteer.*
+    volunteer.*, committee.name committee
 FROM
     volunteer
+        LEFT JOIN
+    committee ON committee.id = volunteer.committeeid
+WHERE
+    COALESCE(committee.id,0) = @id OR 0 = @id
 ORDER BY volunteer.firstname");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -173,7 +178,7 @@ updated = current_timestamp");
 
             return new MResult { retdata = new Hashtable { { "volunteerid", request.id } } };
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -342,20 +347,35 @@ updated = current_timestamp");
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="committeeid"></param>
         /// <returns></returns>
-        public MResult GetVolunteerVoluntaryWorkList(int id)
+        public MResult GetVolunteerVoluntaryWorkList(int? id, int? committeeid)
         {
+            if (!id.HasValue)
+                id = 0;
+            if (!committeeid.HasValue)
+                committeeid = 0;
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-voluntarywork.name voluntarywork,
+    voluntarywork.name voluntarywork,
+    volunteer.firstname,
+    volunteer.lastname,
+    committee.name committee,
     volunteervoluntarywork.*
-FROM volunteervoluntarywork
-left join voluntarywork 
-on voluntarywork.id = volunteervoluntarywork.voluntaryworkid
-where volunteervoluntarywork.volunteerid = @id
+FROM
+    volunteervoluntarywork
+        LEFT JOIN
+    voluntarywork ON voluntarywork.id = volunteervoluntarywork.voluntaryworkid
+        INNER JOIN
+    volunteer ON volunteer.id = volunteervoluntarywork.volunteerid
+        LEFT JOIN
+    committee ON committee.id = volunteer.committeeid
+WHERE (volunteervoluntarywork.volunteerid = @id or 0 = @id)
+  and (volunteer.committeeid = @committeeid or 0 = @committeeid)
 ORDER BY volunteervoluntarywork.updated");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -405,6 +425,7 @@ WHERE
   (id,
 volunteerid,
 voluntaryworkid,
+status,
 duration,
 voluntaryworkdate,
 note,
@@ -413,12 +434,14 @@ values
   (@id,
 @volunteerid,
 @voluntaryworkid,
+@status,
 @duration,
 @voluntaryworkdate,
 @note,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
 voluntaryworkid=@voluntaryworkid,
+status=@status,
 duration=@duration,
 voluntaryworkdate=@voluntaryworkdate,
 note=@note,
@@ -427,9 +450,31 @@ updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
             cmd.AddParam("@voluntaryworkid", DbType.Int32, request.voluntaryworkid, ParameterDirection.Input);
+            cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
             cmd.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
             cmd.AddParam("@voluntaryworkdate", DbType.DateTime, request.voluntaryworkdate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult UpdateVolunteerVoluntaryWork(UVolunteerVoluntaryWork request)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"UPDATE volunteervoluntarywork 
+SET 
+    status = @status,
+    updatedby = @updatedby,
+    updated = CURRENT_TIMESTAMP
+WHERE
+    id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+            cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }

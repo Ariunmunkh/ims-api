@@ -367,8 +367,12 @@ updatedby=@updatedby");
         {
 
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT *
-FROM localinfo");
+            cmd.CommandText(@"SELECT 
+    localinfo.*, committee.name committee
+FROM
+    localinfo
+        LEFT JOIN
+    committee ON committee.id = localinfo.committeeid");
             return connector.Execute(ref cmd, false);
 
         }
@@ -660,8 +664,12 @@ values
         {
 
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT *
-FROM committeeinfo");
+            cmd.CommandText(@"SELECT 
+    committeeinfo.*, committee.name committee
+FROM
+    committeeinfo
+        LEFT JOIN
+    committee ON committee.id = committeeinfo.committeeid");
             return connector.Execute(ref cmd, false);
 
         }
@@ -672,17 +680,35 @@ FROM committeeinfo");
         /// <returns></returns>
         public MResult GetCommitteeInfo(int id)
         {
-            using (DataSet ds = new DataSet())
-            {
-                MCommand cmd = connector.PopCommand();
-                cmd.CommandText(@"SELECT 
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
     committeeinfo.*
 FROM
     committeeinfo
 where committeeinfo.committeeid = @committeeid");
+            cmd.AddParam("@committeeid", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable data && data.Rows.Count > 0)
+            {
+                data.Columns.Add("committeeinfodtl", typeof(object));
+
+                cmd.CommandText(@"SELECT 
+    committeeinfodtl.*
+FROM
+    committeeinfodtl
+where committeeinfodtl.committeeid = @committeeid");
                 cmd.AddParam("@committeeid", DbType.Int32, id, ParameterDirection.Input);
-                return connector.Execute(ref cmd, false);
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                data.Rows[0]["committeeinfodtl"] = result.retdata;
+                return new MResult { retdata = data };
             }
+            return new MResult { rettype = -1, retmsg = "data not found" };
         }
 
         /// <summary>
@@ -883,7 +909,7 @@ values
 @updatedby)");
                 cmd.ClearParam();
                 cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
-                cmd.AddParam("@committeeid", DbType.String, request.committeeid, ParameterDirection.Input);
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                 cmd.AddParam("@c2_1", DbType.String, request.c2_1, ParameterDirection.Input);
                 cmd.AddParam("@c2_2", DbType.String, request.c2_2, ParameterDirection.Input);
                 cmd.AddParam("@c2_3", DbType.String, request.c2_3, ParameterDirection.Input);
@@ -926,6 +952,58 @@ values
                     return result;
             }
 
+            if (request.committeeinfodtl != null && request.committeeinfodtl.Length > 0)
+            {
+                cmd.CommandText("delete from committeeinfodtl where committeeid = @committeeid");
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                foreach (CommitteeInfoDtl dtl in request.committeeinfodtl)
+                {
+                    if (dtl.id == 0)
+                    {
+                        cmd.CommandText(@"select coalesce(max(id),0)+1 newid from committeeinfodtl");
+                        result = connector.Execute(ref cmd, false);
+                        if (result.rettype != 0)
+                            return result;
+                        if (result.retdata is DataTable data && data.Rows.Count > 0)
+                        {
+                            dtl.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                        }
+                    }
+
+                    cmd.CommandText(@"insert into committeeinfodtl
+(id,
+committeeid,
+name,
+isnote,
+isbank,
+updatedby)
+values
+(@id,
+@committeeid,
+@name,
+@isnote,
+@isbank,
+@updatedby)");
+                    cmd.ClearParam();
+                    cmd.AddParam("@id", DbType.Int32, dtl.id, ParameterDirection.Input);
+                    cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+                    cmd.AddParam("@name", DbType.String, dtl.name, ParameterDirection.Input);
+                    cmd.AddParam("@isnote", DbType.Boolean, dtl.isnote, ParameterDirection.Input);
+                    cmd.AddParam("@isbank", DbType.Boolean, dtl.isbank, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+
+                }
+            }
+
             return new MResult { retdata = request.id };
         }
 
@@ -937,9 +1015,230 @@ values
         public MResult DeleteCommitteeInfo(int id)
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText("delete from committeeinfo where id = @id");
+            cmd.CommandText("delete from committeeinfo where committeeid = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
+            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            cmd.CommandText("delete from committeeinfodtl where committeeid = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            result = connector.Execute(ref cmd, false);
+            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region committeeactivity
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetcommitteeactivityList()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT *
+FROM committeeactivity");
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult Getcommitteeactivity(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    committeeactivity.*
+FROM
+    committeeactivity
+where committeeactivity.committeeid = @committeeid");
+            cmd.AddParam("@committeeid", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable data && data.Rows.Count > 0)
+            {
+                data.Columns.Add("committeeactivitydtl", typeof(object));
+
+                cmd.CommandText(@"SELECT 
+    committeeactivitydtl.*
+FROM
+    committeeactivitydtl
+where committeeactivitydtl.committeeid = @committeeid");
+                cmd.AddParam("@committeeid", DbType.Int32, id, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                data.Rows[0]["committeeactivitydtl"] = result.retdata;
+                return new MResult { retdata = data };
+            }
+            return new MResult { rettype = -1, retmsg = "data not found" };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult Setcommitteeactivity(committeeactivity request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from committeeactivity");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText("select count(1) too from committeeactivity where id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            {
+                cmd.CommandText(@"update committeeactivity set 
+committeeid=@committeeid,
+c3_3 =@c3_3,
+c3_4 =@c3_4,
+updatedby=@updatedby 
+where id = @id");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+                cmd.AddParam("@c3_3", DbType.String, request.c3_3, ParameterDirection.Input);
+                cmd.AddParam("@c3_4", DbType.String, request.c3_4, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+            else
+            {
+                cmd.CommandText(@"insert into committeeactivity
+(id,
+committeeid,
+c3_3,
+c3_4,
+updatedby)
+values
+(@id,
+@committeeid,
+@c3_3,
+@c3_4,
+@updatedby)");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+                cmd.AddParam("@c3_3", DbType.String, request.c3_3, ParameterDirection.Input);
+                cmd.AddParam("@c3_4", DbType.String, request.c3_4, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+
+            if (request.committeeactivitydtl != null && request.committeeactivitydtl.Length > 0)
+            {
+                cmd.CommandText("delete from committeeactivitydtl where committeeid = @committeeid");
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                foreach (committeeactivitydtl dtl in request.committeeactivitydtl)
+                {
+                    if (dtl.id == 0)
+                    {
+                        cmd.CommandText(@"select coalesce(max(id),0)+1 newid from committeeactivitydtl");
+                        result = connector.Execute(ref cmd, false);
+                        if (result.rettype != 0)
+                            return result;
+                        if (result.retdata is DataTable data && data.Rows.Count > 0)
+                        {
+                            dtl.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                        }
+                    }
+
+                    cmd.CommandText(@"insert into committeeactivitydtl
+(id,
+committeeid,
+name,
+job,
+type,
+updatedby)
+values
+(@id,
+@committeeid,
+@name,
+@job,
+@type,
+@updatedby)");
+                    cmd.ClearParam();
+                    cmd.AddParam("@id", DbType.Int32, dtl.id, ParameterDirection.Input);
+                    cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+                    cmd.AddParam("@name", DbType.String, dtl.name, ParameterDirection.Input);
+                    cmd.AddParam("@job", DbType.Boolean, dtl.job, ParameterDirection.Input);
+                    cmd.AddParam("@type", DbType.Boolean, dtl.type, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+
+                }
+            }
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult Deletecommitteeactivity(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from committeeactivity where committeeid = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            cmd.CommandText("delete from committeeactivitydtl where committeeid = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            result = connector.Execute(ref cmd, false);
             if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;

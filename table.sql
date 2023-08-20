@@ -152,7 +152,41 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
-
+/*ДУНД ШАТНЫ ХОРООНЫ ТАЛААРХ МЭДЭЭЛЭЛ*/
+create table committeeinfodtl
+(
+id int not null, 
+committeeid int not null, 
+name varchar(200), /*Сум/Хороо дахь анхан шатны хорооны нэр*/
+isnote bool,/*Тэмдэг*/
+isbank bool,/*Банкны данс*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*ҮЙЛ АЖИЛЛАГААНЫ ТАЛААРХ МЭДЭЭЛЭЛ*/
+create table committeeactivity
+(
+id int not null, 
+committeeid int not null, 
+c3_3 varchar(2000), /*Хэрэгжүүлж байсан төслийн нэр, хугацаа, үндсэн үйл ажиллагаа, үр дүнгийн тухай 2-3 өгүүлбэрт багтаах /2020 оноос хойшхи/*/
+c3_4 varchar(2000),/*Нөөц хөгжүүлэх, орлого нэмэгдүүлэх чиглэлээр хийгддэг үйл ажиллагаа /Үйл ажиллагааг жагсааж оруулах/*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*ҮЙЛ АЖИЛЛАГААНЫ ТАЛААРХ МЭДЭЭЛЭЛ*/
+create table committeeactivitydtl
+(
+id int not null, 
+committeeid int not null, 
+name varchar(2000), /*Овог, нэр*/
+job varchar(2000),/*Албан тушаал*/
+type varchar(2000),/*Гишүүний төрөл*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*Дунд шатны хорооны бүртгэл*/
 create table committee
 (
@@ -327,6 +361,7 @@ create table volunteervoluntarywork
 id int not null, 
 volunteerid int,/*Сайн дурын идэвхтэн*/
 voluntaryworkid int,/*Сайн дурын ажлын төрөл*/
+status int,/*Төлөв*/
 duration int,/*Хугацаа*/
 voluntaryworkdate date,/*Огноо*/
 note varchar(2000),/*Нэмэлт мэдээлэл*/

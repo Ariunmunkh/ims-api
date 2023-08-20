@@ -94,5 +94,32 @@ namespace Systems.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         MResult DeleteCommitteeInfo(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetcommitteeactivityList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult Getcommitteeactivity(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult Setcommitteeactivity(committeeactivity request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult Deletecommitteeactivity(int id);
     }
 }

@@ -160,6 +160,22 @@ namespace Systems.Models
     /// <summary>
     /// Сайн дурын идэвхтэн Сайн дурын ажлын мэдээлэл
     /// </summary>
+    public class UVolunteerVoluntaryWork
+    {
+        /// <summary>
+        /// Бүртгэлийн дугаар
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// Төлөв
+        /// </summary>
+        public int? status { get; set; }
+    }
+    
+    /// <summary>
+    /// Сайн дурын идэвхтэн Сайн дурын ажлын мэдээлэл
+    /// </summary>
     public class VolunteerVoluntaryWork
     {
         /// <summary>
@@ -174,6 +190,10 @@ namespace Systems.Models
         /// Сайн дурын ажлын төрөл
         /// </summary>
         public int? voluntaryworkid { get; set; }
+        /// <summary>
+        /// Төлөв
+        /// </summary>
+        public int? status { get; set; }
         /// <summary>
         /// Хугацаа
         /// </summary>
