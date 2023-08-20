@@ -560,7 +560,7 @@ namespace Systems.Models
         /// <summary>
         /// Гишүүний төрөл
         /// </summary>
-        public string type { get; set; }
+        public bool? type { get; set; }
     }
 
 }

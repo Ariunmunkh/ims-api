@@ -180,9 +180,9 @@ create table committeeactivitydtl
 (
 id int not null, 
 committeeid int not null, 
-name varchar(2000), /*Овог, нэр*/
-job varchar(2000),/*Албан тушаал*/
-type varchar(2000),/*Гишүүний төрөл*/
+name varchar(200), /*Овог, нэр*/
+job varchar(200),/*Албан тушаал*/
+type bool,/*Гишүүний төрөл*/
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
