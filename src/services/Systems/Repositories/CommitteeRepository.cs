@@ -172,7 +172,19 @@ order by indicator.name");
             MCommand cmd = connector.PopCommand();
             MResult result;
 
-            if (request.id == 0)
+            cmd.CommandText("select * from committeereport where committeeid = @committeeid and reportdate = @reportdate");
+            cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+            cmd.AddParam("@reportdate", DbType.DateTime, request.reportdate, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            {
+                request.id = Convert.ToInt32(cdata.Rows[0]["id"]);
+            }
+            else
             {
                 cmd.CommandText(@"select coalesce(max(id),0)+1 newid from committeereport");
                 result = connector.Execute(ref cmd, false);
@@ -182,35 +194,7 @@ order by indicator.name");
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
-            }
 
-            cmd.CommandText("select count(1) too from committeereport where id = @id");
-            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
-
-            result = connector.Execute(ref cmd, false);
-            if (result.rettype != 0)
-                return result;
-
-            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
-            {
-                cmd.CommandText(@"update committeereport set 
-committeeid=@committeeid,
-reportdate=@reportdate,
-updated=current_timestamp, 
-updatedby=@updatedby 
-where id = @id");
-                cmd.ClearParam();
-                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
-                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
-                cmd.AddParam("@reportdate", DbType.DateTime, request.reportdate, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
-
-                result = connector.Execute(ref cmd, false);
-                if (result.rettype != 0)
-                    return result;
-            }
-            else
-            {
                 cmd.CommandText(@"insert into committeereport
 (id,
 committeeid,
@@ -253,7 +237,7 @@ updatedby=@updatedby");
                         }
                     }
 
-                    cmd.CommandText("select count(1) too from committeereportdtl where reportid = @reportid and indicatorid = @indicatorid and agegroupid = @agegroupid");
+                    cmd.CommandText("select * from committeereportdtl where reportid = @reportid and indicatorid = @indicatorid and agegroupid = @agegroupid");
                     cmd.ClearParam();
                     cmd.AddParam("@reportid", DbType.Int32, request.id, ParameterDirection.Input);
                     cmd.AddParam("@indicatorid", DbType.Int32, dtl.indicatorid, ParameterDirection.Input);
@@ -263,17 +247,18 @@ updatedby=@updatedby");
                     if (result.rettype != 0)
                         return result;
 
-                    if (result.retdata is DataTable tdata && tdata.Rows.Count > 0 && Convert.ToDecimal(tdata.Rows[0][0]) > 0)
+                    if (result.retdata is DataTable tdata && tdata.Rows.Count > 0 )
                     {
+                        dtl.id = Convert.ToInt32(tdata.Rows[0]["id"]);
+
                         cmd.CommandText(@"update committeereportdtl set 
 male=@male,
 female=@female,
 updated=current_timestamp, 
 updatedby=@updatedby 
-where reportid = @reportid 
-and indicatorid = @indicatorid 
-and agegroupid = @agegroupid");
+where id = @id");
                         cmd.ClearParam();
+                        cmd.AddParam("@id", DbType.Int32, dtl.id, ParameterDirection.Input);
                         cmd.AddParam("@reportid", DbType.Int32, request.id, ParameterDirection.Input);
                         cmd.AddParam("@indicatorid", DbType.Int32, dtl.indicatorid, ParameterDirection.Input);
                         cmd.AddParam("@agegroupid", DbType.Int32, dtl.agegroupid, ParameterDirection.Input);
