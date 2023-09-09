@@ -1,23 +1,10 @@
 version: '3.4'
 
 services:
-
-  consul:
-    image: consul:1.15
-    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
-    hostname: consul
-    container_name: consul
     
   systems:
     image: systems:latest
     build:
       context: .
-      dockerfile: src/services/systems/Dockerfile
+      dockerfile: /systems/Dockerfile
     container_name: systems
-
-  api.gateway:
-    image: apigateway:latest
-    build:
-      context: .
-      dockerfile: src/gateways/API.Gateway/Dockerfile
-    container_name: apigateway

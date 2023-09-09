@@ -2,25 +2,5 @@ version: '3.4'
 
 services:
   systems:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
-      - ServiceConfig__serviceAddress=http://systems:80
-      - ServiceConfig__serviceName=systems
-      - ServiceConfig__serviceId=systems-v1
-    ports:
-      - "80"
-    depends_on:
-    - api.gateway
-
-  api.gateway:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
+      ports:
       - "8080:80"
-    depends_on:
-    - consul
-
-  consul:
-    ports:
-    - "8500:8500"
