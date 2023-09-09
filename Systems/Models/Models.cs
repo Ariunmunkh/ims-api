@@ -191,135 +191,135 @@ namespace Systems.Models
         /// <summary>
         /// Аймаг/Дүүргийн нэр
         /// </summary>
-        public string c1_1 { get; set; } = string.Empty;
+        public string? c1_1 { get; set; } = string.Empty;
         /// <summary>
         /// Сум/Хорооны тоо
         /// </summary>
-        public string c1_2 { get; set; } = string.Empty;
+        public string? c1_2 { get; set; } = string.Empty;
         /// <summary>
         /// Нийслэлээс алслагдсан байдал /км/
         /// </summary>
-        public string c1_3 { get; set; } = string.Empty;
+        public string? c1_3 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо
         /// </summary>
-        public string c1_4 { get; set; } = string.Empty;
+        public string? c1_4 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо /0-5 нас/
         /// </summary>
-        public string c1_4_1 { get; set; } = string.Empty;
+        public string? c1_4_1 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо /6-17 нас/
         /// </summary>
-        public string c1_4_2 { get; set; } = string.Empty;
+        public string? c1_4_2 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо /18-25 нас/
         /// </summary>
-        public string c1_4_3 { get; set; } = string.Empty;
+        public string? c1_4_3 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо /26-45 нас/
         /// </summary>
-        public string c1_4_4 { get; set; } = string.Empty;
+        public string? c1_4_4 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо /46-60 нас/
         /// </summary>
-        public string c1_4_5 { get; set; } = string.Empty;
+        public string? c1_4_5 { get; set; } = string.Empty;
         /// <summary>
         /// Хүн амын тоо /61+ нас/
         /// </summary>
-        public string c1_4_6 { get; set; } = string.Empty;
+        public string? c1_4_6 { get; set; } = string.Empty;
         /// <summary>
         /// Хөдөлмөр эрхлэгч насны хүн амын тоо
         /// </summary>
-        public string c1_5 { get; set; } = string.Empty;
+        public string? c1_5 { get; set; } = string.Empty;
         /// <summary>
         /// Зорилтот бүлгийн хүн амын тоо
         /// </summary>
-        public string c1_6 { get; set; } = string.Empty;
+        public string? c1_6 { get; set; } = string.Empty;
         /// <summary>
         /// Өрх толгойлсон эрэгтэй
         /// </summary>
-        public string c1_6_1 { get; set; } = string.Empty;
+        public string? c1_6_1 { get; set; } = string.Empty;
         /// <summary>
         /// Өрх толгойлсон эмэгтэй
         /// </summary>
-        public string c1_6_2 { get; set; } = string.Empty;
+        public string? c1_6_2 { get; set; } = string.Empty;
         /// <summary>
         /// Хөгжлийн бэрхшээлтэй иргэн
         /// </summary>
-        public string c1_6_3 { get; set; } = string.Empty;
+        public string? c1_6_3 { get; set; } = string.Empty;
         /// <summary>
         /// Өндөр настан
         /// </summary>
-        public string c1_6_4 { get; set; } = string.Empty;
+        public string? c1_6_4 { get; set; } = string.Empty;
         /// <summary>
         /// Хагас өнчин хүүхдийн тоо
         /// </summary>
-        public string c1_6_5 { get; set; } = string.Empty;
+        public string? c1_6_5 { get; set; } = string.Empty;
         /// <summary>
         /// Бүтэн өнчин хүүхдийн тоо
         /// </summary>
-        public string c1_6_6 { get; set; } = string.Empty;
+        public string? c1_6_6 { get; set; } = string.Empty;
         /// <summary>
         /// Малчин өрхийн тоо
         /// </summary>
-        public string c1_7 { get; set; } = string.Empty;
+        public string? c1_7 { get; set; } = string.Empty;
         /// <summary>
         /// Малын тоо, толгой
         /// </summary>
-        public string c1_8 { get; set; } = string.Empty;
+        public string? c1_8 { get; set; } = string.Empty;
         /// <summary>
         /// Адуу
         /// </summary>
-        public string c1_8_1 { get; set; } = string.Empty;
+        public string? c1_8_1 { get; set; } = string.Empty;
         /// <summary>
         /// Тэмээ
         /// </summary>
-        public string c1_8_2 { get; set; } = string.Empty;
+        public string? c1_8_2 { get; set; } = string.Empty;
         /// <summary>
         /// Үхэр
         /// </summary>
-        public string c1_8_3 { get; set; } = string.Empty;
+        public string? c1_8_3 { get; set; } = string.Empty;
         /// <summary>
         /// Хонь
         /// </summary>
-        public string c1_8_4 { get; set; } = string.Empty;
+        public string? c1_8_4 { get; set; } = string.Empty;
         /// <summary>
         /// Ямаа
         /// </summary>
-        public string c1_8_5 { get; set; } = string.Empty;
+        public string? c1_8_5 { get; set; } = string.Empty;
         /// <summary>
         /// Төрийн өмчит аж ахуй нэгж байгууллагын тоо
         /// </summary>
-        public string c1_9 { get; set; } = string.Empty;
+        public string? c1_9 { get; set; } = string.Empty;
         /// <summary>
         /// Хувийн өмчит аж ахуй нэгж байгууллагын тоо
         /// </summary>
-        public string c1_10 { get; set; } = string.Empty;
+        public string? c1_10 { get; set; } = string.Empty;
         /// <summary>
         /// Орон нутагт үйл ажиллагаа явуулж буй Олон улсын байгууллагын тоо
         /// </summary>
-        public string c1_11 { get; set; } = string.Empty;
+        public string? c1_11 { get; set; } = string.Empty;
         /// <summary>
         /// Орон нутагт үйл ажиллагаа явуулж буй хүмүүнлэгийн байгууллагын тоо
         /// </summary>
-        public string c1_12 { get; set; } = string.Empty;
+        public string? c1_12 { get; set; } = string.Empty;
         /// <summary>
         /// Их, дээд сургуулийн тоо
         /// </summary>
-        public string c1_13 { get; set; } = string.Empty;
+        public string? c1_13 { get; set; } = string.Empty;
         /// <summary>
         /// Ерөнхий боловсролын сургуулийн тоо
         /// </summary>
-        public string c1_14 { get; set; } = string.Empty;
+        public string? c1_14 { get; set; } = string.Empty;
         /// <summary>
         /// Сургуулийн өмнөх боловсролын байгууллагын тоо
         /// </summary>
-        public string c1_15 { get; set; } = string.Empty;
+        public string? c1_15 { get; set; } = string.Empty;
         /// <summary>
         /// Жолооны курсын тоо
         /// </summary>
-        public string c1_16 { get; set; } = string.Empty;
+        public string? c1_16 { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -338,143 +338,143 @@ namespace Systems.Models
         /// <summary>
         /// Дунд шатны хорооны нэр
         /// </summary>
-        public string c2_1 { get; set; } = string.Empty;
+        public string? c2_1 { get; set; } = string.Empty;
         /// <summary>
         /// Байгуулагдсан он, сар, өдөр
         /// </summary>
-        public string c2_2 { get; set; } = string.Empty;
+        public string? c2_2 { get; set; } = string.Empty;
         /// <summary>
         /// Хаяг, байршил
         /// </summary>
-        public string c2_3 { get; set; } = string.Empty;
+        public string? c2_3 { get; set; } = string.Empty;
         /// <summary>
         /// Утасны дугаар
         /// </summary>
-        public string c2_4 { get; set; } = string.Empty;
+        public string? c2_4 { get; set; } = string.Empty;
         /// <summary>
         /// И-мэйл хаяг
         /// </summary>
-        public string c2_5 { get; set; } = string.Empty;
+        public string? c2_5 { get; set; } = string.Empty;
         /// <summary>
         /// Үндсэн ажилтаны тоо
         /// </summary>
-        public string c2_6 { get; set; } = string.Empty;
+        public string? c2_6 { get; set; } = string.Empty;
         /// <summary>
         /// Гэрээт ажилтаны тоо
         /// </summary>
-        public string c2_7 { get; set; } = string.Empty;
+        public string? c2_7 { get; set; } = string.Empty;
         /// <summary>
         /// Бүртгэлтэй Сайн дурын идэвхтний тоо
         /// </summary>
-        public string c2_8 { get; set; } = string.Empty;
+        public string? c2_8 { get; set; } = string.Empty;
         /// <summary>
         /// Гишүүнчлэл
         /// </summary>
-        public string c2_9 { get; set; } = string.Empty;
+        public string? c2_9 { get; set; } = string.Empty;
         /// <summary>
         /// Гишүүн
         /// </summary>
-        public string c2_9_1 { get; set; } = string.Empty;
+        public string? c2_9_1 { get; set; } = string.Empty;
         /// <summary>
         /// Онцгой гишүүн
         /// </summary>
-        public string c2_9_2 { get; set; } = string.Empty;
+        public string? c2_9_2 { get; set; } = string.Empty;
         /// <summary>
         /// Мөнгөн гишүүн
         /// </summary>
-        public string c2_9_3 { get; set; } = string.Empty;
+        public string? c2_9_3 { get; set; } = string.Empty;
         /// <summary>
         /// Алтан гишүүн
         /// </summary>
-        public string c2_9_4 { get; set; } = string.Empty;
+        public string? c2_9_4 { get; set; } = string.Empty;
         /// <summary>
         /// Хүмүүнлэгийн гишүүн байгууллагын тоо
         /// </summary>
-        public string c2_10 { get; set; } = string.Empty;
+        public string? c2_10 { get; set; } = string.Empty;
         /// <summary>
         /// Хүүхэд залуучуудын хөдөлгөөний гишүүний тоо
         /// </summary>
-        public string c2_11 { get; set; } = string.Empty;
+        public string? c2_11 { get; set; } = string.Empty;
         /// <summary>
         /// Багачуудын улаан загалмайч
         /// </summary>
-        public string c2_11_1 { get; set; } = string.Empty;
+        public string? c2_11_1 { get; set; } = string.Empty;
         /// <summary>
         /// Өсвөрийн улаан загалмайч
         /// </summary>
-        public string c2_11_2 { get; set; } = string.Empty;
+        public string? c2_11_2 { get; set; } = string.Empty;
         /// <summary>
         /// Залуучуудын улаан загалмайч
         /// </summary>
-        public string c2_11_3 { get; set; } = string.Empty;
+        public string? c2_11_3 { get; set; } = string.Empty;
         /// <summary>
         /// Идэр улаан загалмайч
         /// </summary>
-        public string c2_11_4 { get; set; } = string.Empty;
+        public string? c2_11_4 { get; set; } = string.Empty;
         /// <summary>
         /// ДШХ-ны эзэмшлийн газартай эсэх
         /// </summary>
-        public string c2_12_1 { get; set; } = string.Empty;
+        public string? c2_12_1 { get; set; } = string.Empty;
         /// <summary>
         /// Эзэмшлийн газрын зориулалт
         /// </summary>
-        public string c2_12_2 { get; set; } = string.Empty;
+        public string? c2_12_2 { get; set; } = string.Empty;
         /// <summary>
         /// Талбайн хэмжээ
         /// </summary>
-        public string c2_12_3 { get; set; } = string.Empty;
+        public string? c2_12_3 { get; set; } = string.Empty;
         /// <summary>
         /// Хэрэв үгүй бол Газрын зориулалт
         /// </summary>
-        public string c2_12_4 { get; set; } = string.Empty;
+        public string? c2_12_4 { get; set; } = string.Empty;
         /// <summary>
         /// ДШХ-ны эзэмшлийн байртай эсэх
         /// </summary>
-        public string c2_13_1 { get; set; } = string.Empty;
+        public string? c2_13_1 { get; set; } = string.Empty;
         /// <summary>
         /// Эзэмшлийн байрны тоо
         /// </summary>
-        public string c2_13_2 { get; set; } = string.Empty;
+        public string? c2_13_2 { get; set; } = string.Empty;
         /// <summary>
         /// Талбайн хэмжээ
         /// </summary>
-        public string c2_13_3 { get; set; } = string.Empty;
+        public string? c2_13_3 { get; set; } = string.Empty;
         /// <summary>
         /// Өрөөний тоо
         /// </summary>
-        public string c2_13_4 { get; set; } = string.Empty;
+        public string? c2_13_4 { get; set; } = string.Empty;
         /// <summary>
         /// Хэрэв үгүй бол байрны зориулалт
         /// </summary>
-        public string c2_13_5 { get; set; } = string.Empty;
+        public string? c2_13_5 { get; set; } = string.Empty;
         /// <summary>
         /// ДШХ-ны эзэмшлийн агуулахтай эсэх
         /// </summary>
-        public string c2_14_1 { get; set; } = string.Empty;
+        public string? c2_14_1 { get; set; } = string.Empty;
         /// <summary>
         /// Ашиглалтанд орсон огноо
         /// </summary>
-        public string c2_14_2 { get; set; } = string.Empty;
+        public string? c2_14_2 { get; set; } = string.Empty;
         /// <summary>
         /// Талбайн хэмжээ
         /// </summary>
-        public string c2_14_3 { get; set; } = string.Empty;
+        public string? c2_14_3 { get; set; } = string.Empty;
         /// <summary>
         /// ДШХ-ны эзэмшлийн тээврийн хэрэгсэлтэй эсэх
         /// </summary>
-        public string c2_15_1 { get; set; } = string.Empty;
+        public string? c2_15_1 { get; set; } = string.Empty;
         /// <summary>
         /// Тээврийн хэрэгслийн тоо
         /// </summary>
-        public string c2_15_2 { get; set; } = string.Empty;
+        public string? c2_15_2 { get; set; } = string.Empty;
         /// <summary>
         /// Тээврийн хэрэгслийн тайлбар /Марк, ашигласан хугацаа, Монголд орж ирсэн огноо/
         /// </summary>
-        public string c2_15_3 { get; set; } = string.Empty;
+        public string? c2_15_3 { get; set; } = string.Empty;
         /// <summary>
         /// Бусад хөрөнгө /зөөврийн болон суурийн компьютер, принтер гэх мэтийг дурдах/
         /// </summary>
-        public string c2_16 { get; set; } = string.Empty;
+        public string? c2_16 { get; set; } = string.Empty;
         /// <summary>
         /// Анхан шатны хорооны талаарх мэдээлэл 
         /// </summary>
@@ -524,11 +524,11 @@ namespace Systems.Models
         /// <summary>
         /// Хэрэгжүүлж байсан төслийн нэр, хугацаа, үндсэн үйл ажиллагаа, үр дүнгийн тухай 2-3 өгүүлбэрт багтаах /2020 оноос хойшхи/
         /// </summary>
-        public string c3_3 { get; set; } = string.Empty;
+        public string? c3_3 { get; set; } = string.Empty;
         /// <summary>
         /// Нөөц хөгжүүлэх, орлого нэмэгдүүлэх чиглэлээр хийгддэг үйл ажиллагаа /Үйл ажиллагааг жагсааж оруулах/
         /// </summary>
-        public string c3_4 { get; set; } = string.Empty;
+        public string? c3_4 { get; set; } = string.Empty;
 
         /// <summary>
         /// Байгууллагын хөгжлийн талаарх мэдээлэл 

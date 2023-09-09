@@ -10,6 +10,8 @@ p@ssW0rd
 r@dcr0ss
 fw*+!*Q%G^AA@a$&
 
+SET SQL_SAFE_UPDATES = 0;
+
 export DOCKER_HOST=ssh://root@157.230.241.237
 
 docker stop 2d946ba0a560

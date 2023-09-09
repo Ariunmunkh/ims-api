@@ -61,9 +61,11 @@ ORDER BY volunteer.firstname");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    volunteer.*
+    volunteer.*, committee.name committee
 FROM
     volunteer
+        LEFT JOIN
+    committee ON committee.id = volunteer.committeeid
 WHERE
     volunteer.id = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
