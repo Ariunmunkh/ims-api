@@ -1,7 +1,10 @@
 using BaseLibrary.LConnection;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.Data.Common;
 using Systems.Middleware;
 using Systems.Repositories;
+
+string CorsPolicy = "CorsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,12 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(o => o.AddPolicy(CorsPolicy, builder =>
+{
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+}));
 
 var app = builder.Build();
 
@@ -28,6 +37,7 @@ app.UseMiddleware<MConnection>();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors(CorsPolicy);
 
 //app.UseHttpsRedirection();
 

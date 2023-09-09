@@ -1,4 +1,5 @@
 ﻿using Connection.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using Systems.Models;
@@ -8,6 +9,7 @@ namespace Systems.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("CorsPolicy")]
     public class VolunteerController : ControllerBase
     {
         private readonly IVolunteerRepository _VolunteerRepository;

@@ -67,7 +67,7 @@ namespace Systems.Models
         /// <summary>
         /// Ургийн овог
         /// </summary>
-        public string familyname { get; set; }
+        public string? familyname { get; set; }
         /// <summary>
         /// Өөрийн нэр
         /// </summary>
@@ -83,7 +83,7 @@ namespace Systems.Models
         /// <summary>
         /// Регистрийн дугаар
         /// </summary>
-        public string regno { get; set; }
+        public string? regno { get; set; }
         /// <summary>
         /// Төрсөн огноо
         /// </summary>
@@ -91,7 +91,7 @@ namespace Systems.Models
         /// <summary>
         /// Утасны дугаар
         /// </summary>
-        public string phone { get; set; }
+        public string? phone { get; set; }
         /// <summary>
         /// Сайн дурын идэвхтэн эсэх
         /// </summary>
@@ -123,7 +123,7 @@ namespace Systems.Models
         /// <summary>
         /// Гудамж, байр, орц
         /// </summary>
-        public string address { get; set; }
+        public string? address { get; set; }
         /// <summary>
         /// Хөгжлийн бэрхшээлтэй иргэн эсэх
         /// </summary>

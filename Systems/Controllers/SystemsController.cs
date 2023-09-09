@@ -1,4 +1,5 @@
 ﻿using Connection.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Systems.Models;
 using Systems.Repositories;
@@ -7,6 +8,7 @@ namespace Systems.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("CorsPolicy")]
     public class SystemsController : ControllerBase
     {
         private readonly ISystemsRepository _SystemsRepository;

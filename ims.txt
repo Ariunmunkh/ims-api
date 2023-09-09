@@ -27,11 +27,6 @@ docker-compose build
 docker-compose up -d
 
 export DOCKER_HOST=ssh://root@157.230.241.237
-cd D:/projects/ims-api
-docker-compose build systems
-docker-compose up -d systems
-
-export DOCKER_HOST=ssh://root@157.230.241.237
 cd D:/projects/ims-ui
 docker-compose build
 docker-compose up -d
