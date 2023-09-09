@@ -316,7 +316,7 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        MResult GetCertificate();
+        MResult GetCertificate(int id);
 
     }
 }

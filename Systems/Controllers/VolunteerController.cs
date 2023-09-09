@@ -527,11 +527,12 @@ namespace Systems.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id">volunteerid</param>
         /// <returns></returns>
         [HttpGet("get_certificate")]
-        public IActionResult GetCertificate()
+        public IActionResult GetCertificate(int id)
         {
-            var result = _VolunteerRepository.GetCertificate();
+            var result = _VolunteerRepository.GetCertificate(id);
             if (result.rettype != 0)
             {
                 return BadRequest(result);

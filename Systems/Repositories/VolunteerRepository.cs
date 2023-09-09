@@ -9,6 +9,8 @@ using System.IO;
 using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using IronBarCode;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace Systems.Repositories
 {
@@ -1314,40 +1316,117 @@ updated = current_timestamp");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetCertificate()
+        public MResult GetCertificate(int id)
         {
             try
             {
-                MemoryStream fs = new MemoryStream();
+                string? firstname;
+                string? lastname;
+                string? committee;
+                List<string?> worklist = new List<string?>();
+                MCommand cmd = connector.PopCommand();
+                cmd.CommandText(@"select 
+volunteer.firstname,
+volunteer.lastname,
+committee.name committee
+from volunteer 
+        LEFT JOIN
+    committee ON committee.id = volunteer.committeeid
+where volunteer.id = @id ");
+                cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+                MResult result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
 
-                // Create an instance of the document class which represents the PDF document itself.  
-                Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-                // Create an instance to the PDF file by creating an instance of the PDF   
-                // Writer class using the document and the filestrem in the constructor.  
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    firstname = data.Rows[0]["firstname"].ToString();
+                    lastname = data.Rows[0]["lastname"].ToString();
+                    committee = data.Rows[0]["committee"].ToString();
 
-                PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                    cmd = connector.PopCommand();
+                    cmd.CommandText(@"SELECT 
+    voluntarywork.name voluntarywork,
+    volunteervoluntarywork.duration,
+    DATE_FORMAT(volunteervoluntarywork.voluntaryworkdate,'%Y-%m-%d') voluntaryworkdate
+FROM
+    volunteervoluntarywork
+        LEFT JOIN
+    voluntarywork ON voluntarywork.id = volunteervoluntarywork.voluntaryworkid
+where volunteervoluntarywork.volunteerid = @id 
+and COALESCE(volunteervoluntarywork.status,0) = 1");
+                    cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+                    if (result.retdata is DataTable workdata && workdata.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in workdata.Select("", "voluntaryworkdate desc"))
+                        {
+                            worklist.Add(string.Format("{0} /{1}/", dr["voluntarywork"], dr["voluntaryworkdate"]));
+                        }
+                    }
 
-                string fontPath = Path.Combine(Directory.GetCurrentDirectory(),"Fonts", "tahoma.ttf");
+                    using MemoryStream fs = new MemoryStream();
 
-                BaseFont sylfaen = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                Font head = new Font(sylfaen, 16f, Font.NORMAL, BaseColor.Blue);
-                Font normal = new Font(sylfaen, 12f, Font.NORMAL, BaseColor.Black);
+                    // Create an instance of the document class which represents the PDF document itself.  
+                    Document document = new Document(PageSize.A5, 25, 25, 30, 30);
+                    // Create an instance to the PDF file by creating an instance of the PDF   
+                    // Writer class using the document and the filestrem in the constructor.  
 
-                document.Open();
-                // Add a simple and wellknown phrase to the document in a flow layout manner  
-                document.Add(new Paragraph(2,"ГЭРЧИЛГЭЭ", head));
-                document.Add(new Paragraph("Бат овогтой Дорж нь Монголын улаан загалмай нийгэмлэгийн 13 удаагийн сайн дурын үйл ажиллагаанд оролцсон нь үнэн болно.\r\n\r\nСайн дурын ажлын жагсаалт: \r\n", normal));
-                document.Add(new Paragraph("1.\tЗөвхөн батлагдсан status 1 гэсэн датаг оруулах энд", normal));
-                document.Add(new Paragraph("\r\nМонголын улаан загалмай нийгэмлэгийн \r\nЕрөнхий нарийн бичгийн дарга \r\n\r\n\r\n\r\nН.БОЛОРМАА\r\n", normal));
-                // Close the document  
-                document.Close();
-                // Close the writer instance  
-                writer.Close();
-                // Always close open filehandles explicity  
-                fs.Close();
+                    PdfWriter writer = PdfWriter.GetInstance(document, fs);
 
-                return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(fs.ToArray()) }, { "name", string.Format("{0}.pdf", "testfile") } } };
+                    string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "tahoma.ttf");
+
+                    BaseFont sylfaen = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    Font head = new Font(sylfaen, 16f, Font.NORMAL, BaseColor.Blue);
+                    Font normal = new Font(sylfaen, 12f, Font.NORMAL, BaseColor.Black);
+
+                    document.Open();
+                    // Add a simple and wellknown phrase to the document in a flow layout manner  
+                    document.Add(new Paragraph(2, "ГЭРЧИЛГЭЭ", head));
+                    document.Add(new Paragraph(string.Format("{0} овогтой {1} нь 2016 оноос хойш Монголын улаан загалмай нийгэмлэгийн {2}ны {3} удаагийн сайн дурын үйл ажиллагаанд оролцсон нь үнэн болно.", lastname, firstname, committee, worklist.Count), normal));
+
+                    for (int i = 0; i < worklist.Count; i++)
+                        document.Add(new Paragraph(string.Format("{0}.\t{1}", i + 1, worklist[i]), normal));
+
+                    document.Add(new Paragraph("\r\nМонголын улаан загалмай нийгэмлэгийн \r\nЕрөнхий нарийн бичгийн дарга \r\n\r\n\r\n\r\nН.БОЛОРМАА\r\n", normal));
+
+
+
+                    GeneratedBarcode myBarcode = BarcodeWriter.CreateBarcode("http://157.230.241.237", BarcodeEncoding.QRCode);
+                    myBarcode.SaveAsImage(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "myBarcode.png"));
+
+                    iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "myBarcode.png"));
+
+                    //Resize image depend upon your need
+
+                    jpg.ScaleToFit(140f, 120f);
+
+                    //Give space before image
+
+                    jpg.SpacingBefore = 10f;
+
+                    //Give some space after the image
+
+                    jpg.SpacingAfter = 1f;
+
+                    jpg.Alignment = Element.ALIGN_LEFT;
+
+                    document.Add(jpg);
+
+                    // Close the document  
+                    document.Close();
+                    // Close the writer instance  
+                    writer.Close();
+                    // Always close open filehandles explicity  
+                    fs.Close();
+
+                    return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(fs.ToArray()) }, { "name", string.Format("{0} {1}.pdf", "гэрчилгээ", firstname) } } };
+                }
+                return new MResult { rettype = -1, retmsg = "Сайн дурын идэвхтэйний мэдээлэл олдсонгүй" };
 
             }
             catch (Exception ex)

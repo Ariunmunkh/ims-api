@@ -121,12 +121,11 @@ order by indicator.name");
                 ds.Tables.Add("retdata");
                 ds.Tables["retdata"]?.Columns.Add("key", typeof(int));
                 string col1, col2;
-                if (ds.Tables["agegroup"] != null)
-                    foreach (DataRow dr in ds.Tables["agegroup"].Rows)
-                    {
-                        ds.Tables["retdata"]?.Columns.Add(string.Format("male{0}", dr["id"]), typeof(int));
-                        ds.Tables["retdata"]?.Columns.Add(string.Format("female{0}", dr["id"]), typeof(int));
-                    }
+                foreach (DataRow dr in ds.Tables["agegroup"].Rows)
+                {
+                    ds.Tables["retdata"]?.Columns.Add(string.Format("male{0}", dr["id"]), typeof(int));
+                    ds.Tables["retdata"]?.Columns.Add(string.Format("female{0}", dr["id"]), typeof(int));
+                }
                 DataRow newrow;
                 DataRow[] rows;
                 foreach (DataRow dr in ds.Tables["indicator"].Rows)
