@@ -119,13 +119,14 @@ order by indicator.name");
                 ds.Tables[ds.Tables.Count - 1].TableName = "indicator";
 
                 ds.Tables.Add("retdata");
-                ds.Tables["retdata"].Columns.Add("key", typeof(int));
+                ds.Tables["retdata"]?.Columns.Add("key", typeof(int));
                 string col1, col2;
-                foreach (DataRow dr in ds.Tables["agegroup"].Rows)
-                {
-                    ds.Tables["retdata"].Columns.Add(string.Format("male{0}", dr["id"]), typeof(int));
-                    ds.Tables["retdata"].Columns.Add(string.Format("female{0}", dr["id"]), typeof(int));
-                }
+                if (ds.Tables["agegroup"] != null)
+                    foreach (DataRow dr in ds.Tables["agegroup"].Rows)
+                    {
+                        ds.Tables["retdata"]?.Columns.Add(string.Format("male{0}", dr["id"]), typeof(int));
+                        ds.Tables["retdata"]?.Columns.Add(string.Format("female{0}", dr["id"]), typeof(int));
+                    }
                 DataRow newrow;
                 DataRow[] rows;
                 foreach (DataRow dr in ds.Tables["indicator"].Rows)
@@ -245,7 +246,7 @@ updatedby=@updatedby");
                     if (result.rettype != 0)
                         return result;
 
-                    if (result.retdata is DataTable tdata && tdata.Rows.Count > 0 )
+                    if (result.retdata is DataTable tdata && tdata.Rows.Count > 0)
                     {
                         dtl.id = Convert.ToInt32(tdata.Rows[0]["id"]);
 

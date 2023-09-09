@@ -20,12 +20,12 @@ namespace Systems.Models
         /// <summary>
         /// Нэр
         /// </summary>
-        public string name { get; set; }
+        public string? name { get; set; }
 
         /// <summary>
         /// Төрөл
         /// </summary>
-        public string type { get; set; }
+        public string? type { get; set; }
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ namespace Systems.Models
         /// </summary>
         public int status { get; set; }
     }
-    
+
     /// <summary>
     /// Сайн дурын идэвхтэн
     /// </summary>
@@ -71,11 +71,11 @@ namespace Systems.Models
         /// <summary>
         /// Өөрийн нэр
         /// </summary>
-        public string firstname { get; set; }
+        public string? firstname { get; set; }
         /// <summary>
         /// Эцэг эхийн нэр
         /// </summary>
-        public string lastname { get; set; }
+        public string? lastname { get; set; }
         /// <summary>
         /// Хүйс
         /// </summary>
@@ -150,11 +150,11 @@ namespace Systems.Models
         /// <summary>
         /// Овог нэр
         /// </summary>
-        public string firstname { get; set; }
+        public string? firstname { get; set; }
         /// <summary>
         /// Утасны дугаар
         /// </summary>
-        public string phone { get; set; }
+        public string? phone { get; set; }
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ namespace Systems.Models
         /// </summary>
         public int? status { get; set; }
     }
-    
+
     /// <summary>
     /// Сайн дурын идэвхтэн Сайн дурын ажлын мэдээлэл
     /// </summary>
@@ -205,7 +205,7 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
     }
 
     /// <summary>
@@ -236,7 +236,7 @@ namespace Systems.Models
         /// <summary>
         /// Хаана
         /// </summary>
-        public string location { get; set; }
+        public string? location { get; set; }
         /// <summary>
         /// Хугацаа
         /// </summary>
@@ -244,7 +244,7 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
     }
     /// <summary>
     /// Сайн дурын идэвхтэн Ур чадварын мэдээлэл
@@ -270,7 +270,7 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
     }
 
     /// <summary>
@@ -301,7 +301,7 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
     }
 
     /// <summary>
@@ -326,7 +326,7 @@ namespace Systems.Models
         /// <summary>
         /// Сургуулийн нэр
         /// </summary>
-        public string schoolname { get; set; }
+        public string? schoolname { get; set; }
 
         /// <summary>
         /// Төгссөн эсэх
@@ -340,7 +340,7 @@ namespace Systems.Models
         /// <summary>
         /// Мэрэгжил
         /// </summary>
-        public string skill { get; set; }
+        public string? skill { get; set; }
     }
 
     /// <summary>
@@ -359,15 +359,15 @@ namespace Systems.Models
         /// <summary>
         /// Ажлын салбар
         /// </summary>
-        public string employment { get; set; }
+        public string? employment { get; set; }
         /// <summary>
         /// Ажлын газар
         /// </summary>
-        public string company { get; set; }
+        public string? company { get; set; }
         /// <summary>
         /// Албан тушаал
         /// </summary>
-        public string job { get; set; }
+        public string? job { get; set; }
         /// <summary>
         /// Эхэлсэн огноо
         /// </summary>
@@ -379,7 +379,7 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
     }
 
     /// <summary>
@@ -415,7 +415,7 @@ namespace Systems.Models
         /// <summary>
         /// Шалгалтын нэр
         /// </summary>
-        public string testname { get; set; }
+        public string? testname { get; set; }
         /// <summary>
         /// Шалгалтын оноо
         /// </summary>
@@ -423,7 +423,7 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
 
     }
     /// <summary>
@@ -446,7 +446,7 @@ namespace Systems.Models
         /// <summary>
         /// Төслийн нэр
         /// </summary>
-        public string projectname { get; set; }
+        public string? projectname { get; set; }
         /// <summary>
         /// Огноо
         /// </summary>
@@ -454,6 +454,6 @@ namespace Systems.Models
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
-        public string note { get; set; }
+        public string? note { get; set; }
     }
 }

@@ -61,7 +61,7 @@ namespace LConnection.Model
             MyCommand.Parameters.Add(param);
         }
 
-        public void AddParam(string name, DbType type, object value, ParameterDirection direction)
+        public void AddParam(string name, DbType type, object? value, ParameterDirection direction)
         {
             MySqlParameter param = new MySqlParameter();
             param.ParameterName = name;

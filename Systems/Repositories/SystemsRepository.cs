@@ -117,12 +117,12 @@ WHERE
         /// <returns></returns>
         private Claim[] BuildJWTClaims(DataTable data)
         {
-            string username = string.Empty;
-            string email = string.Empty;
-            string roleid = string.Empty;
-            string volunteerid = string.Empty;
-            string committeeid = string.Empty;
-            string committee = string.Empty;
+            string? username = string.Empty;
+            string? email = string.Empty;
+            string? roleid = string.Empty;
+            string? volunteerid = string.Empty;
+            string? committeeid = string.Empty;
+            string? committee = string.Empty;
 
             if (data.Rows.Count > 0)
             {

@@ -16,23 +16,23 @@ namespace Systems.Models
         /// <summary>
         /// Нэвтрэх нэр
         /// </summary>
-        public string username { get; set; } = string.Empty;
+        public string? username { get; set; } = string.Empty;
 
         /// <summary>
         /// Имэйл
         /// </summary>
-        public string email { get; set; } = string.Empty;
+        public string? email { get; set; } = string.Empty;
 
         /// <summary>
         /// Нууц үг
         /// </summary>
-        public string password { get; set; } = string.Empty;
+        public string? password { get; set; } = string.Empty;
 
         /// <summary>
         /// Нууц үг
         /// </summary>
         [JsonIgnore]
-        public string encryptpass { get; set; } = string.Empty;
+        public string? encryptpass { get; set; } = string.Empty;
 
         /// <summary>
         /// Хэрэглэгчийн үүрэг
@@ -65,22 +65,22 @@ namespace Systems.Models
         /// <summary>
         /// Салбар нэгжүүд
         /// </summary>
-        public string name { get; set; } = string.Empty;
+        public string? name { get; set; } = string.Empty;
 
         /// <summary>
         /// Хороодын дарга нарын нэр 
         /// </summary>
-        public string bossname { get; set; } = string.Empty;
+        public string? bossname { get; set; } = string.Empty;
 
         /// <summary>
         /// Утасны дугаар
         /// </summary>
-        public string phone { get; set; } = string.Empty;
+        public string? phone { get; set; } = string.Empty;
 
         /// <summary>
         /// Байршил
         /// </summary>
-        public string location { get; set; } = string.Empty;
+        public string? location { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -160,19 +160,19 @@ namespace Systems.Models
         /// <summary>
         /// Төслийн нэр
         /// </summary>
-        public string name { get; set; } = string.Empty;
+        public string? name { get; set; } = string.Empty;
         /// <summary>
         /// Санхүүжүүлэгч
         /// </summary>
-        public string funder { get; set; } = string.Empty;
+        public string? funder { get; set; } = string.Empty;
         /// <summary>
         /// Төслийн товч мэдээлэл
         /// </summary>
-        public string note { get; set; } = string.Empty;
+        public string? note { get; set; } = string.Empty;
         /// <summary>
         /// Хүрсэн үр дүн
         /// </summary>
-        public string results { get; set; } = string.Empty;
+        public string? results { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -497,7 +497,7 @@ namespace Systems.Models
         /// <summary>
         /// Сум/Хороо дахь анхан шатны хорооны нэр
         /// </summary>
-        public string name { get; set; } = string.Empty;
+        public string? name { get; set; } = string.Empty;
         /// <summary>
         /// Тэмдэг
         /// </summary>
@@ -552,11 +552,11 @@ namespace Systems.Models
         /// <summary>
         /// Овог, нэр
         /// </summary>
-        public string name { get; set; } = string.Empty;
+        public string? name { get; set; } = string.Empty;
         /// <summary>
         /// Албан тушаал
         /// </summary>
-        public string job { get; set; } = string.Empty;
+        public string? job { get; set; } = string.Empty;
         /// <summary>
         /// Гишүүний төрөл
         /// </summary>
