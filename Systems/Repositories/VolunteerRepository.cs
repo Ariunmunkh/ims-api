@@ -106,6 +106,7 @@ lastname,
 gender,
 regno,
 birthday,
+joindate,
 phone,
 isvolunteer,
 isblooddonor,
@@ -127,6 +128,7 @@ values
 @gender,
 @regno,
 @birthday,
+@joindate,
 @phone,
 @isvolunteer,
 @isblooddonor,
@@ -147,6 +149,7 @@ lastname=@lastname,
 gender=@gender,
 regno=@regno,
 birthday=@birthday,
+joindate=@joindate,
 phone=@phone,
 isvolunteer=@isvolunteer,
 isblooddonor=@isblooddonor,
@@ -168,6 +171,7 @@ updated = current_timestamp");
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             cmd.AddParam("@regno", DbType.String, request.regno, ParameterDirection.Input);
             cmd.AddParam("@birthday", DbType.DateTime, request.birthday, ParameterDirection.Input);
+            cmd.AddParam("@joindate", DbType.DateTime, request.joindate, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
             cmd.AddParam("@isvolunteer", DbType.Boolean, request.isvolunteer, ParameterDirection.Input);
             cmd.AddParam("@isblooddonor", DbType.Boolean, request.isblooddonor, ParameterDirection.Input);

@@ -89,6 +89,10 @@ namespace Systems.Models
         /// </summary>
         public DateTime? birthday { get; set; }
         /// <summary>
+        /// Элссэн огноо /улаан загалмайд/
+        /// </summary>
+        public DateTime? joindate { get; set; }
+        /// <summary>
         /// Утасны дугаар
         /// </summary>
         public string? phone { get; set; }

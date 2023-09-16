@@ -328,6 +328,7 @@ gender int,/*Хүйс*/
 regno varchar(200),/*Регистрийн дугаар*/
 birthday date,/*Төрсөн огноо*/
 phone varchar(200),/*Утасны дугаар*/
+joindate date,/*Элссэн огноо /улаан загалмайд/*/
 isvolunteer bool,/*Сайн дурын идэвхтэн эсэх*/
 isblooddonor bool,/*Цусны доонор эсэх*/
 bloodgroupid int,/*Цусны бүлэг*/
