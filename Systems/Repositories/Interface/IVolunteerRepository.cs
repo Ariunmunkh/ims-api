@@ -25,6 +25,13 @@ namespace Systems.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetVolunteerImage(int id);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         MResult UpdateVolunteer(UVolunteer request);
@@ -35,6 +42,13 @@ namespace Systems.Repositories
         /// <param name="request"></param>
         /// <returns></returns>
         MResult SetVolunteer(Volunteer request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetVolunteerImage(VolunteerImage request);
 
         /// <summary>
         /// 

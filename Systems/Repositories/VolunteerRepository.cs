@@ -78,6 +78,26 @@ WHERE
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult GetVolunteerImage(int id)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    volunteerimage.*
+FROM
+    volunteerimage
+WHERE
+    volunteerimage.volunteerid = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         public MResult SetVolunteer(Volunteer request)
@@ -100,11 +120,13 @@ WHERE
   (id,
 committeeid,
 status,
+type,
 familyname,
 firstname,
 lastname,
 gender,
 regno,
+jobname,
 birthday,
 joindate,
 phone,
@@ -122,11 +144,13 @@ values
   (@id,
 @committeeid,
 @status,
+@type,
 @familyname,
 @firstname,
 @lastname,
 @gender,
 @regno,
+@jobname,
 @birthday,
 @joindate,
 @phone,
@@ -143,11 +167,13 @@ values
 ON DUPLICATE KEY UPDATE 
 committeeid=@committeeid,
 status=@status,
+type=@type,
 familyname=@familyname,
 firstname=@firstname,
 lastname=@lastname,
 gender=@gender,
 regno=@regno,
+jobname=@jobname,
 birthday=@birthday,
 joindate=@joindate,
 phone=@phone,
@@ -165,11 +191,13 @@ updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
+            cmd.AddParam("@type", DbType.Int32, request.type, ParameterDirection.Input);
             cmd.AddParam("@familyname", DbType.String, request.familyname, ParameterDirection.Input);
             cmd.AddParam("@firstname", DbType.String, request.firstname, ParameterDirection.Input);
             cmd.AddParam("@lastname", DbType.String, request.lastname, ParameterDirection.Input);
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             cmd.AddParam("@regno", DbType.String, request.regno, ParameterDirection.Input);
+            cmd.AddParam("@jobname", DbType.String, request.jobname, ParameterDirection.Input);
             cmd.AddParam("@birthday", DbType.DateTime, request.birthday, ParameterDirection.Input);
             cmd.AddParam("@joindate", DbType.DateTime, request.joindate, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
@@ -188,6 +216,33 @@ updated = current_timestamp");
                 return result;
 
             return new MResult { retdata = new Hashtable { { "volunteerid", request.id } } };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetVolunteerImage(VolunteerImage request)
+        {
+            MCommand cmd = connector.PopCommand();
+
+            cmd.CommandText(@"INSERT INTO volunteerimage
+  (volunteerid,
+image,
+updatedby)
+values
+  (@volunteerid,
+@image,
+@updatedby) 
+ON DUPLICATE KEY UPDATE 
+image=@image,
+updatedby=@updatedby, 
+updated = current_timestamp");
+            cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
+            cmd.AddParam("@image", DbType.String, request.image, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
         }
 
         /// <summary>

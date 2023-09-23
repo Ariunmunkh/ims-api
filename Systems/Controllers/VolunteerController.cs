@@ -44,6 +44,17 @@ namespace Systems.Controllers
         {
             return Ok(_VolunteerRepository.GetVolunteer(id));
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_Volunteer_image")]
+        public IActionResult GetVolunteerImage(int id)
+        {
+            return Ok(_VolunteerRepository.GetVolunteerImage(id));
+        }
 
         /// <summary>
         /// 
@@ -65,6 +76,17 @@ namespace Systems.Controllers
         public IActionResult SetVolunteer([FromBody] Volunteer request)
         {
             return Ok(_VolunteerRepository.SetVolunteer(request));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_Volunteer_image")]
+        public IActionResult SetVolunteerImage([FromBody] VolunteerImage request)
+        {
+            return Ok(_VolunteerRepository.SetVolunteerImage(request));
         }
 
         /// <summary>

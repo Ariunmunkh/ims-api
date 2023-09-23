@@ -65,6 +65,10 @@ namespace Systems.Models
         /// </summary>
         public int status { get; set; }
         /// <summary>
+        /// Төрөл
+        /// </summary>
+        public int type { get; set; }
+        /// <summary>
         /// Ургийн овог
         /// </summary>
         public string? familyname { get; set; }
@@ -84,6 +88,10 @@ namespace Systems.Models
         /// Регистрийн дугаар
         /// </summary>
         public string? regno { get; set; }
+        /// <summary>
+        /// Мэргэжил
+        /// </summary>
+        public string? jobname { get; set; }
         /// <summary>
         /// Төрсөн огноо
         /// </summary>
@@ -132,6 +140,22 @@ namespace Systems.Models
         /// Хөгжлийн бэрхшээлтэй иргэн эсэх
         /// </summary>
         public bool isdisabled { get; set; }
+    }
+    
+    /// <summary>
+    /// Сайн дурын идэвхтэн Зураг
+    /// </summary>
+    public class VolunteerImage
+    {
+        /// <summary>
+        /// Бүртгэлийн дугаар
+        /// </summary>
+        public int volunteerid { get; set; }
+
+        /// <summary>
+        /// Зураг
+        /// </summary>
+        public string? image { get; set; }
     }
 
     /// <summary>

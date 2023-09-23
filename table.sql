@@ -337,9 +337,19 @@ countryid int,/*Улс*/
 divisionid int,/*Аймаг, хот*/
 districtid int,/*Сум, дүүрэг*/
 address varchar(2000),/*гудамж, байр, орц*/
+jobname varchar(200),/*Мэргэжил*/
 isdisabled bool,/*Хөгжлийн бэрхшээлтэй иргэн эсэх*/
 committeeid int,/*Дунд шатны хороо*/
+type int,/*төрөл*/
 status int,/*Төлөв*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*Сайн дурын идэвхтэн Зураг*/
+create table volunteerimage(
+volunteerid int not null, 
+image BLOB,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
