@@ -239,6 +239,7 @@ PRIMARY KEY (id)
 create table division
 (
 id int not null, 
+committeeid int,
 name varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
@@ -248,6 +249,8 @@ PRIMARY KEY (id)
 create table district
 (
 id int not null, 
+divisionid int,
+committeeid int,
 name varchar(200),
 updated timestamp default current_timestamp,
 updatedby int,  
@@ -337,7 +340,10 @@ countryid int,/*Улс*/
 divisionid int,/*Аймаг, хот*/
 districtid int,/*Сум, дүүрэг*/
 address varchar(2000),/*гудамж, байр, орц*/
+birthplace varchar(2000),/*Төрсөн газар*/
+facebook varchar(300),/*facebook*/
 jobname varchar(200),/*Мэргэжил*/
+employment varchar(200),/*Одоо эрхлэж буй ажил*/
 isdisabled bool,/*Хөгжлийн бэрхшээлтэй иргэн эсэх*/
 committeeid int,/*Дунд шатны хороо*/
 type int,/*төрөл*/
@@ -372,8 +378,10 @@ create table volunteervoluntarywork
 id int not null, 
 volunteerid int,/*Сайн дурын идэвхтэн*/
 voluntaryworkid int,/*Сайн дурын ажлын төрөл*/
+name varchar(300),
 status int,/*Төлөв*/
-duration int,/*Хугацаа*/
+duration float,/*Хугацаа*/
+voluntaryworkdate date,/*Огноо*/
 voluntaryworkdate date,/*Огноо*/
 note varchar(2000),/*Нэмэлт мэдээлэл*/
 updated timestamp default current_timestamp,
@@ -386,11 +394,12 @@ create table volunteertraining
 id int not null, 
 volunteerid int,/*Сайн дурын идэвхтэн*/
 trainingid int,/*Сургалтын төрөл*/
-levelid int,/*Түвшин*/
-trainingdate date,/*Огноо*/
-location varchar(200),/*Хаана*/
-duration int,/*Хугацаа*/
-note varchar(2000),/*Нэмэлт мэдээлэл*/
+name varchar(200),/*Сургалтын нэр*/
+organizer varchar(200),/*Зохион байгуулагч*/
+begindate date,/*Сургалт эхэлсэн огноо*/
+enddate date,/*Сургалт дууссан огноо*/
+location varchar(200),/*Сургалтын байршил*/
+iscertificate bool,/*Гэрчилгээтэй эсэх*/
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)

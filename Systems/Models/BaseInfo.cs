@@ -93,6 +93,10 @@ namespace Systems.Models
         /// </summary>
         public string? jobname { get; set; }
         /// <summary>
+        /// Одоо эрхлэж буй ажил
+        /// </summary>
+        public string? employment { get; set; }
+        /// <summary>
         /// Төрсөн огноо
         /// </summary>
         public DateTime? birthday { get; set; }
@@ -137,11 +141,19 @@ namespace Systems.Models
         /// </summary>
         public string? address { get; set; }
         /// <summary>
+        /// Төрсөн газар
+        /// </summary>
+        public string? birthplace { get; set; }
+        /// <summary>
+        /// facebook
+        /// </summary>
+        public string? facebook { get; set; }
+        /// <summary>
         /// Хөгжлийн бэрхшээлтэй иргэн эсэх
         /// </summary>
         public bool isdisabled { get; set; }
     }
-    
+
     /// <summary>
     /// Сайн дурын идэвхтэн Зураг
     /// </summary>
@@ -215,6 +227,10 @@ namespace Systems.Models
         /// </summary>
         public int volunteerid { get; set; }
         /// <summary>
+        /// Сайн дурын ажлын нэр
+        /// </summary>
+        public string? name { get; set; }
+        /// <summary>
         /// Сайн дурын ажлын төрөл
         /// </summary>
         public int? voluntaryworkid { get; set; }
@@ -225,11 +241,15 @@ namespace Systems.Models
         /// <summary>
         /// Хугацаа
         /// </summary>
-        public int? duration { get; set; }
+        public decimal? duration { get; set; }
         /// <summary>
-        /// Огноо
+        /// Эхлэх огноо
         /// </summary>
-        public DateTime? voluntaryworkdate { get; set; }
+        public DateTime? begindate { get; set; }
+        /// <summary>
+        /// Дуусах огноо
+        /// </summary>
+        public DateTime? enddate { get; set; }
         /// <summary>
         /// Нэмэлт мэдээлэл
         /// </summary>
@@ -254,25 +274,29 @@ namespace Systems.Models
         /// </summary>
         public int? trainingid { get; set; }
         /// <summary>
-        /// Түвшин
+        /// Сургалтын нэр
         /// </summary>
-        public int? levelid { get; set; }
+        public string? name { get; set; }
         /// <summary>
-        /// Огноо
+        /// Зохион байгуулагч
         /// </summary>
-        public DateTime? trainingdate { get; set; }
+        public string? organizer { get; set; }
         /// <summary>
-        /// Хаана
+        /// Сургалт эхэлсэн огноо
+        /// </summary>
+        public DateTime? begindate { get; set; }
+        /// <summary>
+        /// Сургалт дууссан огноо
+        /// </summary>
+        public DateTime? enddate { get; set; }
+        /// <summary>
+        /// Сургалтын байршил
         /// </summary>
         public string? location { get; set; }
         /// <summary>
-        /// Хугацаа
+        /// Гэрчилгээтэй эсэх
         /// </summary>
-        public int? duration { get; set; }
-        /// <summary>
-        /// Нэмэлт мэдээлэл
-        /// </summary>
-        public string? note { get; set; }
+        public bool? iscertificate { get; set; }
     }
     /// <summary>
     /// Сайн дурын идэвхтэн Ур чадварын мэдээлэл
