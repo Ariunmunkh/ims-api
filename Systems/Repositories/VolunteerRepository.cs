@@ -63,11 +63,13 @@ ORDER BY volunteer.firstname");
 
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    volunteer.*, committee.name committee
+    volunteer.*, committee.name committee, tbluser.email
 FROM
     volunteer
         LEFT JOIN
     committee ON committee.id = volunteer.committeeid
+        LEFT JOIN
+    tbluser ON tbluser.volunteerid = volunteer.id
 WHERE
     volunteer.id = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
@@ -127,6 +129,7 @@ lastname,
 gender,
 regno,
 jobname,
+employment,
 birthday,
 joindate,
 phone,
@@ -138,6 +141,8 @@ countryid,
 divisionid,
 districtid,
 address,
+birthplace,
+facebook,
 isdisabled,
 updatedby)
 values
@@ -151,6 +156,7 @@ values
 @gender,
 @regno,
 @jobname,
+@employment,
 @birthday,
 @joindate,
 @phone,
@@ -162,6 +168,8 @@ values
 @divisionid,
 @districtid,
 @address,
+@birthplace,
+@facebook,
 @isdisabled,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
@@ -174,6 +182,7 @@ lastname=@lastname,
 gender=@gender,
 regno=@regno,
 jobname=@jobname,
+employment=@employment,
 birthday=@birthday,
 joindate=@joindate,
 phone=@phone,
@@ -185,6 +194,8 @@ countryid=@countryid,
 divisionid=@divisionid,
 districtid=@districtid,
 address=@address,
+birthplace=@birthplace,
+facebook=@facebook,
 isdisabled=@isdisabled,
 updatedby=@updatedby, 
 updated = current_timestamp");
@@ -198,6 +209,7 @@ updated = current_timestamp");
             cmd.AddParam("@gender", DbType.Int32, request.gender, ParameterDirection.Input);
             cmd.AddParam("@regno", DbType.String, request.regno, ParameterDirection.Input);
             cmd.AddParam("@jobname", DbType.String, request.jobname, ParameterDirection.Input);
+            cmd.AddParam("@employment", DbType.String, request.employment, ParameterDirection.Input);
             cmd.AddParam("@birthday", DbType.DateTime, request.birthday, ParameterDirection.Input);
             cmd.AddParam("@joindate", DbType.DateTime, request.joindate, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
@@ -209,8 +221,26 @@ updated = current_timestamp");
             cmd.AddParam("@divisionid", DbType.Int32, request.divisionid, ParameterDirection.Input);
             cmd.AddParam("@districtid", DbType.Int32, request.districtid, ParameterDirection.Input);
             cmd.AddParam("@address", DbType.String, request.address, ParameterDirection.Input);
+            cmd.AddParam("@birthplace", DbType.String, request.birthplace, ParameterDirection.Input);
+            cmd.AddParam("@facebook", DbType.String, request.facebook, ParameterDirection.Input);
             cmd.AddParam("@isdisabled", DbType.Boolean, request.isdisabled, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            result = connector.Execute(ref cmd, true);
+            if (result.rettype != 0)
+                return result;
+
+            cmd.CommandText(@"UPDATE volunteer a 
+SET 
+    committeeid = (SELECT 
+            MAX(COALESCE(b.committeeid, c.committeeid))
+        FROM
+            district b
+                INNER JOIN
+            division c ON c.id = b.divisionid
+        WHERE
+            b.id = a.districtid)
+WHERE
+    a.id = @id");
             result = connector.Execute(ref cmd, true);
             if (result.rettype != 0)
                 return result;
@@ -428,6 +458,8 @@ updated = current_timestamp");
     volunteer.firstname,
     volunteer.lastname,
     committee.name committee,
+    DATE_FORMAT(volunteervoluntarywork.begindate, '%Y-%m-%d') begindate2,
+    DATE_FORMAT(volunteervoluntarywork.enddate, '%Y-%m-%d') enddate2,
     volunteervoluntarywork.*
 FROM
     volunteervoluntarywork
@@ -475,6 +507,11 @@ WHERE
         {
             MCommand cmd = connector.PopCommand();
 
+            if (request.status == 1)
+            {
+                return new MResult { rettype = -1, retmsg = "Баталгаажсан мэдээллийн засах боломжгүй." };
+            }
+
             if (request.id == 0)
             {
                 cmd.CommandText(@"select coalesce(max(id),0)+1 newid from volunteervoluntarywork");
@@ -491,34 +528,42 @@ WHERE
   (id,
 volunteerid,
 voluntaryworkid,
+name,
 status,
 duration,
-voluntaryworkdate,
+begindate,
+enddate,
 note,
 updatedby)
 values
   (@id,
 @volunteerid,
 @voluntaryworkid,
+@name,
 @status,
 @duration,
-@voluntaryworkdate,
+@begindate,
+@enddate,
 @note,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
 voluntaryworkid=@voluntaryworkid,
+name=@name,
 status=@status,
 duration=@duration,
-voluntaryworkdate=@voluntaryworkdate,
+begindate=@begindate,
+enddate=@enddate,
 note=@note,
 updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
             cmd.AddParam("@voluntaryworkid", DbType.Int32, request.voluntaryworkid, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
-            cmd.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
-            cmd.AddParam("@voluntaryworkdate", DbType.DateTime, request.voluntaryworkdate, ParameterDirection.Input);
+            cmd.AddParam("@duration", DbType.Decimal, request.duration, ParameterDirection.Input);
+            cmd.AddParam("@begindate", DbType.DateTime, request.begindate, ParameterDirection.Input);
+            cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
@@ -573,6 +618,9 @@ WHERE
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
 training.name training,
+    DATE_FORMAT(volunteertraining.begindate, '%Y-%m-%d') begindate2,
+    DATE_FORMAT(volunteertraining.enddate, '%Y-%m-%d') enddate2,
+case when volunteertraining.iscertificate = true then 'Тийм' else 'Үгүй' end iscertificate2,
     volunteertraining.*
 FROM
     volunteertraining
@@ -629,39 +677,43 @@ WHERE
   (id,
 volunteerid,
 trainingid,
-levelid,
-trainingdate,
+name,
+organizer,
+begindate,
+enddate,
 location,
-duration,
-note,
+iscertificate,
 updatedby)
 values
   (@id,
 @volunteerid,
 @trainingid,
-@levelid,
-@trainingdate,
+@name,
+@organizer,
+@begindate,
+@enddate,
 @location,
-@duration,
-@note,
+@iscertificate,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
 trainingid=@trainingid,
-levelid=@levelid,
-trainingdate=@trainingdate,
+name=@name,
+organizer=@organizer,
+begindate=@begindate,
+enddate=@enddate,
 location=@location,
-duration=@duration,
-note=@note,
+iscertificate=@iscertificate,
 updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
             cmd.AddParam("@trainingid", DbType.Int32, request.trainingid, ParameterDirection.Input);
-            cmd.AddParam("@levelid", DbType.Int32, request.levelid, ParameterDirection.Input);
-            cmd.AddParam("@trainingdate", DbType.DateTime, request.trainingdate, ParameterDirection.Input);
+            cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
+            cmd.AddParam("@organizer", DbType.String, request.organizer, ParameterDirection.Input);
+            cmd.AddParam("@begindate", DbType.DateTime, request.begindate, ParameterDirection.Input);
+            cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
-            cmd.AddParam("@duration", DbType.Int32, request.duration, ParameterDirection.Input);
-            cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@iscertificate", DbType.Boolean, request.iscertificate, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
