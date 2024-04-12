@@ -1,18 +1,27 @@
 sudo apt update
 sudo apt install docker.io
 
+docker pull mysql/mysql-server
+sudo docker run --name mysql -e MYSQL_ROOT_HOST=% -e MYSQL_ROOT_PASSWORD=rootpass -p 3333:3306 -d mysql/mysql-server
+
+sudo ufw allow 8080
+
+public ip: 97.74.93.220
+Login: redcross
+pass: cd3HO8N1z$8O
+
 ssh-keygen
 ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
-ssh-copy-id -i ~/.ssh/id_rsa root@157.230.241.237
+ssh-copy-id -i ~/.ssh/id_rsa redcross@97.74.93.220
 p@ssW0rd
 r@dcr0ss
 fw*+!*Q%G^AA@a$&
 
 SET SQL_SAFE_UPDATES = 0;
 
-export DOCKER_HOST=ssh://root@157.230.241.237
+export DOCKER_HOST=ssh://root@97.74.93.220
 
 docker stop 2d946ba0a560
 docker rmi -f 2d946ba0a560
@@ -23,12 +32,12 @@ docker system prune -a
 docker image prune -a
 service docker restart
 
-export DOCKER_HOST=ssh://root@157.230.241.237
+export DOCKER_HOST=ssh://redcross@97.74.93.220
 cd D:/projects/ims-api
 docker-compose build
 docker-compose up -d
 
-export DOCKER_HOST=ssh://root@157.230.241.237
+export DOCKER_HOST=ssh://redcross@97.74.93.220
 cd D:/projects/ims-ui
 docker-compose build
 docker-compose up -d

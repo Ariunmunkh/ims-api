@@ -27,11 +27,11 @@ namespace Systems.Middleware
         /// <param name="con">The connection object</param>
         public async Task Invoke(HttpContext context, DWConnector con)
         {
-            string connectionString = "Server=db-mysql-sgp1-50348-do-user-14443432-0.b.db.ondigitalocean.com;" +
-                "Port=25060;" +
-                "Database=defaultdb;" +
-                "Uid=doadmin;" +
-                "Pwd=AVNS_EfKzZm97_ivk8rBM8Ow;";
+            string connectionString = "Server=97.74.93.220;" +
+                "Port=3333;" +
+                "Database=mysql;" +
+                "Uid=root;" +
+                "Pwd=rootpass;";
 
             con.ReloadConnectionString(connectionString);
             using (var c = con.Initialize())

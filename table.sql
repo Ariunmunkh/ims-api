@@ -316,7 +316,6 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
-drop table volunteer;
 /*Сайн дурын идэвхтэн*/
 create table volunteer
 (
@@ -352,7 +351,7 @@ volunteerid int not null,
 image BLOB,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (id)
+PRIMARY KEY (volunteerid)
 );
 /*Яаралтаы үед холбоо барих гэр бүлийн гишүүний мэдээлэл*/
 create table emergencycontact
