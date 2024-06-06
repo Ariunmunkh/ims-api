@@ -3,13 +3,6 @@ using Connection.Model;
 using LConnection.Model;
 using System.Data;
 using Systems.Models;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Net;
-using Microsoft.Net.Http.Headers;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Systems.Repositories
 {
@@ -166,7 +159,7 @@ updatedby=@updatedby", request.type, ishead ? "headid," : string.Empty, ishead ?
             cmd.CommandText(string.Format("delete from {0} where id = @id", type));
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
                 if (result.retmsg.Contains("fk_householdmember_educationdegreeid")
@@ -350,7 +343,7 @@ updatedby=@updatedby");
             cmd.CommandText("delete from committee where id = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 
@@ -506,7 +499,7 @@ updatedby=@updatedby");
             cmd.CommandText("delete from project where id = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 

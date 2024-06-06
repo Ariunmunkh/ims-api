@@ -44,7 +44,7 @@ namespace Systems.Controllers
         {
             return Ok(_VolunteerRepository.GetVolunteer(id));
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -561,7 +561,7 @@ namespace Systems.Controllers
             }
             if (result.retdata is Hashtable ht && ht.ContainsKey("file") && ht.ContainsKey("name"))
             {
-                return File(Convert.FromBase64String(Convert.ToString(ht["file"])), "application/pdf", Convert.ToString(ht["name"]));
+                return File(Convert.FromBase64String(Convert.ToString(ht["file"]) ?? string.Empty), "application/pdf", Convert.ToString(ht["name"]));
             }
             return NoContent();
         }

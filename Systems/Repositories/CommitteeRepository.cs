@@ -3,13 +3,6 @@ using Connection.Model;
 using LConnection.Model;
 using System.Data;
 using Systems.Models;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Net;
-using Microsoft.Net.Http.Headers;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Systems.Repositories
 {
@@ -79,7 +72,7 @@ where committeereport.committeeid = @committeeid and committeereport.reportdate 
                 if (result.rettype != 0)
                     return result;
 
-                ds.Tables.Add(result.retdata as DataTable);
+                ds.Tables.Add(result.retdata as DataTable ?? new DataTable());
                 ds.Tables[ds.Tables.Count - 1].TableName = "committeereportdtl";
 
                 cmd = connector.PopCommand();
@@ -91,7 +84,7 @@ order by program.name");
                 if (result.rettype != 0)
                     return result;
 
-                ds.Tables.Add(result.retdata as DataTable);
+                ds.Tables.Add(result.retdata as DataTable ?? new DataTable());
                 ds.Tables[ds.Tables.Count - 1].TableName = "program";
 
                 cmd = connector.PopCommand();
@@ -103,7 +96,7 @@ order by agegroup.name");
                 if (result.rettype != 0)
                     return result;
 
-                ds.Tables.Add(result.retdata as DataTable);
+                ds.Tables.Add(result.retdata as DataTable ?? new DataTable());
                 ds.Tables[ds.Tables.Count - 1].TableName = "agegroup";
 
                 cmd = connector.PopCommand();
@@ -115,30 +108,30 @@ order by indicator.name");
                 if (result.rettype != 0)
                     return result;
 
-                ds.Tables.Add(result.retdata as DataTable);
+                ds.Tables.Add(result.retdata as DataTable ?? new DataTable());
                 ds.Tables[ds.Tables.Count - 1].TableName = "indicator";
 
                 ds.Tables.Add("retdata");
                 ds.Tables["retdata"]?.Columns.Add("key", typeof(int));
                 string col1, col2;
-                foreach (DataRow dr in ds.Tables["agegroup"].Rows)
+                foreach (DataRow dr in (ds.Tables["agegroup"]?? new DataTable()).Rows)
                 {
                     ds.Tables["retdata"]?.Columns.Add(string.Format("male{0}", dr["id"]), typeof(int));
                     ds.Tables["retdata"]?.Columns.Add(string.Format("female{0}", dr["id"]), typeof(int));
                 }
                 DataRow newrow;
                 DataRow[] rows;
-                foreach (DataRow dr in ds.Tables["indicator"].Rows)
+                foreach (DataRow dr in (ds.Tables["indicator"] ?? new DataTable()).Rows)
                 {
-                    newrow = ds.Tables["retdata"].NewRow();
+                    newrow = (ds.Tables["retdata"] ?? new DataTable()).NewRow();
 
                     newrow["key"] = dr["id"];
 
-                    foreach (DataRow row in ds.Tables["agegroup"].Rows)
+                    foreach (DataRow row in (ds.Tables["agegroup"] ?? new DataTable()).Rows)
                     {
                         col1 = string.Format("male{0}", row["id"]);
                         col2 = string.Format("female{0}", row["id"]);
-                        rows = ds.Tables["committeereportdtl"].Select("indicatorid = '" + dr["id"] + "' and agegroupid = '" + row["id"] + "'");
+                        rows = (ds.Tables["committeereportdtl"] ?? new DataTable()).Select("indicatorid = '" + dr["id"] + "' and agegroupid = '" + row["id"] + "'");
                         if (rows.Length > 0)
                         {
                             newrow[col1] = rows[0]["male"];
@@ -150,7 +143,7 @@ order by indicator.name");
                             newrow[col2] = 0;
                         }
                     }
-                    ds.Tables["retdata"].Rows.Add(newrow);
+                    (ds.Tables["retdata"] ?? new DataTable()).Rows.Add(newrow);
                 }
                 ds.Tables.Remove("committeereportdtl");
                 ds.AcceptChanges();
@@ -329,7 +322,7 @@ updatedby=@updatedby");
             cmd.CommandText("delete from committee where id = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 
@@ -623,7 +616,7 @@ values
             cmd.CommandText("delete from localinfo where id = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 
@@ -1005,7 +998,7 @@ values
             cmd.CommandText("delete from committeeinfo where committeeid = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 
@@ -1013,7 +1006,7 @@ values
             }
             cmd.CommandText("delete from committeeinfodtl where committeeid = @id");
             result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 
@@ -1225,7 +1218,7 @@ values
             cmd.CommandText("delete from committeeactivity where committeeid = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 
@@ -1233,7 +1226,7 @@ values
             }
             cmd.CommandText("delete from committeeactivitydtl where committeeid = @id");
             result = connector.Execute(ref cmd, false);
-            if (result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
 

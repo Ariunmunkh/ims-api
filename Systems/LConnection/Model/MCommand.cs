@@ -11,7 +11,7 @@ namespace LConnection.Model
         public MySqlCommand MyCommand { get; private set; } = new MySqlCommand();
 
         #region Constructor
-        public MCommand(MySqlConnection _con)
+        public MCommand(MySqlConnection? _con)
         {
             ResetCommand();
             MyCommand.Connection = _con;
@@ -29,7 +29,6 @@ namespace LConnection.Model
             if (MyCommand != null)
             {
                 MyCommand.Dispose();
-                MyCommand = null;
             }
 
             GC.SuppressFinalize(this);

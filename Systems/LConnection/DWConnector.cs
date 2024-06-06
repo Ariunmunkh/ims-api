@@ -12,14 +12,13 @@ namespace BaseLibrary.LConnection
 {
     public sealed class DWConnector
     {
-        private MySqlTransaction MySqlTransaction ;
-        private string ConnectionString;
-        public MySqlConnection MySqlConnection { get; set; }
-        public MClientHeaderInfo _requestHeaderInfo { get; set; }
-
         #region Attributes
 
-        private string _errMsg { get; set; }
+        private MySqlTransaction? MySqlTransaction = null;
+        private string ConnectionString = string.Empty;
+        public MySqlConnection? MySqlConnection { get; set; } = null;
+        public MClientHeaderInfo _requestHeaderInfo { get; set; } = new MClientHeaderInfo();
+        private string? _errMsg { get; set; }
         private string? _errTrace { get; set; }
         private int _errNo { get; set; }
         private int _affectedrows { get; set; }
@@ -30,10 +29,17 @@ namespace BaseLibrary.LConnection
         }
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DWConnector()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ConnectionString"></param>
         public DWConnector(string ConnectionString)
         {
             this.InitializePool(ConnectionString);
@@ -104,7 +110,7 @@ namespace BaseLibrary.LConnection
         public MResult Execute(ref MCommand cmd, bool nonQuery)
         {
             MResult result = new MResult();
-            DataTable dataTable ;
+            DataTable dataTable;
 
             ResetFields();
 
@@ -177,7 +183,7 @@ namespace BaseLibrary.LConnection
             {
                 if (MySqlTransaction == null)
                 {
-                    MySqlTransaction = MySqlConnection.BeginTransaction();
+                    MySqlTransaction = MySqlConnection?.BeginTransaction();
                     result = true;
                 }
             }

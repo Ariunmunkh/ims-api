@@ -136,13 +136,13 @@ WHERE
 
             var claims = new Claim[]
                 {
-                    new Claim("username", username),
-                    new Claim("email", email),
-                    new Claim("roleid", roleid),
-                    new Claim("volunteerid", volunteerid),
-                    new Claim("committeeid", committeeid),
-                    new Claim("committee", committee),
-                    new Claim(JwtRegisteredClaimNames.Sub, username),
+                    new Claim("username", username ?? string.Empty),
+                    new Claim("email", email ?? string.Empty),
+                    new Claim("roleid", roleid ?? string.Empty),
+                    new Claim("volunteerid", volunteerid ?? string.Empty),
+                    new Claim("committeeid", committeeid ?? string.Empty),
+                    new Claim("committee", committee ?? string.Empty),
+                    new Claim(JwtRegisteredClaimNames.Sub, username ?? string.Empty),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
                 };
