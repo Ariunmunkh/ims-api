@@ -27,11 +27,11 @@ namespace Systems.Middleware
         /// <param name="con">The connection object</param>
         public async Task Invoke(HttpContext context, DWConnector con)
         {
-            string connectionString = "Server=97.74.93.220;" +
+            string connectionString = "Server=157.245.58.21;" +
                 "Port=3333;" +
                 "Database=mysql;" +
                 "Uid=root;" +
-                "Pwd=rootpass;";
+                "Pwd=rqzs1jwpe1rqmk1jndo;";
 
             con.ReloadConnectionString(connectionString);
             using (var c = con.Initialize())

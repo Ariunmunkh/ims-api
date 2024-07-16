@@ -46,7 +46,7 @@ FROM
         LEFT JOIN
     committee ON committee.id = tbluser.committeeid
 WHERE
-    tbluser.username = @username");
+    tbluser.username = @username or tbluser.email = @username");
                 cmd.AddParam("@username", DbType.String, request.username, ParameterDirection.Input);
                 MResult result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
