@@ -27,7 +27,7 @@ namespace Systems.Middleware
         /// <param name="con">The connection object</param>
         public async Task Invoke(HttpContext context, DWConnector con)
         {
-            string connectionString = "Server=157.245.58.21;" +
+            string connectionString = "Server=134.209.98.47;" +
                 "Port=3333;" +
                 "Database=mysql;" +
                 "Uid=root;" +
