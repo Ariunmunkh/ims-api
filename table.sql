@@ -249,7 +249,7 @@ PRIMARY KEY (id)
 create table district
 (
 id int not null, 
-divisionid int,
+headid int,
 committeeid int,
 name varchar(200),
 updated timestamp default current_timestamp,
