@@ -41,6 +41,31 @@ namespace Systems.Repositories
 
         #endregion
 
+        #region Committee
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        MResult GetRepoertInfoList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
+        /// <returns></returns>
+        MResult GetRepoertInfo(int committeeid);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetReportInfo(CommitteeReportInfo request);
+
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>

@@ -84,6 +84,23 @@ namespace Systems.Models
     }
 
     /// <summary>
+    /// Сарын үйл ажиллагааны бичмэл мэдээлэл
+    /// </summary>
+    public class CommitteeReportInfo
+    {
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+
+        /// <summary>
+        /// Огноо
+        /// </summary>
+        public string? info { get; set; }
+
+    }
+
+    /// <summary>
     /// Дунд шатны хорооны сарын тайлан
     /// </summary>
     public class CommitteeReport

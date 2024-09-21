@@ -114,7 +114,7 @@ order by indicator.name");
                 ds.Tables.Add("retdata");
                 ds.Tables["retdata"]?.Columns.Add("key", typeof(int));
                 string col1, col2;
-                foreach (DataRow dr in (ds.Tables["agegroup"]?? new DataTable()).Rows)
+                foreach (DataRow dr in (ds.Tables["agegroup"] ?? new DataTable()).Rows)
                 {
                     ds.Tables["retdata"]?.Columns.Add(string.Format("male{0}", dr["id"]), typeof(int));
                     ds.Tables["retdata"]?.Columns.Add(string.Format("female{0}", dr["id"]), typeof(int));
@@ -330,6 +330,74 @@ updatedby=@updatedby");
             }
             return result;
         }
+
+        #endregion
+
+        #region Committee
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetRepoertInfoList()
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    committeereportinfo.*
+FROM
+    committeereportinfo
+order by committeereportinfo.committeeid");
+            return connector.Execute(ref cmd, false);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
+        /// <returns></returns>
+        public MResult GetRepoertInfo(int committeeid)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    committeereportinfo.*
+FROM
+    committeereportinfo
+where committeereportinfo.committeeid = @committeeid");
+            cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetReportInfo(CommitteeReportInfo request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"insert into committeereportinfo
+(committeeid,
+info,
+updatedby)
+values
+(@committeeid,
+@info,
+@updatedby) 
+on duplicate key update 
+committeeid=@committeeid,
+info=@info,
+updated=current_timestamp,
+updatedby=@updatedby");
+            cmd.AddParam("@committeeid", DbType.Int64, request.committeeid, ParameterDirection.Input);
+            cmd.AddParam("@info", DbType.String, request.info, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            return connector.Execute(ref cmd, true);
+
+        }
+
 
         #endregion
 

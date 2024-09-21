@@ -236,7 +236,7 @@ SET
         FROM
             district b
                 INNER JOIN
-            division c ON c.id = b.divisionid
+            division c ON c.id = b.headid
         WHERE
             b.id = a.districtid)
 WHERE

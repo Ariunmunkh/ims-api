@@ -485,6 +485,15 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+/*Сарын үйл ажиллагааны бичмэл мэдээлэл*/
+create table committeereportinfo
+(
+committeeid int,
+info LONGTEXT,
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (committeeid)
+);
 /*Хэрэглэгч*/
 create table tbluser(
 userid int not null, 

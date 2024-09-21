@@ -69,6 +69,44 @@ namespace Systems.Controllers
 
         #endregion
 
+        #region Committee
+
+        /// <summary>
+        /// Дунд шатны хорооны сарын тайлан авах
+        /// </summary>
+        /// <param name="committeeid">Дунд шатны хороо</param>
+        /// <returns></returns>
+        [HttpGet("get_report_info_list")]
+        public IActionResult GetRepoertInfoList()
+        {
+            return Ok(_CommitteeRepository.GetRepoertInfoList());
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны сарын тайлан дэлгэрэнгүй авах
+        /// </summary>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
+        /// <returns></returns>
+        [HttpGet("get_report_info")]
+        public IActionResult GetRepoertInfo(int committeeid)
+        {
+            return Ok(_CommitteeRepository.GetRepoertInfo(committeeid));
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны сарын тайлан хадгалах
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_report_info")]
+        public IActionResult SetReportInfo([FromBody] CommitteeReportInfo request)
+        {
+            return Ok(_CommitteeRepository.SetReportInfo(request));
+        }
+
+        #endregion
+
         #region localinfo
 
         /// <summary>
