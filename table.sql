@@ -354,7 +354,7 @@ PRIMARY KEY (id)
 /*Сайн дурын идэвхтэн Зураг*/
 create table volunteerimage(
 volunteerid int not null, 
-image BLOB,
+image longtext,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (volunteerid)

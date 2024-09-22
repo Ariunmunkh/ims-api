@@ -93,8 +93,16 @@ FROM
 WHERE
     volunteerimage.volunteerid = @id");
             cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
-
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+            using DataTable data = result.retdata as DataTable ?? new DataTable();
+            if (data.Rows.Count > 0)
+            {
+                Hashtable retdata = new Hashtable { { "volunteerid", id }, { "image", data.Rows[0]["image"] } };
+                return new MResult { retdata = retdata };
+            }
+            return new MResult { };
         }
 
         /// <summary>
