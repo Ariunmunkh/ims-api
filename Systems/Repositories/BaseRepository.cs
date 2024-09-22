@@ -101,14 +101,19 @@ where id = @id", type));
                 if (cdata.Rows.Count > 0 && Convert.ToInt32(cdata.Rows[0]["id"]) == request.id)
                 {
                     cmd.CommandText(string.Format(@"update {0} set 
-                                                           {1} 
+                                                           {1}
+                                                           {2}
                                                            name=@name, 
                                                            updated=current_timestamp, 
                                                            updatedby=@updatedby 
-                                                     where id = @id", request.type, ishead ? "headid=@headid," : string.Empty));
+                                                     where id = @id", 
+                                                     request.type, 
+                                                     ishead ? "headid=@headid," : string.Empty,
+                                                     request.committeeid.HasValue ? "committeeid=@committeeid," : string.Empty));
                     cmd.ClearParam();
                     cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
                     cmd.AddParam("@headid", DbType.Int32, request.headid, ParameterDirection.Input);
+                    cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                     cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
                     cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 
@@ -121,20 +126,28 @@ where id = @id", type));
                     cmd.CommandText(string.Format(@"insert into {0}
 (id,
 {1}
+{2}
 name,
 updatedby)
 values
 (@id,
-{2}
+{3}
+{4}
 @name,
 @updatedby) 
 on duplicate key update 
 name=@name,
 updated=current_timestamp,
-updatedby=@updatedby", request.type, ishead ? "headid," : string.Empty, ishead ? "@headid," : string.Empty));
+updatedby=@updatedby", 
+request.type, 
+ishead ? "headid," : string.Empty, 
+request.committeeid.HasValue ? "committeeid," : string.Empty, 
+ishead ? "@headid," : string.Empty,
+ request.committeeid.HasValue ? "@committeeid," : string.Empty));
                     cmd.ClearParam();
                     cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
                     cmd.AddParam("@headid", DbType.Int32, request.headid, ParameterDirection.Input);
+                    cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                     cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
                     cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
 

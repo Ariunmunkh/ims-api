@@ -381,6 +381,8 @@ name varchar(300),
 status int,/*Төлөв*/
 duration float,/*Хугацаа*/
 voluntaryworkdate date,/*Огноо*/
+begindate date,
+enddate date,
 note varchar(2000),/*Нэмэлт мэдээлэл*/
 updated timestamp default current_timestamp,
 updatedby int,  

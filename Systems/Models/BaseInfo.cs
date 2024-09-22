@@ -18,6 +18,11 @@ namespace Systems.Models
         public int? headid { get; set; }
 
         /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int? committeeid { get; set; }
+
+        /// <summary>
         /// Нэр
         /// </summary>
         public string? name { get; set; }
