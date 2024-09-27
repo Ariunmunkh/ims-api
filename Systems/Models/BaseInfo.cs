@@ -259,6 +259,10 @@ namespace Systems.Models
         /// Нэмэлт мэдээлэл
         /// </summary>
         public string? note { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? image { get; set; }
     }
 
     /// <summary>
@@ -302,6 +306,10 @@ namespace Systems.Models
         /// Гэрчилгээтэй эсэх
         /// </summary>
         public bool? iscertificate { get; set; }
+        /// <summary>
+        /// Зураг
+        /// </summary>
+        public string? image { get; set; }
     }
     /// <summary>
     /// Сайн дурын идэвхтэн Ур чадварын мэдээлэл

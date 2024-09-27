@@ -384,6 +384,7 @@ voluntaryworkdate date,/*Огноо*/
 begindate date,
 enddate date,
 note varchar(2000),/*Нэмэлт мэдээлэл*/
+image longtext,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
@@ -400,6 +401,7 @@ begindate date,/*Сургалт эхэлсэн огноо*/
 enddate date,/*Сургалт дууссан огноо*/
 location varchar(200),/*Сургалтын байршил*/
 iscertificate bool,/*Гэрчилгээтэй эсэх*/
+image longtext,
 updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)

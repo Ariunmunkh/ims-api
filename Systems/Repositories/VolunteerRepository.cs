@@ -468,7 +468,18 @@ updated = current_timestamp");
     committee.name committee,
     DATE_FORMAT(volunteervoluntarywork.begindate, '%Y-%m-%d') begindate2,
     DATE_FORMAT(volunteervoluntarywork.enddate, '%Y-%m-%d') enddate2,
-    volunteervoluntarywork.*
+    volunteervoluntarywork.id,
+    volunteervoluntarywork.volunteerid,
+    volunteervoluntarywork.voluntaryworkid,
+    volunteervoluntarywork.name,
+    volunteervoluntarywork.status,
+    volunteervoluntarywork.duration,
+    volunteervoluntarywork.voluntaryworkdate,
+    volunteervoluntarywork.begindate,
+    volunteervoluntarywork.enddate,
+    volunteervoluntarywork.note,
+    volunteervoluntarywork.updated,
+    volunteervoluntarywork.updatedby
 FROM
     volunteervoluntarywork
         LEFT JOIN
@@ -542,6 +553,7 @@ duration,
 begindate,
 enddate,
 note,
+image,
 updatedby)
 values
   (@id,
@@ -553,6 +565,7 @@ values
 @begindate,
 @enddate,
 @note,
+@image,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
 voluntaryworkid=@voluntaryworkid,
@@ -562,6 +575,7 @@ duration=@duration,
 begindate=@begindate,
 enddate=@enddate,
 note=@note,
+image=@image,
 updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
@@ -573,6 +587,7 @@ updated = current_timestamp");
             cmd.AddParam("@begindate", DbType.DateTime, request.begindate, ParameterDirection.Input);
             cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
+            cmd.AddParam("@image", DbType.String, request.image, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
@@ -629,7 +644,17 @@ training.name training,
     DATE_FORMAT(volunteertraining.begindate, '%Y-%m-%d') begindate2,
     DATE_FORMAT(volunteertraining.enddate, '%Y-%m-%d') enddate2,
 case when volunteertraining.iscertificate = true then 'Тийм' else 'Үгүй' end iscertificate2,
-    volunteertraining.*
+    volunteertraining.id,
+    volunteertraining.volunteerid,
+    volunteertraining.trainingid,
+    volunteertraining.name,
+    volunteertraining.organizer,
+    volunteertraining.begindate,
+    volunteertraining.enddate,
+    volunteertraining.location,
+    volunteertraining.iscertificate,
+    volunteertraining.updated,
+    volunteertraining.updatedby
 FROM
     volunteertraining
 left join training on training.id = volunteertraining.trainingid
@@ -691,6 +716,7 @@ begindate,
 enddate,
 location,
 iscertificate,
+image,
 updatedby)
 values
   (@id,
@@ -702,6 +728,7 @@ values
 @enddate,
 @location,
 @iscertificate,
+@image,
 @updatedby) 
 ON DUPLICATE KEY UPDATE 
 trainingid=@trainingid,
@@ -711,6 +738,7 @@ begindate=@begindate,
 enddate=@enddate,
 location=@location,
 iscertificate=@iscertificate,
+image=@image,
 updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
@@ -722,6 +750,7 @@ updated = current_timestamp");
             cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
             cmd.AddParam("@iscertificate", DbType.Boolean, request.iscertificate, ParameterDirection.Input);
+            cmd.AddParam("@image", DbType.String, request.image, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
