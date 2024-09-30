@@ -46,16 +46,16 @@ namespace Systems.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="committeeid"></param>
         /// <returns></returns>
-        MResult GetRepoertInfoList();
+        MResult GetRepoertInfoList(int committeeid);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="committeeid"></param>
-        /// <param name="reportdate"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        MResult GetRepoertInfo(int committeeid);
+        MResult GetRepoertInfo(int id);
 
         /// <summary>
         /// 
@@ -63,6 +63,13 @@ namespace Systems.Repositories
         /// <param name="request"></param>
         /// <returns></returns>
         MResult SetReportInfo(CommitteeReportInfo request);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeleteReportInfo(int id);
 
         #endregion
 

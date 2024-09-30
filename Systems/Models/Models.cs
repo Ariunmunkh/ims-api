@@ -89,14 +89,24 @@ namespace Systems.Models
     public class CommitteeReportInfo
     {
         /// <summary>
+        /// Д/д
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
         /// Дунд шатны хороо
         /// </summary>
         public int committeeid { get; set; }
 
         /// <summary>
-        /// Огноо
+        /// Бичмэл мэдээлэл
         /// </summary>
         public string? info { get; set; }
+
+        /// <summary>
+        /// Огноо
+        /// </summary>
+        public DateTime? infodate { get; set; }
 
     }
 

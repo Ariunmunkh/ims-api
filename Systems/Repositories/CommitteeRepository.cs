@@ -1,6 +1,7 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
 using LConnection.Model;
+using MySqlX.XDevAPI.Common;
 using System.Data;
 using Systems.Models;
 
@@ -338,15 +339,18 @@ updatedby=@updatedby");
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="committeeid"></param>
         /// <returns></returns>
-        public MResult GetRepoertInfoList()
+        public MResult GetRepoertInfoList(int committeeid)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
     committeereportinfo.*
 FROM
     committeereportinfo
+where committeereportinfo.committeeid = @committeeid
 order by committeereportinfo.committeeid");
+            cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
 
         }
@@ -354,18 +358,17 @@ order by committeereportinfo.committeeid");
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="committeeid"></param>
-        /// <param name="reportdate"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public MResult GetRepoertInfo(int committeeid)
+        public MResult GetRepoertInfo(int id)
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
     committeereportinfo.*
 FROM
     committeereportinfo
-where committeereportinfo.committeeid = @committeeid");
-            cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
+where committeereportinfo.id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
             return connector.Execute(ref cmd, false);
         }
 
@@ -378,26 +381,68 @@ where committeereportinfo.committeeid = @committeeid");
         {
 
             MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from committeereportinfo");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+            if (!request.infodate.HasValue)
+                request.infodate = DateTime.Now;
+
             cmd.CommandText(@"insert into committeereportinfo
-(committeeid,
+(id,
+committeeid,
 info,
+infodate,
 updatedby)
 values
-(@committeeid,
+(@id,
+@committeeid,
 @info,
+@infodate,
 @updatedby) 
 on duplicate key update 
 committeeid=@committeeid,
 info=@info,
+infodate=@infodate,
 updated=current_timestamp,
 updatedby=@updatedby");
+            cmd.AddParam("@id", DbType.Int64, request.id, ParameterDirection.Input);
             cmd.AddParam("@committeeid", DbType.Int64, request.committeeid, ParameterDirection.Input);
             cmd.AddParam("@info", DbType.String, request.info, ParameterDirection.Input);
+            cmd.AddParam("@infodate", DbType.DateTime, request.infodate, ParameterDirection.Input);
             cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeleteReportInfo(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from committeereportinfo where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            return result;
+        }
 
         #endregion
 

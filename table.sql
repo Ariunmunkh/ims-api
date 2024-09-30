@@ -492,11 +492,13 @@ PRIMARY KEY (id)
 /*Сарын үйл ажиллагааны бичмэл мэдээлэл*/
 create table committeereportinfo
 (
+id int not null, 
 committeeid int,
 info LONGTEXT,
+infodate date,
 updated timestamp default current_timestamp,
 updatedby int,  
-PRIMARY KEY (committeeid)
+PRIMARY KEY (id)
 );
 /*Хэрэглэгч*/
 create table tbluser(

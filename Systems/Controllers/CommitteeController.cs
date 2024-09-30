@@ -77,21 +77,20 @@ namespace Systems.Controllers
         /// <param name="committeeid">Дунд шатны хороо</param>
         /// <returns></returns>
         [HttpGet("get_report_info_list")]
-        public IActionResult GetRepoertInfoList()
+        public IActionResult GetRepoertInfoList(int committeeid)
         {
-            return Ok(_CommitteeRepository.GetRepoertInfoList());
+            return Ok(_CommitteeRepository.GetRepoertInfoList(committeeid));
         }
 
         /// <summary>
         /// Дунд шатны хорооны сарын тайлан дэлгэрэнгүй авах
         /// </summary>
-        /// <param name="committeeid"></param>
-        /// <param name="reportdate"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get_report_info")]
-        public IActionResult GetRepoertInfo(int committeeid)
+        public IActionResult GetRepoertInfo(int id)
         {
-            return Ok(_CommitteeRepository.GetRepoertInfo(committeeid));
+            return Ok(_CommitteeRepository.GetRepoertInfo(id));
         }
 
         /// <summary>
@@ -103,6 +102,17 @@ namespace Systems.Controllers
         public IActionResult SetReportInfo([FromBody] CommitteeReportInfo request)
         {
             return Ok(_CommitteeRepository.SetReportInfo(request));
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны бүртгэл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_report_info")]
+        public IActionResult DeleteReportInfo(int id)
+        {
+            return Ok(_CommitteeRepository.DeleteReportInfo(id));
         }
 
         #endregion
