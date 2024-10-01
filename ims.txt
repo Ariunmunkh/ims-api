@@ -6,7 +6,7 @@ sudo docker run --name mysql -e MYSQL_ROOT_HOST=% -e MYSQL_ROOT_PASSWORD=rqzs1jw
 
 sudo ufw allow 8080
 
-public ip: 134.209.98.47
+public ip: 167.172.94.246
 Login: redcross
 pass: cd3HO8N1z$8O
 
@@ -14,14 +14,14 @@ ssh-keygen
 ssh-keygen -p -m PEM -f ~/.ssh/id_rsa
 ssh-agent bash
 ssh-add ~/.ssh/id_rsa
-ssh-copy-id -i ~/.ssh/id_rsa redcross@134.209.98.47
+ssh-copy-id -i ~/.ssh/id_rsa redcross@167.172.94.246
 p@ssW0rd
 r@dcr0ss
 fw*+!*Q%G^AA@a$&
 
 SET SQL_SAFE_UPDATES = 0;
 
-export DOCKER_HOST=ssh://root@134.209.98.47
+export DOCKER_HOST=ssh://root@167.172.94.246
 
 docker stop 2d946ba0a560
 docker rmi -f 2d946ba0a560
@@ -32,12 +32,12 @@ docker system prune -a
 docker image prune -a
 service docker restart
 
-export DOCKER_HOST=ssh://root@134.209.98.47
+export DOCKER_HOST=ssh://root@167.172.94.246
 cd D:/projects/ims-api
 docker-compose build
 docker-compose up -d
 
-export DOCKER_HOST=ssh://root@134.209.98.47
+export DOCKER_HOST=ssh://root@167.172.94.246
 cd D:/projects/ims-ui
 docker-compose build
 docker-compose up -d

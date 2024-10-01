@@ -345,9 +345,13 @@ updatedby=@updatedby");
         {
             MCommand cmd = connector.PopCommand();
             cmd.CommandText(@"SELECT 
-    committeereportinfo.*
+    committeereportinfo.*,
+    committee.name committee,
+    DATE_FORMAT(committeereportinfo.infodate, '%Y-%m') infodate2
 FROM
     committeereportinfo
+left join committee
+on committee.id = committeereportinfo.committeeid
 where committeereportinfo.committeeid = @committeeid
 order by committeereportinfo.committeeid");
             cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
