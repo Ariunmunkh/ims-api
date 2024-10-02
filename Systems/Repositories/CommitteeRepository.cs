@@ -2,6 +2,7 @@
 using Connection.Model;
 using LConnection.Model;
 using MySqlX.XDevAPI.Common;
+using System.Collections;
 using System.Data;
 using Systems.Models;
 
@@ -347,16 +348,42 @@ updatedby=@updatedby");
             cmd.CommandText(@"SELECT 
     committeereportinfo.*,
     committee.name committee,
-    DATE_FORMAT(committeereportinfo.infodate, '%Y-%m') infodate2
+    DATE_FORMAT(committeereportinfo.infodate, '%Y') infoyear,
+    DATE_FORMAT(committeereportinfo.infodate, '%Y-%m-%d') infodate2
 FROM
     committeereportinfo
 left join committee
 on committee.id = committeereportinfo.committeeid
-where committeereportinfo.committeeid = @committeeid
-order by committeereportinfo.committeeid");
+where committeereportinfo.committeeid = @committeeid");
             cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
-            return connector.Execute(ref cmd, false);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
 
+            using DataTable data = result.retdata as DataTable ?? new DataTable();
+            using DataTable yeardata = data.DefaultView.ToTable(true, "infoyear");
+            List<object> retdata = new();
+            List<object> children;
+            foreach (DataRow year in yeardata.Select("", "infoyear desc"))
+            {
+                children = new();
+                foreach (DataRow dr in data.Select("infoyear='" + year["infoyear"] + "'", "infodate2 desc"))
+                {
+                    children.Add(new Hashtable
+                    {
+                        { "title", dr["infodate2"] },
+                        { "key", dr["id"] }
+                    });
+                }
+
+                retdata.Add(new Hashtable
+                {
+                    { "title", year["infoyear"] },
+                    { "key", year["infoyear"] },
+                    { "children", children }
+                });
+            }
+            return new MResult { retdata = retdata };
         }
 
         /// <summary>

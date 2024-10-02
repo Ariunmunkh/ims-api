@@ -35,7 +35,7 @@ namespace Systems.Models
         public string? encryptpass { get; set; } = string.Empty;
 
         /// <summary>
-        /// Хэрэглэгчийн үүрэг
+        /// Хэрэглэгчийн үүрэг 1 Admin, 2 Sub-admin, 3 Coach, 4 Others, 5 Volunteer
         /// </summary>
         public int roleid { get; set; }
 
