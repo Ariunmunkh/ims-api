@@ -1,4 +1,5 @@
 ﻿using Connection.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Systems.Models;
@@ -6,14 +7,23 @@ using Systems.Repositories;
 
 namespace Systems.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Route("api/record/base")]
     [EnableCors("CorsPolicy")]
+    [Authorize]
     public class BaseController : ControllerBase
     {
         private readonly IBaseRepository _BaseRepository;
         private readonly ILogger<BaseController> _logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="BaseRepository"></param>
         public BaseController(ILogger<BaseController> logger, IBaseRepository BaseRepository)
         {
             _logger = logger;

@@ -6,6 +6,9 @@ using Systems.Repositories;
 
 namespace Systems.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [EnableCors("CorsPolicy")]
@@ -13,7 +16,11 @@ namespace Systems.Controllers
     {
         private readonly ISystemsRepository _SystemsRepository;
         private readonly ILogger<SystemsController> _logger;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="SystemsRepository"></param>
         public SystemsController(ILogger<SystemsController> logger, ISystemsRepository SystemsRepository)
         {
             _logger = logger;

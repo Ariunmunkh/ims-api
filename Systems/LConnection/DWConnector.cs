@@ -10,19 +10,30 @@ using System.Text.RegularExpressions;
 
 namespace BaseLibrary.LConnection
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class DWConnector
     {
         #region Attributes
 
         private MySqlTransaction? MySqlTransaction = null;
         private string ConnectionString = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
         public MySqlConnection? MySqlConnection { get; set; } = null;
+        /// <summary>
+        /// 
+        /// </summary>
         public MClientHeaderInfo _requestHeaderInfo { get; set; } = new MClientHeaderInfo();
         private string? _errMsg { get; set; }
         private string? _errTrace { get; set; }
         private int _errNo { get; set; }
         private int _affectedrows { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Transacted
         {
             get { return (MySqlTransaction != null); }
@@ -66,7 +77,11 @@ namespace BaseLibrary.LConnection
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_connectionString"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void ReloadConnectionString(string _connectionString)
         {
             if (string.IsNullOrEmpty(_connectionString))
@@ -77,13 +92,18 @@ namespace BaseLibrary.LConnection
             ConnectionString = _connectionString;
             this.InitializePool(ConnectionString);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public MySqlConnection Initialize()
         {
             MySqlConnection = new MySqlConnection(ConnectionString);
             return MySqlConnection;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void OpenMySqlConnection()
         {
             if (MySqlConnection != null && MySqlConnection.State != ConnectionState.Open)
@@ -91,7 +111,9 @@ namespace BaseLibrary.LConnection
                 MySqlConnection.Open();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void CloseMySqlConnection()
         {
             if (MySqlConnection != null && MySqlConnection.State == ConnectionState.Open)
@@ -101,12 +123,21 @@ namespace BaseLibrary.LConnection
         }
 
         #region Query commands
-        // Шаардлагагүй Pointer!
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public MCommand PopCommand()
         {
             return new MCommand(MySqlConnection);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="nonQuery"></param>
+        /// <returns></returns>
         public MResult Execute(ref MCommand cmd, bool nonQuery)
         {
             MResult result = new MResult();
@@ -175,6 +206,10 @@ namespace BaseLibrary.LConnection
         #endregion
 
         #region Transaction methods
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool BeginTransaction()
         {
             bool result = false;
@@ -211,7 +246,10 @@ namespace BaseLibrary.LConnection
 
             return result;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool RollbackTransaction()
         {
             bool result = false;
@@ -250,7 +288,10 @@ namespace BaseLibrary.LConnection
 
             return result;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool CommitTransaction()
         {
             bool result = false;

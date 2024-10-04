@@ -17,14 +17,17 @@ namespace Systems.Repositories
     public class SystemsRepository : ISystemsRepository
     {
         private readonly DWConnector connector;
+        private readonly IConfiguration configuration;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="_connector"></param>
-        public SystemsRepository(DWConnector _connector)
+        /// <param name="_configuration"></param>
+        public SystemsRepository(DWConnector _connector, IConfiguration _configuration)
         {
             connector = _connector;
+            configuration = _configuration;
         }
 
         /// <summary>
@@ -80,14 +83,14 @@ WHERE
                 throw new InvalidCastException(nameof(data));
             }
 
-            int configExpires = 24;
+            _ = int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int configExpires);
             var now = DateTime.UtcNow;
             var claims = BuildJWTClaims(data);
-            var signKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("QXJpdW5tdW5raCBFcmRlbmViaWxlZw=="));
+            var signKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:Secret"]));
 
             var jwt = new JwtSecurityToken(
-                issuer: "UL",
-                audience: "UL",
+                issuer: configuration["JWT:ValidIssuer"],
+                audience: configuration["JWT:ValidAudience"],
                 claims: claims,
                 notBefore: now,
                 expires: now.Add(TimeSpan.FromHours(configExpires)),

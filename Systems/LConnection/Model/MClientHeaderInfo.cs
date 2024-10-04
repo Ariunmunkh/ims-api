@@ -27,6 +27,9 @@ namespace Connection.Model
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// 
+        /// </summary>
         public MClientHeaderInfo()
         {
             UserID = "";

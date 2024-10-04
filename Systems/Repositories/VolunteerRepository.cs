@@ -99,7 +99,7 @@ WHERE
             using DataTable data = result.retdata as DataTable ?? new DataTable();
             if (data.Rows.Count > 0)
             {
-                Hashtable retdata = new Hashtable { { "volunteerid", id }, { "image", data.Rows[0]["image"] } };
+                Hashtable retdata = new() { { "volunteerid", id }, { "image", data.Rows[0]["image"] } };
                 return new MResult { retdata = retdata };
             }
             return new MResult { };
@@ -1473,15 +1473,26 @@ updated = current_timestamp");
                 string? firstname;
                 string? lastname;
                 string? committee;
-                List<string?> worklist = new List<string?>();
+                string? division;
+                string? regno;
+                DateTime joindate;
+                List<string?> worklist = new();
                 MCommand cmd = connector.PopCommand();
                 cmd.CommandText(@"select 
 volunteer.firstname,
 volunteer.lastname,
+volunteer.regno,
+volunteer.joindate,
+division.name division,
+district.name district,
 committee.name committee
 from volunteer 
         LEFT JOIN
     committee ON committee.id = volunteer.committeeid
+        LEFT JOIN
+    division ON division.id = volunteer.divisionid
+        LEFT JOIN
+    district ON district.id = volunteer.districtid
 where volunteer.id = @id ");
                 cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
                 MResult result = connector.Execute(ref cmd, false);
@@ -1493,6 +1504,9 @@ where volunteer.id = @id ");
                     firstname = data.Rows[0]["firstname"].ToString();
                     lastname = data.Rows[0]["lastname"].ToString();
                     committee = data.Rows[0]["committee"].ToString();
+                    division = data.Rows[0]["division"].ToString();
+                    regno = data.Rows[0]["regno"].ToString();
+                    joindate = Convert.ToDateTime(data.Rows[0]["joindate"]);
 
                     cmd = connector.PopCommand();
                     cmd.CommandText(@"SELECT 
@@ -1517,10 +1531,10 @@ and COALESCE(volunteervoluntarywork.status,0) = 1");
                         }
                     }
 
-                    using MemoryStream fs = new MemoryStream();
+                    using MemoryStream fs = new ();
 
                     // Create an instance of the document class which represents the PDF document itself.  
-                    Document document = new Document(PageSize.A5, 25, 25, 30, 30);
+                    Document document = new (PageSize.A5, 25, 25, 30, 30);
                     // Create an instance to the PDF file by creating an instance of the PDF   
                     // Writer class using the document and the filestrem in the constructor.  
 
@@ -1529,8 +1543,8 @@ and COALESCE(volunteervoluntarywork.status,0) = 1");
                     string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "tahoma.ttf");
 
                     BaseFont sylfaen = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    Font head = new Font(sylfaen, 16f, Font.NORMAL, BaseColor.Blue);
-                    Font normal = new Font(sylfaen, 12f, Font.NORMAL, BaseColor.Black);
+                    Font head = new (sylfaen, 16f, Font.NORMAL, BaseColor.Blue);
+                    Font normal = new (sylfaen, 12f, Font.NORMAL, BaseColor.Black);
 
                     document.Open();
                     // Add a simple and wellknown phrase to the document in a flow layout manner  

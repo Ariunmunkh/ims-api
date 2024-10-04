@@ -1,4 +1,5 @@
 ﻿using Connection.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
@@ -7,17 +8,22 @@ using Systems.Repositories;
 
 namespace Systems.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [EnableCors("CorsPolicy")]
+    [Authorize]
     public class VolunteerController : ControllerBase
     {
         private readonly IVolunteerRepository _VolunteerRepository;
-        private readonly ILogger<VolunteerController> _logger;
-
-        public VolunteerController(ILogger<VolunteerController> logger, IVolunteerRepository VolunteerRepository)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="VolunteerRepository"></param>
+        public VolunteerController(IVolunteerRepository VolunteerRepository)
         {
-            _logger = logger;
             _VolunteerRepository = VolunteerRepository;
         }
 

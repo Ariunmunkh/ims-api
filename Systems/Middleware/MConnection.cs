@@ -34,11 +34,9 @@ namespace Systems.Middleware
                 "Pwd=rqzs1jwpe1rqmk1jndo;";
 
             con.ReloadConnectionString(connectionString);
-            using (var c = con.Initialize())
-            {
-                c.Open();
-                await requestDeletegate.Invoke(context);
-            }
+            using var c = con.Initialize();
+            c.Open();
+            await requestDeletegate.Invoke(context);
 
         }
 

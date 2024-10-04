@@ -1,4 +1,5 @@
 ﻿using Connection.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Systems.Models;
@@ -6,14 +7,23 @@ using Systems.Repositories;
 
 namespace Systems.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [EnableCors("CorsPolicy")]
+    [Authorize]
     public class CommitteeController : ControllerBase
     {
         private readonly ICommitteeRepository _CommitteeRepository;
         private readonly ILogger<CommitteeController> _logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="CommitteeRepository"></param>
         public CommitteeController(ILogger<CommitteeController> logger, ICommitteeRepository CommitteeRepository)
         {
             _logger = logger;

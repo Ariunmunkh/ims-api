@@ -1,4 +1,5 @@
 ﻿using Connection.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Systems.Models;
@@ -6,6 +7,9 @@ using Systems.Repositories;
 
 namespace Systems.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Route("api/systems/[controller]")]
     [EnableCors("CorsPolicy")]
@@ -14,6 +18,11 @@ namespace Systems.Controllers
         private readonly IUserRepository _UserRepository;
         private readonly ILogger<UserController> _logger;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="UserRepository"></param>
         public UserController(ILogger<UserController> logger, IUserRepository UserRepository)
         {
             _logger = logger;
