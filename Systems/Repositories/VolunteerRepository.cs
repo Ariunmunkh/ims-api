@@ -1474,9 +1474,11 @@ updated = current_timestamp");
                 string? lastname;
                 string? committee;
                 string? division;
+                string? district;
                 string? regno;
                 DateTime joindate;
                 List<string?> worklist = new();
+                List<string?> traininglist = new();
                 MCommand cmd = connector.PopCommand();
                 cmd.CommandText(@"select 
 volunteer.firstname,
@@ -1505,80 +1507,118 @@ where volunteer.id = @id ");
                     lastname = data.Rows[0]["lastname"].ToString();
                     committee = data.Rows[0]["committee"].ToString();
                     division = data.Rows[0]["division"].ToString();
+                    district = data.Rows[0]["district"].ToString();
                     regno = data.Rows[0]["regno"].ToString();
                     joindate = Convert.ToDateTime(data.Rows[0]["joindate"]);
 
-                    cmd = connector.PopCommand();
                     cmd.CommandText(@"SELECT 
     voluntarywork.name voluntarywork,
+    volunteervoluntarywork.name,
     volunteervoluntarywork.duration,
-    DATE_FORMAT(volunteervoluntarywork.voluntaryworkdate,'%Y-%m-%d') voluntaryworkdate
+    DATE_FORMAT(volunteervoluntarywork.voluntaryworkdate,'%Y-%m-%d') voluntaryworkdate,
+    DATE_FORMAT(volunteervoluntarywork.begindate,'%Y-%m-%d') begindate,
+    DATE_FORMAT(volunteervoluntarywork.enddate,'%Y-%m-%d') enddate
 FROM
     volunteervoluntarywork
         LEFT JOIN
     voluntarywork ON voluntarywork.id = volunteervoluntarywork.voluntaryworkid
 where volunteervoluntarywork.volunteerid = @id 
 and COALESCE(volunteervoluntarywork.status,0) = 1");
-                    cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
                     result = connector.Execute(ref cmd, false);
                     if (result.rettype != 0)
                         return result;
                     if (result.retdata is DataTable workdata && workdata.Rows.Count > 0)
                     {
-                        foreach (DataRow dr in workdata.Select("", "voluntaryworkdate desc"))
+                        foreach (DataRow dr in workdata.Select("", "begindate desc"))
                         {
-                            worklist.Add(string.Format("{0} /{1}/", dr["voluntarywork"], dr["voluntaryworkdate"]));
+                            worklist.Add(string.Format("    {0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
                         }
                     }
 
-                    using MemoryStream fs = new ();
+                    cmd.CommandText(@"SELECT 
+    volunteertraining.name,
+    DATE_FORMAT(volunteertraining.begindate,'%Y-%m-%d') begindate,
+    DATE_FORMAT(volunteertraining.enddate,'%Y-%m-%d') enddate
+FROM
+    volunteertraining
+where volunteertraining.volunteerid = @id");
+                    result = connector.Execute(ref cmd, false);
+                    if (result.rettype != 0)
+                        return result;
+                    if (result.retdata is DataTable trainingdata && trainingdata.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in trainingdata.Select("", "begindate desc"))
+                        {
+                            traininglist.Add(string.Format("    {0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
+                        }
+                    }
+
+                    using MemoryStream fs = new();
 
                     // Create an instance of the document class which represents the PDF document itself.  
-                    Document document = new (PageSize.A5, 25, 25, 30, 30);
+                    Document document = new(PageSize.A4, 80, 40, 50, 50);
                     // Create an instance to the PDF file by creating an instance of the PDF   
                     // Writer class using the document and the filestrem in the constructor.  
 
                     PdfWriter writer = PdfWriter.GetInstance(document, fs);
-
-                    string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "tahoma.ttf");
-
-                    BaseFont sylfaen = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    Font head = new (sylfaen, 16f, Font.NORMAL, BaseColor.Blue);
-                    Font normal = new (sylfaen, 12f, Font.NORMAL, BaseColor.Black);
-
                     document.Open();
-                    // Add a simple and wellknown phrase to the document in a flow layout manner  
-                    document.Add(new Paragraph(2, "ГЭРЧИЛГЭЭ", head));
-                    document.Add(new Paragraph(string.Format("{0} овогтой {1} нь 2016 оноос хойш Монголын улаан загалмай нийгэмлэгийн {2}ны {3} удаагийн сайн дурын үйл ажиллагаанд оролцсон нь үнэн болно.", lastname, firstname, committee, worklist.Count), normal));
 
-                    for (int i = 0; i < worklist.Count; i++)
-                        document.Add(new Paragraph(string.Format("{0}.\t{1}", i + 1, worklist[i]), normal));
-
-                    document.Add(new Paragraph("\r\nМонголын улаан загалмай нийгэмлэгийн \r\nЕрөнхий нарийн бичгийн дарга \r\n\r\n\r\n\r\nН.БОЛОРМАА\r\n", normal));
-
-
-
-                    GeneratedBarcode myBarcode = BarcodeWriter.CreateBarcode("http://157.230.241.237", BarcodeEncoding.QRCode);
-                    myBarcode.SaveAsImage(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "myBarcode.png"));
-
-                    iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "myBarcode.png"));
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "logo.png"));
 
                     //Resize image depend upon your need
 
-                    jpg.ScaleToFit(140f, 120f);
+                    logo.ScaleToFit(80, 80);
 
                     //Give space before image
 
-                    jpg.SpacingBefore = 10f;
+                    logo.SpacingBefore = 10f;
 
                     //Give some space after the image
 
-                    jpg.SpacingAfter = 1f;
+                    logo.SpacingAfter = 1f;
 
-                    jpg.Alignment = Element.ALIGN_LEFT;
+                    logo.Alignment = Element.ALIGN_CENTER;
 
-                    document.Add(jpg);
+                    document.Add(logo);
 
+
+                    string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "calibri.ttf");
+
+                    BaseFont sylfaen = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    Font head = new(sylfaen, 16f, Font.NORMAL, BaseColor.Black);
+                    Font normal = new(sylfaen, 11f, Font.NORMAL, BaseColor.Black);
+
+                    // Add a simple and wellknown phrase to the document in a flow layout manner  
+                    Paragraph title = new(Environment.NewLine + "МОНГОЛЫН УЛААН ЗАГАЛМАЙ НИЙГЭМЛЭГ" + Environment.NewLine, normal);
+                    title.Alignment = Element.ALIGN_CENTER;
+                    document.Add(title);
+                    Paragraph title2 = new(Environment.NewLine + "Сайн дурын үйл ажиллагааны тодорхойлолт" + Environment.NewLine, normal);
+                    title2.Alignment = Element.ALIGN_CENTER;
+                    document.Add(title2);
+
+                    Paragraph body = new($"{Environment.NewLine}{lastname} овогтой {firstname} /РД:{regno}/нь {division}/{district} аймаг/дүүргийн Улаан загалмайн дунд шатны хороонд {joindate.Year} оны {joindate.Month} сарын {joindate.Day}-ны/ний өдрөөс эхлэн Сайн дурын идэвхтнээр ажиллаж, дараах үйл ажиллагаа, сургалтад хамрагдсан нь үнэн болно. ", normal);
+                    document.Add(body);
+
+                    Paragraph body2 = new($"{Environment.NewLine}1. Хамрагдаж, зохион байгуулсан үйл ажиллагааны мэдээлэл {Environment.NewLine}{string.Join(Environment.NewLine, worklist)}", normal);
+                    document.Add(body2);
+
+                    Paragraph body3 = new($"{Environment.NewLine}2. Хамрагдсан сургалтын мэдээлэл  {Environment.NewLine}{string.Join(Environment.NewLine, traininglist)}{Environment.NewLine}", normal);
+                    document.Add(body3);
+
+                    Paragraph body4 = new($"{Environment.NewLine}ТОДОРХОЙЛОЛТ ГАРГАСАН:", normal);
+                    
+                    body4.SpacingBefore = 0;
+                    body4.SpacingAfter = 0.5f;
+                    document.Add(body4);
+                    Paragraph body5 = new($"{Environment.NewLine}{division}/{district} аймаг/дүүргийн", normal);
+                    body5.SpacingBefore = 0;
+                    body5.SpacingAfter = 0.5f;
+                    document.Add(body5);
+                    Paragraph body6 = new($"{Environment.NewLine}Улаан загалмайн хорооны дарга", normal);
+                    body6.SpacingBefore = 0;
+                    body6.SpacingAfter = 0.5f;
+                    document.Add(body6);
+                    
                     // Close the document  
                     document.Close();
                     // Close the writer instance  

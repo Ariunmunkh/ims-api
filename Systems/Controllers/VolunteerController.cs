@@ -557,6 +557,7 @@ namespace Systems.Controllers
         /// </summary>
         /// <param name="id">volunteerid</param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("get_certificate")]
         public IActionResult GetCertificate(int id)
         {
