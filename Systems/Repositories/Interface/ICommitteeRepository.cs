@@ -15,6 +15,12 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
+        MResult GetRepoertExcel();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         MResult GetRepoertList(int committeeid);
 
         /// <summary>

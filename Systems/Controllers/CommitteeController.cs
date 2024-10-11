@@ -35,6 +35,16 @@ namespace Systems.Controllers
         /// <summary>
         /// Дунд шатны хорооны сарын тайлан авах
         /// </summary>
+        /// <returns></returns>
+        [HttpGet("get_report_excel")]
+        public IActionResult GetRepoertExcel()
+        {
+            return Ok(_CommitteeRepository.GetRepoertExcel());
+        }
+
+        /// <summary>
+        /// Дунд шатны хорооны сарын тайлан авах
+        /// </summary>
         /// <param name="committeeid">Дунд шатны хороо</param>
         /// <returns></returns>
         [HttpGet("get_report_list")]

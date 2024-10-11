@@ -1,7 +1,6 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
 using LConnection.Model;
-using MySqlX.XDevAPI.Common;
 using System.Collections;
 using System.Data;
 using Systems.Models;
@@ -26,6 +25,16 @@ namespace Systems.Repositories
 
         #region Committee
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetRepoertExcel()
+        {
+
+
+            return new MResult{};
+        }
         /// <summary>
         /// 
         /// </summary>
