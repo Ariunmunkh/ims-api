@@ -26,7 +26,7 @@ namespace BaseLibrary.LConnection
         /// <summary>
         /// 
         /// </summary>
-        public MClientHeaderInfo _requestHeaderInfo { get; set; } = new MClientHeaderInfo();
+        public RequestInfo RequestHeaderInfo { get; set; } = new RequestInfo();
         private string? _errMsg { get; set; }
         private string? _errTrace { get; set; }
         private int _errNo { get; set; }

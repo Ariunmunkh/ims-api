@@ -115,7 +115,7 @@ where id = @id", type));
                     cmd.AddParam("@headid", DbType.Int32, request.headid, ParameterDirection.Input);
                     cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                     cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                     result = connector.Execute(ref cmd, false);
                     if (result.rettype != 0)
@@ -149,7 +149,7 @@ ishead ? "@headid," : string.Empty,
                     cmd.AddParam("@headid", DbType.Int32, request.headid, ParameterDirection.Input);
                     cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                     cmd.AddParam("@name", DbType.String, request.name, ParameterDirection.Input);
-                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                     result = connector.Execute(ref cmd, false);
                     if (result.rettype != 0)
@@ -300,7 +300,7 @@ where id = @id");
                 cmd.AddParam("@bossname", DbType.String, request.bossname, ParameterDirection.Input);
                 cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
                 cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -335,7 +335,7 @@ updatedby=@updatedby");
                 cmd.AddParam("@bossname", DbType.String, request.bossname, ParameterDirection.Input);
                 cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
                 cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -452,7 +452,7 @@ where id = @id");
                 cmd.AddParam("@funder", DbType.String, request.funder, ParameterDirection.Input);
                 cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
                 cmd.AddParam("@results", DbType.String, request.results, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -491,7 +491,7 @@ updatedby=@updatedby");
                 cmd.AddParam("@funder", DbType.String, request.funder, ParameterDirection.Input);
                 cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
                 cmd.AddParam("@results", DbType.String, request.results, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)

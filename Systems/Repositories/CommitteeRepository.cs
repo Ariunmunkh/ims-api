@@ -207,7 +207,7 @@ updatedby=@updatedby");
                 cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
                 cmd.AddParam("@committeeid", DbType.String, request.committeeid, ParameterDirection.Input);
                 cmd.AddParam("@reportdate", DbType.DateTime, request.reportdate, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -258,7 +258,7 @@ where id = @id");
 
                         cmd.AddParam("@male", DbType.Int32, dtl.male, ParameterDirection.Input);
                         cmd.AddParam("@female", DbType.Int32, dtl.female, ParameterDirection.Input);
-                        cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                        cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
@@ -301,7 +301,7 @@ updatedby=@updatedby");
                         cmd.AddParam("@agegroupid", DbType.Int32, dtl.agegroupid, ParameterDirection.Input);
                         cmd.AddParam("@male", DbType.Int32, dtl.male, ParameterDirection.Input);
                         cmd.AddParam("@female", DbType.Int32, dtl.female, ParameterDirection.Input);
-                        cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                        cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
@@ -450,7 +450,7 @@ updatedby=@updatedby");
             cmd.AddParam("@committeeid", DbType.Int64, request.committeeid, ParameterDirection.Input);
             cmd.AddParam("@info", DbType.String, request.info, ParameterDirection.Input);
             cmd.AddParam("@infodate", DbType.DateTime, request.infodate, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
 
         }
@@ -621,7 +621,7 @@ where id = @id");
                 cmd.AddParam("@c1_15", DbType.String, request.c1_15, ParameterDirection.Input);
                 cmd.AddParam("@c1_16", DbType.String, request.c1_16, ParameterDirection.Input);
 
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -739,7 +739,7 @@ values
                 cmd.AddParam("@c1_14", DbType.String, request.c1_14, ParameterDirection.Input);
                 cmd.AddParam("@c1_15", DbType.String, request.c1_15, ParameterDirection.Input);
                 cmd.AddParam("@c1_16", DbType.String, request.c1_16, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -944,7 +944,7 @@ where committeeid=@committeeid");
                 cmd.AddParam("@c2_15_2", DbType.String, request.c2_15_2, ParameterDirection.Input);
                 cmd.AddParam("@c2_15_3", DbType.String, request.c2_15_3, ParameterDirection.Input);
                 cmd.AddParam("@c2_16", DbType.String, request.c2_16, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -1068,7 +1068,7 @@ values
                 cmd.AddParam("@c2_15_2", DbType.String, request.c2_15_2, ParameterDirection.Input);
                 cmd.AddParam("@c2_15_3", DbType.String, request.c2_15_3, ParameterDirection.Input);
                 cmd.AddParam("@c2_16", DbType.String, request.c2_16, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -1119,7 +1119,7 @@ values
                     cmd.AddParam("@name", DbType.String, dtl.name, ParameterDirection.Input);
                     cmd.AddParam("@isnote", DbType.Boolean, dtl.isnote, ParameterDirection.Input);
                     cmd.AddParam("@isbank", DbType.Boolean, dtl.isbank, ParameterDirection.Input);
-                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                     result = connector.Execute(ref cmd, false);
                     if (result.rettype != 0)
@@ -1263,7 +1263,7 @@ where committeeid=@committeeid");
                 cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                 cmd.AddParam("@c3_3", DbType.String, request.c3_3, ParameterDirection.Input);
                 cmd.AddParam("@c3_4", DbType.String, request.c3_4, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -1288,7 +1288,7 @@ values
                 cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
                 cmd.AddParam("@c3_3", DbType.String, request.c3_3, ParameterDirection.Input);
                 cmd.AddParam("@c3_4", DbType.String, request.c3_4, ParameterDirection.Input);
-                cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
@@ -1339,7 +1339,7 @@ values
                     cmd.AddParam("@name", DbType.String, dtl.name, ParameterDirection.Input);
                     cmd.AddParam("@job", DbType.String, dtl.job, ParameterDirection.Input);
                     cmd.AddParam("@type", DbType.Boolean, dtl.type, ParameterDirection.Input);
-                    cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+                    cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
 
                     result = connector.Execute(ref cmd, false);
                     if (result.rettype != 0)

@@ -11,6 +11,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using IronBarCode;
 using Microsoft.AspNetCore.Hosting.Server;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace Systems.Repositories
 {
@@ -232,7 +233,7 @@ updated = current_timestamp");
             cmd.AddParam("@birthplace", DbType.String, request.birthplace, ParameterDirection.Input);
             cmd.AddParam("@facebook", DbType.String, request.facebook, ParameterDirection.Input);
             cmd.AddParam("@isdisabled", DbType.Boolean, request.isdisabled, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             result = connector.Execute(ref cmd, true);
             if (result.rettype != 0)
                 return result;
@@ -279,7 +280,7 @@ updatedby=@updatedby,
 updated = current_timestamp");
             cmd.AddParam("@volunteerid", DbType.Int32, request.volunteerid, ParameterDirection.Input);
             cmd.AddParam("@image", DbType.String, request.image, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -302,7 +303,7 @@ WHERE
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             MResult result = connector.Execute(ref cmd, true);
             if (result.rettype != 0)
                 return result;
@@ -317,7 +318,7 @@ WHERE
             cmd.ClearParam();
             cmd.AddParam("@volunteerid", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -426,7 +427,7 @@ updated = current_timestamp");
             cmd.AddParam("@relationshipid", DbType.Int32, request.relationshipid, ParameterDirection.Input);
             cmd.AddParam("@firstname", DbType.String, request.firstname, ParameterDirection.Input);
             cmd.AddParam("@phone", DbType.String, request.phone, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -588,7 +589,7 @@ updated = current_timestamp");
             cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
             cmd.AddParam("@image", DbType.String, request.image, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -609,7 +610,7 @@ WHERE
     id = @id");
             cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
             cmd.AddParam("@status", DbType.Int32, request.status, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -751,7 +752,7 @@ updated = current_timestamp");
             cmd.AddParam("@location", DbType.String, request.location, ParameterDirection.Input);
             cmd.AddParam("@iscertificate", DbType.Boolean, request.iscertificate, ParameterDirection.Input);
             cmd.AddParam("@image", DbType.String, request.image, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -857,7 +858,7 @@ updated = current_timestamp");
             cmd.AddParam("@skillsid", DbType.Int32, request.skillsid, ParameterDirection.Input);
             cmd.AddParam("@skillslevelid", DbType.Int32, request.skillslevelid, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -968,7 +969,7 @@ updated = current_timestamp");
             cmd.AddParam("@begindate", DbType.DateTime, request.begindate, ParameterDirection.Input);
             cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -1085,7 +1086,7 @@ updated = current_timestamp");
             cmd.AddParam("@isend", DbType.Boolean, request.isend, ParameterDirection.Input);
             cmd.AddParam("@classlevel", DbType.Int32, request.classlevel, ParameterDirection.Input);
             cmd.AddParam("@skill", DbType.String, request.skill, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -1204,7 +1205,7 @@ updated = current_timestamp");
             cmd.AddParam("@begindate", DbType.DateTime, request.begindate, ParameterDirection.Input);
             cmd.AddParam("@enddate", DbType.DateTime, request.enddate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -1329,7 +1330,7 @@ updated = current_timestamp");
             cmd.AddParam("@testname", DbType.String, request.testname, ParameterDirection.Input);
             cmd.AddParam("@testscore", DbType.Int32, request.testscore, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -1440,7 +1441,7 @@ updated = current_timestamp");
             cmd.AddParam("@projectname", DbType.String, request.projectname, ParameterDirection.Input);
             cmd.AddParam("@assistancedate", DbType.DateTime, request.assistancedate, ParameterDirection.Input);
             cmd.AddParam("@note", DbType.String, request.note, ParameterDirection.Input);
-            cmd.AddParam("@updatedby", DbType.Int32, 1, ParameterDirection.Input);
+            cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
             return connector.Execute(ref cmd, true);
         }
 
@@ -1549,7 +1550,7 @@ where volunteertraining.volunteerid = @id");
                     {
                         foreach (DataRow dr in trainingdata.Select("", "begindate desc"))
                         {
-                            traininglist.Add(string.Format("    {0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
+                            traininglist.Add(string.Format("{0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
                         }
                     }
 
@@ -1588,6 +1589,8 @@ where volunteertraining.volunteerid = @id");
                     Font head = new(sylfaen, 16f, Font.NORMAL, BaseColor.Black);
                     Font normal = new(sylfaen, 11f, Font.NORMAL, BaseColor.Black);
 
+                    Chunk bullet = new Chunk("\u2022", normal);
+
                     // Add a simple and wellknown phrase to the document in a flow layout manner  
                     Paragraph title = new(Environment.NewLine + "МОНГОЛЫН УЛААН ЗАГАЛМАЙ НИЙГЭМЛЭГ" + Environment.NewLine, normal);
                     title.Alignment = Element.ALIGN_CENTER;
@@ -1599,26 +1602,29 @@ where volunteertraining.volunteerid = @id");
                     Paragraph body = new($"{Environment.NewLine}{lastname} овогтой {firstname} /РД:{regno}/нь {division}/{district} аймаг/дүүргийн Улаан загалмайн дунд шатны хороонд {joindate.Year} оны {joindate.Month} сарын {joindate.Day}-ны/ний өдрөөс эхлэн Сайн дурын идэвхтнээр ажиллаж, дараах үйл ажиллагаа, сургалтад хамрагдсан нь үнэн болно. ", normal);
                     document.Add(body);
 
-                    Paragraph body2 = new($"{Environment.NewLine}1. Хамрагдаж, зохион байгуулсан үйл ажиллагааны мэдээлэл {Environment.NewLine}{string.Join(Environment.NewLine, worklist)}", normal);
+                    Paragraph body2 = new($"{Environment.NewLine}1. Хамрагдаж, зохион байгуулсан үйл ажиллагааны мэдээлэл ", normal);
+                    foreach (string? workstr in worklist)
+                    {
+                        body2.Add(new Phrase(Environment.NewLine + "          ", normal));
+                        body2.Add(bullet);
+                        body2.Add(new Phrase(" " + workstr + " ", normal));
+                    }
                     document.Add(body2);
 
-                    Paragraph body3 = new($"{Environment.NewLine}2. Хамрагдсан сургалтын мэдээлэл  {Environment.NewLine}{string.Join(Environment.NewLine, traininglist)}{Environment.NewLine}", normal);
+                    Paragraph body3 = new($"{Environment.NewLine}2. Хамрагдсан сургалтын мэдээлэл ", normal);
+                    foreach (string? training in traininglist)
+                    {
+                        body3.Add(new Phrase(Environment.NewLine + "          ", normal));
+                        body3.Add(bullet);
+                        body3.Add(new Phrase(" " + training + " ", normal));
+                    }
                     document.Add(body3);
 
-                    Paragraph body4 = new($"{Environment.NewLine}ТОДОРХОЙЛОЛТ ГАРГАСАН:", normal);
-                    
+                    Paragraph body4 = new($"{Environment.NewLine}ТОДОРХОЙЛОЛТ ГАРГАСАН:{Environment.NewLine}{division}/{district} аймаг/дүүргийн{Environment.NewLine}Улаан загалмайн хорооны дарга", normal);
                     body4.SpacingBefore = 0;
                     body4.SpacingAfter = 0.5f;
                     document.Add(body4);
-                    Paragraph body5 = new($"{Environment.NewLine}{division}/{district} аймаг/дүүргийн", normal);
-                    body5.SpacingBefore = 0;
-                    body5.SpacingAfter = 0.5f;
-                    document.Add(body5);
-                    Paragraph body6 = new($"{Environment.NewLine}Улаан загалмайн хорооны дарга", normal);
-                    body6.SpacingBefore = 0;
-                    body6.SpacingAfter = 0.5f;
-                    document.Add(body6);
-                    
+
                     // Close the document  
                     document.Close();
                     // Close the writer instance  
