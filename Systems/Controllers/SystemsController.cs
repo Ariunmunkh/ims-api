@@ -31,7 +31,7 @@ namespace Systems.Controllers
         /// <param name="request">Хэрэглэгчийн мэдээлэл.</param>
         /// <returns></returns>
         [HttpPost("login")]
-        public IActionResult Login([FromBody] authbody request)
+        public IActionResult Login([FromBody] Authbody request)
         {
             request.encryptpass = Utility.EncryptPass(request.password);
 

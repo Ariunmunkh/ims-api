@@ -26,7 +26,7 @@ namespace Systems.Repositories
         /// </summary>
         /// <param name="tbluser"></param>
         /// <returns></returns>
-        MResult SetUser(tbluser tbluser);
+        MResult SetUser(Tbluser tbluser);
 
         /// <summary>
         /// 

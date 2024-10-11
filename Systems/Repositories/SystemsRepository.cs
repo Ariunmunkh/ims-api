@@ -35,7 +35,7 @@ namespace Systems.Repositories
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public MResult GetUserInfo(authbody request)
+        public MResult GetUserInfo(Authbody request)
         {
             try
             {
@@ -86,7 +86,7 @@ WHERE
             _ = int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int configExpires);
             var now = DateTime.UtcNow;
             var claims = BuildJWTClaims(data);
-            var signKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:Secret"]));
+            var signKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? string.Empty));
 
             var jwt = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
@@ -94,7 +94,7 @@ WHERE
                 claims: claims,
                 notBefore: now,
                 expires: now.Add(TimeSpan.FromHours(configExpires)),
-                signingCredentials: new SigningCredentials(signKey, SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(signKey, SecurityAlgorithms.HmacSha256Signature)
             );
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -118,7 +118,7 @@ WHERE
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private Claim[] BuildJWTClaims(DataTable data)
+        private List<Claim> BuildJWTClaims(DataTable data)
         {
             string? username = string.Empty;
             string? email = string.Empty;
@@ -137,7 +137,7 @@ WHERE
                 committee = data.Rows[0]["committee"].ToString();
             }
 
-            var claims = new Claim[]
+            var claims = new List<Claim>
                 {
                     new Claim("username", username ?? string.Empty),
                     new Claim("email", email ?? string.Empty),

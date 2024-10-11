@@ -1,17 +1,11 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
 using LConnection.Model;
-using System;
 using System.Collections;
 using System.Data;
 using Systems.Models;
-using System.IO;
-using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using IronBarCode;
-using Microsoft.AspNetCore.Hosting.Server;
-using static iTextSharp.text.pdf.AcroFields;
 
 namespace Systems.Repositories
 {

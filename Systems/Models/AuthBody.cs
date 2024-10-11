@@ -5,7 +5,7 @@ namespace Systems.Models
     /// <summary>
     /// 
     /// </summary>
-    public class authbody
+    public class Authbody
     {
         /// <summary>
         /// Нэвтрэх нэр

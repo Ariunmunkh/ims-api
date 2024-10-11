@@ -13,7 +13,7 @@ namespace Systems.Repositories
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        MResult GetUserInfo(authbody request);
+        MResult GetUserInfo(Authbody request);
 
     }
 }

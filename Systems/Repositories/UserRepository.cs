@@ -78,7 +78,7 @@ WHERE
         /// </summary>
         /// <param name="tbluser"></param>
         /// <returns></returns>
-        public MResult SetUser(tbluser tbluser)
+        public MResult SetUser(Tbluser tbluser)
         {
             string updatepasssql = "password = password,";
             tbluser.encryptpass = Utility.EncryptPass("5");

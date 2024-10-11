@@ -56,7 +56,7 @@ namespace Systems.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("set_user")]
-        public IActionResult SetUser([FromBody] tbluser request)
+        public IActionResult SetUser([FromBody] Tbluser request)
         {
             return Ok(_UserRepository.SetUser(request));
         }

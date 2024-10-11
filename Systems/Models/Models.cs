@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System;
+
 
 namespace Systems.Models
 {
     /// <summary>
     /// Хэрэглэгч
     /// </summary>
-    public class tbluser
+    public class Tbluser
     {
         /// <summary>
         /// Бүртгэлийн дугаар
@@ -538,7 +538,7 @@ namespace Systems.Models
     /// <summary>
     /// ҮЙЛ АЖИЛЛАГААНЫ ТАЛААРХ МЭДЭЭЛЭЛ
     /// </summary>
-    public class committeeactivity
+    public class Committeeactivity
     {
         /// <summary>
         /// Дугаар
@@ -560,13 +560,13 @@ namespace Systems.Models
         /// <summary>
         /// Байгууллагын хөгжлийн талаарх мэдээлэл 
         /// </summary>
-        public committeeactivitydtl[]? committeeactivitydtl { get; set; }
+        public Committeeactivitydtl[]? committeeactivitydtl { get; set; }
     }
 
     /// <summary>
     /// Байгууллагын хөгжлийн талаарх мэдээлэл 
     /// </summary>
-    public class committeeactivitydtl
+    public class Committeeactivitydtl
     {
         /// <summary>
         /// Дугаар

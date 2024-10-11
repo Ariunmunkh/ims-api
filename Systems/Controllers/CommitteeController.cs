@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 using Systems.Models;
 using Systems.Repositories;
 
@@ -37,9 +38,19 @@ namespace Systems.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("get_report_excel")]
+        [AllowAnonymous]
         public IActionResult GetRepoertExcel()
         {
-            return Ok(_CommitteeRepository.GetRepoertExcel());
+            var result = _CommitteeRepository.GetRepoertExcel();
+            if (result.rettype != 0)
+            {
+                return BadRequest(result);
+            }
+            if (result.retdata is Hashtable ht && ht.ContainsKey("file") && ht.ContainsKey("name"))
+            {
+                return File(Convert.FromBase64String(Convert.ToString(ht["file"]) ?? string.Empty), "application/pdf", Convert.ToString(ht["name"]));
+            }
+            return NoContent();
         }
 
         /// <summary>
@@ -260,7 +271,7 @@ namespace Systems.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("set_committeeactivity")]
-        public IActionResult Setcommitteeactivity([FromBody] committeeactivity request)
+        public IActionResult Setcommitteeactivity([FromBody] Committeeactivity request)
         {
             return Ok(_CommitteeRepository.Setcommitteeactivity(request));
         }

@@ -151,7 +151,7 @@ namespace Systems.Repositories
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        MResult Setcommitteeactivity(committeeactivity request);
+        MResult Setcommitteeactivity(Committeeactivity request);
 
         /// <summary>
         /// 

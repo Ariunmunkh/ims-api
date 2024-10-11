@@ -1,5 +1,6 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
+using DevExpress.XtraRichEdit;
 using LConnection.Model;
 using System.Collections;
 using System.Data;
@@ -31,9 +32,22 @@ namespace Systems.Repositories
         /// <returns></returns>
         public MResult GetRepoertExcel()
         {
+            try
+            {
+                using RichEditDocumentServer richEdit = new();
+                richEdit.LoadDocument(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "definition.docx"));
 
+                using MemoryStream memory2 = new();
 
-            return new MResult{};
+                richEdit.ExportToPdf(memory2);
+
+                return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(memory2.ToArray()) }, { "name", "data.pdf" } } };
+
+            }
+            catch (Exception ex)
+            {
+                return new MResult { retdata = ex, rettype = -1, retmsg = ex.Message };
+            }
         }
         /// <summary>
         /// 
@@ -1235,7 +1249,7 @@ where committeeactivitydtl.committeeid = @committeeid");
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public MResult Setcommitteeactivity(committeeactivity request)
+        public MResult Setcommitteeactivity(Committeeactivity request)
         {
 
             MCommand cmd = connector.PopCommand();
@@ -1314,7 +1328,7 @@ values
                 if (result.rettype != 0)
                     return result;
 
-                foreach (committeeactivitydtl dtl in request.committeeactivitydtl)
+                foreach (Committeeactivitydtl dtl in request.committeeactivitydtl)
                 {
                     if (dtl.id < 1)
                     {
