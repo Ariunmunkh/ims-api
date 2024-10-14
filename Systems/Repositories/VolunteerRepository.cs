@@ -4,8 +4,8 @@ using LConnection.Model;
 using System.Collections;
 using System.Data;
 using Systems.Models;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using DevExpress.XtraRichEdit;
+using DevExpress.XtraRichEdit.API.Native;
 
 namespace Systems.Repositories
 {
@@ -1526,7 +1526,7 @@ and COALESCE(volunteervoluntarywork.status,0) = 1");
                     {
                         foreach (DataRow dr in workdata.Select("", "begindate desc"))
                         {
-                            worklist.Add(string.Format("    {0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
+                            worklist.Add(string.Format("        • {0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
                         }
                     }
 
@@ -1544,89 +1544,46 @@ where volunteertraining.volunteerid = @id");
                     {
                         foreach (DataRow dr in trainingdata.Select("", "begindate desc"))
                         {
-                            traininglist.Add(string.Format("{0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
+                            traininglist.Add(string.Format("        • {0} /{1}-{2}/", dr["name"], dr["begindate"], dr["enddate"]));
                         }
                     }
 
-                    using MemoryStream fs = new();
+                    using RichEditDocumentServer richEdit = new();
+                    richEdit.LoadDocument(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "definition.docx"));
 
-                    // Create an instance of the document class which represents the PDF document itself.  
-                    Document document = new(PageSize.A4, 80, 40, 50, 50);
-                    // Create an instance to the PDF file by creating an instance of the PDF   
-                    // Writer class using the document and the filestrem in the constructor.  
+                    richEdit.Document.ReplaceAll("[LASTNAME]", lastname, SearchOptions.None);
+                    richEdit.Document.ReplaceAll("[FIRSTNAME]", firstname, SearchOptions.None);
+                    richEdit.Document.ReplaceAll("[REGNO]", regno, SearchOptions.None);
+                    richEdit.Document.ReplaceAll("[DIVISION]", division, SearchOptions.None);
+                    richEdit.Document.ReplaceAll("[YEAR]", joindate.Year.ToString(), SearchOptions.None);
+                    richEdit.Document.ReplaceAll("[MONTH]", joindate.Month.ToString(), SearchOptions.None);
+                    richEdit.Document.ReplaceAll("[DAY]", joindate.Day.ToString(), SearchOptions.None);
 
-                    PdfWriter writer = PdfWriter.GetInstance(document, fs);
-                    document.Open();
-
-                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "logo.png"));
-
-                    //Resize image depend upon your need
-
-                    logo.ScaleToFit(80, 80);
-
-                    //Give space before image
-
-                    logo.SpacingBefore = 10f;
-
-                    //Give some space after the image
-
-                    logo.SpacingAfter = 1f;
-
-                    logo.Alignment = Element.ALIGN_CENTER;
-
-                    document.Add(logo);
-
-
-                    string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "calibri.ttf");
-
-                    BaseFont sylfaen = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    Font head = new(sylfaen, 16f, Font.NORMAL, BaseColor.Black);
-                    Font normal = new(sylfaen, 11f, Font.NORMAL, BaseColor.Black);
-
-                    Chunk bullet = new Chunk("\u2022", normal);
-
-                    // Add a simple and wellknown phrase to the document in a flow layout manner  
-                    Paragraph title = new(Environment.NewLine + "МОНГОЛЫН УЛААН ЗАГАЛМАЙ НИЙГЭМЛЭГ" + Environment.NewLine, normal);
-                    title.Alignment = Element.ALIGN_CENTER;
-                    document.Add(title);
-                    Paragraph title2 = new(Environment.NewLine + "Сайн дурын үйл ажиллагааны тодорхойлолт" + Environment.NewLine, normal);
-                    title2.Alignment = Element.ALIGN_CENTER;
-                    document.Add(title2);
-
-                    Paragraph body = new($"{Environment.NewLine}{lastname} овогтой {firstname} /РД:{regno}/нь {division}/{district} аймаг/дүүргийн Улаан загалмайн дунд шатны хороонд {joindate.Year} оны {joindate.Month} сарын {joindate.Day}-ны/ний өдрөөс эхлэн Сайн дурын идэвхтнээр ажиллаж, дараах үйл ажиллагаа, сургалтад хамрагдсан нь үнэн болно. ", normal);
-                    document.Add(body);
-
-                    Paragraph body2 = new($"{Environment.NewLine}1. Хамрагдаж, зохион байгуулсан үйл ажиллагааны мэдээлэл ", normal);
-                    foreach (string? workstr in worklist)
+                    DocumentRange[] ranges = richEdit.Document.FindAll("[WORK]", SearchOptions.None);
+                    if (ranges.Length > 0)
                     {
-                        body2.Add(new Phrase(Environment.NewLine + "          ", normal));
-                        body2.Add(bullet);
-                        body2.Add(new Phrase(" " + workstr + " ", normal));
-                    }
-                    document.Add(body2);
+                        DocumentPosition start = ranges[0].Start;
+                        richEdit.Document.ReplaceAll("[WORK]", string.Empty, SearchOptions.None);
+                        DocumentRange range = richEdit.Document.InsertText(start, string.Join(Environment.NewLine, worklist));
+                        ParagraphProperties pp = richEdit.Document.BeginUpdateParagraphs(range);
+                        pp.Style.NumberingListIndex = 0;
+                        richEdit.Document.EndUpdateParagraphs(pp);
 
-                    Paragraph body3 = new($"{Environment.NewLine}2. Хамрагдсан сургалтын мэдээлэл ", normal);
-                    foreach (string? training in traininglist)
+                    }
+                    ranges = richEdit.Document.FindAll("[TRAINING]", SearchOptions.None);
+                    if (ranges.Length > 0)
                     {
-                        body3.Add(new Phrase(Environment.NewLine + "          ", normal));
-                        body3.Add(bullet);
-                        body3.Add(new Phrase(" " + training + " ", normal));
+                        DocumentPosition start = ranges[0].Start;
+                        richEdit.Document.ReplaceAll("[TRAINING]", string.Empty, SearchOptions.None);
+                        DocumentRange range = richEdit.Document.InsertText(start, string.Join(Environment.NewLine, traininglist));
+                        ParagraphProperties pp = richEdit.Document.BeginUpdateParagraphs(range);
+                        pp.Style.NumberingListIndex = 0;
+                        richEdit.Document.EndUpdateParagraphs(pp);
                     }
-                    document.Add(body3);
 
-                    Paragraph body4 = new($"{Environment.NewLine}ТОДОРХОЙЛОЛТ ГАРГАСАН:{Environment.NewLine}{division}/{district} аймаг/дүүргийн{Environment.NewLine}Улаан загалмайн хорооны дарга", normal);
-                    body4.SpacingBefore = 0;
-                    body4.SpacingAfter = 0.5f;
-                    document.Add(body4);
-
-                    // Close the document  
-                    document.Close();
-                    // Close the writer instance  
-                    writer.Close();
-                    // Always close open filehandles explicity  
-                    fs.Close();
-
-                    return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(fs.ToArray()) }, { "name", string.Format("{0} {1}.pdf", "гэрчилгээ", firstname) } } };
+                    using MemoryStream memory2 = new();
+                    richEdit.ExportToPdf(memory2);
+                    return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(memory2.ToArray()) }, { "name", string.Format("{0} {1}.pdf", "гэрчилгээ", firstname) } } };
                 }
                 return new MResult { rettype = -1, retmsg = "Сайн дурын идэвхтэйний мэдээлэл олдсонгүй" };
 
