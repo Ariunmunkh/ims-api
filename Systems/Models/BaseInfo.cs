@@ -64,7 +64,7 @@ namespace Systems.Models
         /// <summary>
         /// Дунд шатны хороо
         /// </summary>
-        public int committeeid { get; set; }
+        public int? committeeid { get; set; }
         /// <summary>
         /// Төлөв
         /// </summary>

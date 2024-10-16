@@ -79,6 +79,7 @@ namespace Systems.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("set_Volunteer")]
+        [AllowAnonymous]
         public IActionResult SetVolunteer([FromBody] Volunteer request)
         {
             return Ok(_VolunteerRepository.SetVolunteer(request));
