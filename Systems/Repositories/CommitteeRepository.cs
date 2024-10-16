@@ -1,9 +1,10 @@
 ﻿using BaseLibrary.LConnection;
 using Connection.Model;
-using DevExpress.XtraRichEdit;
+using DevExpress.Spreadsheet;
 using LConnection.Model;
 using System.Collections;
 using System.Data;
+using System.Xml.Linq;
 using Systems.Models;
 
 namespace Systems.Repositories
@@ -30,18 +31,114 @@ namespace Systems.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        public MResult GetRepoertExcel()
+        public MResult GetRepoertExcel(int committeeid, DateTime reportdate)
         {
             try
             {
-                using RichEditDocumentServer richEdit = new();
-                richEdit.LoadDocument(Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "definition.docx"));
+                MResult result = GetRepoert(committeeid, reportdate);
+                if (result.rettype != 0)
+                    return result;
+
+                using DataSet ds = result.retdata as DataSet ?? new DataSet();
+
+                MCommand cmd = connector.PopCommand();
+                cmd.CommandText(@"SELECT 
+    committee.name
+FROM committee
+where committee.id = @committeeid");
+                cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                ds.Tables.Add(result.retdata as DataTable ?? new DataTable());
+                ds.Tables[ds.Tables.Count - 1].TableName = "committee";
+                string? committeename = string.Empty;
+                if ((ds.Tables["committee"] ?? new()).Rows.Count > 0)
+                {
+                    committeename = (ds.Tables["committee"] ?? new()).Rows[0]["name"].ToString();
+                }
+
+                using Workbook workbook = new Workbook();
+
+                try
+                {
+                    workbook.CreateNewDocument();
+                    workbook.BeginUpdate();
+
+                    Worksheet worksheet = workbook.Worksheets[0];
+                    worksheet.Name = string.Format("{0:yyyy.MM} Сарын тоон мэдээлэл", reportdate);
+                    int rowOffset = 0;
+                    int columnOffset = 0;
+                    string colmale;
+                    string colfemale;
+                    DataRow[] rows;
+
+                    rowOffset++;
+                    worksheet.Cells[rowOffset, 0].Value = (committeename?? "Улаан загалмайн хороо").ToUpper();
+                    worksheet.Cells[rowOffset, 0].Font.Bold = true;
+                    rowOffset++;
+
+                    rowOffset++;
+                    worksheet.Cells[rowOffset, 0].Value = string.Format("Тайлангийн огноо: {0:yyyy.MM}", reportdate);
+                    worksheet.Cells[rowOffset, 0].Font.Bold = true;
+                    rowOffset++;
+
+                    foreach (DataRow program in (ds.Tables["program"] ?? new()).Select("", "name"))
+                    {
+                        rowOffset++;
+                        worksheet.Cells[rowOffset, 0].Value = program["name"].ToString();
+                        worksheet.Cells[rowOffset, 0].Font.Bold = true;
+
+                        rowOffset++;
+                        foreach (DataRow indicator in (ds.Tables["indicator"] ?? new()).Select("headid = '" + program["id"] + "'", "name"))
+                        {
+                            rowOffset++;
+                            worksheet.Cells[rowOffset, 0].Value = indicator["name"].ToString();
+                            rowOffset++;
+                            columnOffset = 0;
+                            rows = (ds.Tables["retdata"] ?? new()).Select("key = '" + indicator["id"] + "'");
+                            foreach (DataRow agedr in (ds.Tables["agegroup"] ?? new()).Select("", "name"))
+                            {
+                                worksheet.Cells[rowOffset, columnOffset].Value = agedr["name"].ToString();
+
+                                worksheet.Cells[rowOffset + 1, columnOffset].Value = "эр";
+                                worksheet.Cells[rowOffset + 1, columnOffset + 1].Value = "эм";
+
+                                colmale = string.Format("male{0}", agedr["id"]);
+                                colfemale = string.Format("female{0}", agedr["id"]);
+
+                                if (rows.Length > 0 && rows[0].Table.Columns.Contains(colmale) && rows[0].Table.Columns.Contains(colfemale))
+                                {
+                                    worksheet.Cells[rowOffset + 2, columnOffset].Value = Convert.ToInt32(rows[0][colmale]);
+                                    worksheet.Cells[rowOffset + 2, columnOffset + 1].Value = Convert.ToInt32(rows[0][colfemale]);
+                                }
+                                columnOffset += 2;
+                            }
+                            rowOffset += 2;
+                        }
+                        rowOffset++;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return new MResult { retdata = ex, rettype = -1, retmsg = ex.Message };
+                }
+                finally
+                {
+                    workbook.EndUpdate();
+                }
+
+
+
+
 
                 using MemoryStream memory2 = new();
 
-                richEdit.ExportToPdf(memory2);
+                workbook.SaveDocument(memory2, DocumentFormat.Xlsx);
 
-                return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(memory2.ToArray()) }, { "name", "data.pdf" } } };
+                return new MResult { retdata = new Hashtable { { "file", Convert.ToBase64String(memory2.ToArray()) }, { "name", string.Format("{0} {1:yyyy.MM}.xlsx", committeename, reportdate) } } };
 
             }
             catch (Exception ex)

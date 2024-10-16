@@ -14,8 +14,10 @@ namespace Systems.Repositories
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
         /// <returns></returns>
-        MResult GetRepoertExcel();
+        MResult GetRepoertExcel(int committeeid, DateTime reportdate);
 
         /// <summary>
         /// 

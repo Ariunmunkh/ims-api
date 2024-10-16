@@ -36,19 +36,21 @@ namespace Systems.Controllers
         /// <summary>
         /// Дунд шатны хорооны сарын тайлан авах
         /// </summary>
+        /// <param name="committeeid"></param>
+        /// <param name="reportdate"></param>
         /// <returns></returns>
         [HttpGet("get_report_excel")]
         [AllowAnonymous]
-        public IActionResult GetRepoertExcel()
+        public IActionResult GetRepoertExcel(int committeeid, DateTime reportdate)
         {
-            var result = _CommitteeRepository.GetRepoertExcel();
+            var result = _CommitteeRepository.GetRepoertExcel(committeeid, reportdate);
             if (result.rettype != 0)
             {
                 return BadRequest(result);
             }
             if (result.retdata is Hashtable ht && ht.ContainsKey("file") && ht.ContainsKey("name"))
             {
-                return File(Convert.FromBase64String(Convert.ToString(ht["file"]) ?? string.Empty), "application/pdf", Convert.ToString(ht["name"]));
+                return File(Convert.FromBase64String(Convert.ToString(ht["file"]) ?? string.Empty), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Convert.ToString(ht["name"]));
             }
             return NoContent();
         }
