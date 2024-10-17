@@ -1,6 +1,5 @@
 ﻿using Connection.Model;
 using Systems.Models;
-using System;
 
 namespace Systems.Repositories
 {
@@ -161,5 +160,33 @@ namespace Systems.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         MResult Deletecommitteeactivity(int id);
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="committeeid">Дунд шатны хороо</param>
+        /// <returns></returns>
+        MResult GetPrimaryStageInfoList(int committeeid);
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult GetPrimaryStageInfo(int id);
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        MResult SetPrimaryStageInfo(PrimaryStageInfo request);
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MResult DeletePrimaryStageInfo(int id);
     }
 }

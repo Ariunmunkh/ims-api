@@ -40,7 +40,6 @@ namespace Systems.Controllers
         /// <param name="reportdate"></param>
         /// <returns></returns>
         [HttpGet("get_report_excel")]
-        [AllowAnonymous]
         public IActionResult GetRepoertExcel(int committeeid, DateTime reportdate)
         {
             var result = _CommitteeRepository.GetRepoertExcel(committeeid, reportdate);
@@ -287,6 +286,54 @@ namespace Systems.Controllers
         public IActionResult Deletecommitteeactivity(int id)
         {
             return Ok(_CommitteeRepository.Deletecommitteeactivity(id));
+        }
+
+        #endregion
+
+        #region primarystageinfo
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="committeeid">Дунд шатны хороо</param>
+        /// <returns></returns>
+        [HttpGet("get_primarystageinfo_list")]
+        public IActionResult GetPrimaryStageInfoList(int committeeid)
+        {
+            return Ok(_CommitteeRepository.GetPrimaryStageInfoList(committeeid));
+        }
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("get_primarystageinfo")]
+        public IActionResult GetPrimaryStageInfo(int id)
+        {
+            return Ok(_CommitteeRepository.GetPrimaryStageInfo(id));
+        }
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("set_primarystageinfo")]
+        public IActionResult SetPrimaryStageInfo([FromBody] PrimaryStageInfo request)
+        {
+            return Ok(_CommitteeRepository.SetPrimaryStageInfo(request));
+        }
+
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete_primarystageinfo")]
+        public IActionResult DeletePrimaryStageInfo(int id)
+        {
+            return Ok(_CommitteeRepository.DeletePrimaryStageInfo(id));
         }
 
         #endregion

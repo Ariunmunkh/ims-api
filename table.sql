@@ -187,6 +187,30 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
+/*АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ*/
+create table primarystageinfo
+(
+id int not null,
+committeeid int not null, 
+c4_1 varchar(200), /*АНХАН ШАТНЫ ХОРООНЫ НЭР*/
+c4_2 varchar(200), /*АНХАН ШАТНЫ ХОРООНЫ БАЙГУУЛАГДСАН ОГНОО*/
+c4_3_1 varchar(200), /*СУМ/ХОРОО*/
+c4_3_2 varchar(200), /*БАЙГУУЛЛАГА/ААН*/
+c4_4 varchar(200), /*ТЭРГҮҮНИЙ ОВОГ, НЭР*/
+c4_5 varchar(200), /*ХОЛБОГДОХ УТАСНЫ ДУГААР*/
+c4_6 varchar(200), /*НАРИЙН БИЧГИЙН ДАРГЫН ОВОГ, НЭР*/
+c4_7 varchar(200), /*ХОЛБОГДОХ УТАСНЫ ДУГААР*/
+c4_8_1 varchar(200), /*ЭНГИЙН ГИШҮҮН*/
+c4_8_2 varchar(200), /*ОНЦГОЙ ГИШҮҮН*/
+c4_8_3 varchar(200), /*МӨНГӨН ГИШҮҮН*/
+c4_8_4 varchar(200), /*АЛТАН ГИШҮҮН*/
+c4_9 varchar(200), /*ХҮМҮҮНЛЭГИЙН ГИШҮҮН БАЙГУУЛЛАГЫН ТОО*/
+c4_10 varchar(200), /*САЙН ДУРЫН ИДЭВХТНИЙ ТОО*/
+c4_11 varchar(200), /*ХҮҮХЭД ЗАЛУУЧУУДЫН ГИШҮҮНИЙ ТОО*/
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*Дунд шатны хорооны бүртгэл*/
 create table committee
 (

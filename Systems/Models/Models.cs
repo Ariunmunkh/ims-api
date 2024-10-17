@@ -590,4 +590,79 @@ namespace Systems.Models
         public bool? type { get; set; }
     }
 
+    /// <summary>
+    /// АНХАН ШАТНЫ ХОРООДЫН МЭДЭЭЛЭЛ
+    /// </summary>
+    public class PrimaryStageInfo
+    {
+        /// <summary>
+        /// Дугаар
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// Дунд шатны хороо
+        /// </summary>
+        public int committeeid { get; set; }
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООНЫ НЭР
+        /// </summary>
+        public string? c4_1 { get; set; }
+        /// <summary>
+        /// АНХАН ШАТНЫ ХОРООНЫ БАЙГУУЛАГДСАН ОГНОО
+        /// </summary>
+        public string? c4_2 { get; set; }
+        /// <summary>
+        /// СУМ/ХОРОО
+        /// </summary>
+        public string? c4_3_1 { get; set; }
+        /// <summary>
+        /// БАЙГУУЛЛАГА/ААН
+        /// </summary>
+        public string? c4_3_2 { get; set; }
+        /// <summary>
+        /// ТЭРГҮҮНИЙ ОВОГ, НЭР
+        /// </summary>
+        public string? c4_4 { get; set; }
+        /// <summary>
+        /// ХОЛБОГДОХ УТАСНЫ ДУГААР
+        /// </summary>
+        public string? c4_5 { get; set; }
+        /// <summary>
+        /// НАРИЙН БИЧГИЙН ДАРГЫН ОВОГ, НЭР
+        /// </summary>
+        public string? c4_6 { get; set; }
+        /// <summary>
+        /// ХОЛБОГДОХ УТАСНЫ ДУГААР
+        /// </summary>
+        public string? c4_7 { get; set; }
+        /// <summary>
+        /// ЭНГИЙН ГИШҮҮН
+        /// </summary>
+        public string? c4_8_1 { get; set; }
+        /// <summary>
+        /// ОНЦГОЙ ГИШҮҮН
+        /// </summary>
+        public string? c4_8_2 { get; set; }
+        /// <summary>
+        /// МӨНГӨН ГИШҮҮН
+        /// </summary>
+        public string? c4_8_3 { get; set; }
+        /// <summary>
+        /// АЛТАН ГИШҮҮН
+        /// </summary>
+        public string? c4_8_4 { get; set; }
+        /// <summary>
+        /// ХҮМҮҮНЛЭГИЙН ГИШҮҮН БАЙГУУЛЛАГЫН ТОО
+        /// </summary>
+        public string? c4_9 { get; set; }
+        /// <summary>
+        /// САЙН ДУРЫН ИДЭВХТНИЙ ТОО
+        /// </summary>
+        public string? c4_10 { get; set; }
+        /// <summary>
+        /// ХҮҮХЭД ЗАЛУУЧУУДЫН ГИШҮҮНИЙ ТОО
+        /// </summary>
+        public string? c4_11 { get; set; }
+    }
 }

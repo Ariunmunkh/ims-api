@@ -75,7 +75,7 @@ where committee.id = @committeeid");
                     DataRow[] rows;
 
                     rowOffset++;
-                    worksheet.Cells[rowOffset, 0].Value = (committeename?? "Улаан загалмайн хороо").ToUpper();
+                    worksheet.Cells[rowOffset, 0].Value = (committeename ?? "Улаан загалмайн хороо").ToUpper();
                     worksheet.Cells[rowOffset, 0].Font.Bold = true;
                     rowOffset++;
 
@@ -1490,6 +1490,222 @@ values
             }
             cmd.CommandText("delete from committeeactivitydtl where committeeid = @id");
             result = connector.Execute(ref cmd, false);
+            if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
+            {
+                string tablename = string.Empty;
+
+                result.retmsg = string.Format("{0} бүртгэлд ашигласан тул устгах боломжгүй.", tablename);
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region primarystageinfo
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="committeeid"></param>
+        /// <returns></returns>
+        public MResult GetPrimaryStageInfoList(int committeeid)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT *
+FROM primarystageinfo 
+where primarystageinfo.committeeid = @committeeid");
+            cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
+            return connector.Execute(ref cmd, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public MResult GetPrimaryStageInfo(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText(@"SELECT 
+    primarystageinfo.*
+FROM
+    primarystageinfo
+where primarystageinfo.id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            using DataTable data = result.retdata as DataTable ?? new();
+
+            if (data.Rows.Count > 0)
+            {
+                Hashtable retdata = new Hashtable();
+                foreach (DataColumn dc in data.Columns)
+                    retdata.Add(dc.Caption, data.Rows[0][dc.Caption]);
+                return new MResult { retdata = retdata };
+            }
+            else
+                return new MResult { rettype = -1, retmsg = "data not found" };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public MResult SetPrimaryStageInfo(PrimaryStageInfo request)
+        {
+
+            MCommand cmd = connector.PopCommand();
+            MResult result;
+
+            if (request.id == 0)
+            {
+                cmd.CommandText(@"select coalesce(max(id),0)+1 newid from primarystageinfo");
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                {
+                    request.id = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+            }
+
+            cmd.CommandText("select count(1) too from primarystageinfo where id = @id");
+            cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+
+            result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            if (result.retdata is DataTable cdata && cdata.Rows.Count > 0 && Convert.ToDecimal(cdata.Rows[0][0]) > 0)
+            {
+                cmd.CommandText(@"update primarystageinfo set 
+c4_1 =@c4_1,
+c4_2 =@c4_2,
+c4_3_1 =@c4_3_1,
+c4_3_2 =@c4_3_2,
+c4_4 =@c4_4,
+c4_5 =@c4_5,
+c4_6 =@c4_6,
+c4_7 =@c4_7,
+c4_8_1 =@c4_8_1,
+c4_8_2 =@c4_8_2,
+c4_8_3 =@c4_8_3,
+c4_8_4 =@c4_8_4,
+c4_9 =@c4_9,
+c4_10 =@c4_10,
+c4_11 =@c4_11,
+committeeid=@committeeid,
+updatedby=@updatedby 
+where id = @id");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+
+                cmd.AddParam("@c4_1", DbType.String, request.c4_1, ParameterDirection.Input);
+                cmd.AddParam("@c4_2", DbType.String, request.c4_2, ParameterDirection.Input);
+                cmd.AddParam("@c4_3_1", DbType.String, request.c4_3_1, ParameterDirection.Input);
+                cmd.AddParam("@c4_3_2", DbType.String, request.c4_3_2, ParameterDirection.Input);
+                cmd.AddParam("@c4_4", DbType.String, request.c4_4, ParameterDirection.Input);
+                cmd.AddParam("@c4_5", DbType.String, request.c4_5, ParameterDirection.Input);
+                cmd.AddParam("@c4_6", DbType.String, request.c4_6, ParameterDirection.Input);
+                cmd.AddParam("@c4_7", DbType.String, request.c4_7, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_1", DbType.String, request.c4_8_1, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_2", DbType.String, request.c4_8_2, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_3", DbType.String, request.c4_8_3, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_4", DbType.String, request.c4_8_4, ParameterDirection.Input);
+                cmd.AddParam("@c4_9", DbType.String, request.c4_9, ParameterDirection.Input);
+                cmd.AddParam("@c4_10", DbType.String, request.c4_10, ParameterDirection.Input);
+                cmd.AddParam("@c4_11", DbType.String, request.c4_11, ParameterDirection.Input);
+
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+            else
+            {
+                cmd.CommandText(@"insert into primarystageinfo
+(id,
+committeeid,
+c4_1,
+c4_2,
+c4_3_1,
+c4_3_2,
+c4_4,
+c4_5,
+c4_6,
+c4_7,
+c4_8_1,
+c4_8_2,
+c4_8_3,
+c4_8_4,
+c4_9,
+c4_10,
+c4_11,
+updatedby)
+values
+(@id,
+@committeeid,
+@c4_1,
+@c4_2,
+@c4_3_1,
+@c4_3_2,
+@c4_4,
+@c4_5,
+@c4_6,
+@c4_7,
+@c4_8_1,
+@c4_8_2,
+@c4_8_3,
+@c4_8_4,
+@c4_9,
+@c4_10,
+@c4_11,
+@updatedby)");
+                cmd.ClearParam();
+                cmd.AddParam("@id", DbType.Int32, request.id, ParameterDirection.Input);
+                cmd.AddParam("@committeeid", DbType.Int32, request.committeeid, ParameterDirection.Input);
+                cmd.AddParam("@c4_1", DbType.String, request.c4_1, ParameterDirection.Input);
+                cmd.AddParam("@c4_2", DbType.String, request.c4_2, ParameterDirection.Input);
+                cmd.AddParam("@c4_3_1", DbType.String, request.c4_3_1, ParameterDirection.Input);
+                cmd.AddParam("@c4_3_2", DbType.String, request.c4_3_2, ParameterDirection.Input);
+                cmd.AddParam("@c4_4", DbType.String, request.c4_4, ParameterDirection.Input);
+                cmd.AddParam("@c4_5", DbType.String, request.c4_5, ParameterDirection.Input);
+                cmd.AddParam("@c4_6", DbType.String, request.c4_6, ParameterDirection.Input);
+                cmd.AddParam("@c4_7", DbType.String, request.c4_7, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_1", DbType.String, request.c4_8_1, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_2", DbType.String, request.c4_8_2, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_3", DbType.String, request.c4_8_3, ParameterDirection.Input);
+                cmd.AddParam("@c4_8_4", DbType.String, request.c4_8_4, ParameterDirection.Input);
+                cmd.AddParam("@c4_9", DbType.String, request.c4_9, ParameterDirection.Input);
+                cmd.AddParam("@c4_10", DbType.String, request.c4_10, ParameterDirection.Input);
+                cmd.AddParam("@c4_11", DbType.String, request.c4_11, ParameterDirection.Input);
+                cmd.AddParam("@updatedby", DbType.Int32, connector.RequestHeaderInfo.UserID, ParameterDirection.Input);
+
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+            }
+
+            
+
+            return new MResult { retdata = request.id };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MResult DeletePrimaryStageInfo(int id)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("delete from primarystageinfo where id = @id");
+            cmd.AddParam("@id", DbType.Int32, id, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
             if (!string.IsNullOrEmpty(result.retmsg) && result.retmsg.Contains("Cannot delete or update a parent row: a foreign key constraint fails"))
             {
                 string tablename = string.Empty;
