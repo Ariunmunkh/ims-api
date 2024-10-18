@@ -1511,7 +1511,23 @@ values
         public MResult GetPrimaryStageInfoList(int committeeid)
         {
             MCommand cmd = connector.PopCommand();
-            cmd.CommandText(@"SELECT *
+            cmd.CommandText(@"SELECT
+id,
+committeeid,
+c4_1,
+c4_2,
+case when c4_3_1 = 1 then 'СУМ/ХОРОО' when c4_3_1 = 2 then 'БАЙГУУЛЛАГА/ААН' end c4_3_1,
+c4_3_2,
+c4_4,
+c4_5,
+c4_6,
+c4_7,
+case when c4_8_1 = 1 then 'ЭНГИЙН ГИШҮҮН' when c4_8_1 = 2 then 'ОНЦГОЙ ГИШҮҮН' when c4_8_1 = 3 then 'МӨНГӨН ГИШҮҮН' when c4_8_1 = 4 then 'АЛТАН ГИШҮҮН' end c4_8_1,
+c4_9,
+c4_10,
+c4_11,
+updated,
+updatedby
 FROM primarystageinfo 
 where primarystageinfo.committeeid = @committeeid");
             cmd.AddParam("@committeeid", DbType.Int32, committeeid, ParameterDirection.Input);
@@ -1689,8 +1705,6 @@ values
                 if (result.rettype != 0)
                     return result;
             }
-
-            
 
             return new MResult { retdata = request.id };
         }
