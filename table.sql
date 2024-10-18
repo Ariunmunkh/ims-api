@@ -39,7 +39,33 @@ updated timestamp default current_timestamp,
 updatedby int,  
 PRIMARY KEY (id)
 );
-
+/*Хөтөлбөр*/
+create table pro_program 
+(
+id int not null, 
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*Төслийн нэр*/
+create table pro_project 
+(
+id int not null, 
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
+/*Санхүүжүүлэгч*/
+create table pro_funder
+(
+id int not null, 
+name varchar(200),
+updated timestamp default current_timestamp,
+updatedby int,  
+PRIMARY KEY (id)
+);
 /*ДШХ-ны сарын тайлан*/
 create table committeereport
 (
