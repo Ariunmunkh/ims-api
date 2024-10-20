@@ -303,7 +303,8 @@ order by indicator.name");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -344,7 +345,8 @@ updatedby=@updatedby");
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
                             return result;
-                        if (result.retdata is DataTable data && data.Rows.Count > 0)
+                        using DataTable data = result.retdata as DataTable ?? new();
+                        if (data.Rows.Count > 0)
                         {
                             dtl.id = Convert.ToInt32(data.Rows[0]["newid"]);
                         }
@@ -360,7 +362,8 @@ updatedby=@updatedby");
                     if (result.rettype != 0)
                         return result;
 
-                    if (result.retdata is DataTable tdata && tdata.Rows.Count > 0)
+                    using DataTable tdata = result.retdata as DataTable ?? new();
+                    if (tdata.Rows.Count > 0)
                     {
                         dtl.id = Convert.ToInt32(tdata.Rows[0]["id"]);
 
@@ -540,7 +543,8 @@ where committeereportinfo.id = @id");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -650,7 +654,8 @@ where localinfo.committeeid = @committeeid");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -974,7 +979,8 @@ where committeeinfodtl.committeeid = @committeeid");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -1213,7 +1219,8 @@ values
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
                             return result;
-                        if (result.retdata is DataTable data && data.Rows.Count > 0)
+                        using DataTable data = result.retdata as DataTable ?? new();
+                        if (data.Rows.Count > 0)
                         {
                             dtl.id = Convert.ToInt32(data.Rows[0]["newid"]);
                         }
@@ -1358,7 +1365,8 @@ where committeeactivitydtl.committeeid = @committeeid");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -1433,7 +1441,8 @@ values
                         result = connector.Execute(ref cmd, false);
                         if (result.rettype != 0)
                             return result;
-                        if (result.retdata is DataTable data && data.Rows.Count > 0)
+                        using DataTable data = result.retdata as DataTable ?? new();
+                        if (data.Rows.Count > 0)
                         {
                             dtl.id = Convert.ToInt32(data.Rows[0]["newid"]);
                         }
@@ -1581,7 +1590,8 @@ where primarystageinfo.id = @id");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }

@@ -102,6 +102,7 @@ namespace Systems.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("delete_Volunteer")]
+        [AllowAnonymous]
         public IActionResult DeleteVolunteer(int id)
         {
             return Ok(_VolunteerRepository.DeleteVolunteer(id));

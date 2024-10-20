@@ -96,9 +96,22 @@ WHERE
                 MResult result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+
+                using DataTable data = result.retdata as DataTable ?? new DataTable();
+                if (data.Rows.Count > 0)
                 {
                     tbluser.userid = Convert.ToInt32(data.Rows[0]["newid"]);
+                }
+
+                cmd.CommandText(@"select count(1) too from tbluser where upper(email) = upper(@email)");
+                cmd.AddParam("@email", DbType.String, tbluser.email, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+                using DataTable udata = result.retdata as DataTable ?? new();
+                if (udata.Rows.Count > 0 && Convert.ToDecimal(udata.Rows[0]["too"]) > 0)
+                {
+                    return new MResult { rettype = -1, retmsg = "Бүртгэлтэй имэйл байна." };
                 }
             }
 
@@ -113,6 +126,7 @@ volunteerid = @volunteerid,
 committeeid = @committeeid,
 email = @email, {0}
 updated = current_timestamp", updatepasssql));
+            cmd.ClearParam();
             cmd.AddParam("@userid", DbType.Int32, tbluser.userid, ParameterDirection.Input);
             cmd.AddParam("@username", DbType.String, tbluser.username, ParameterDirection.Input);
             cmd.AddParam("@email", DbType.String, tbluser.email, ParameterDirection.Input);

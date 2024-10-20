@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using Systems.Models;
@@ -55,7 +57,8 @@ WHERE
                 if (result.rettype != 0)
                     return result;
 
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     if (request.encryptpass.Equals(data.Rows[0]["password"].ToString()))
                     {
@@ -83,7 +86,7 @@ WHERE
                 throw new InvalidCastException(nameof(data));
             }
 
-            _ = int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int configExpires);
+            _ = int.TryParse(configuration["JWT:TokenValidityInDays"], out int configExpires);
             var now = DateTime.UtcNow;
             var claims = BuildJWTClaims(data);
             var signKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? string.Empty));
@@ -93,7 +96,7 @@ WHERE
                 audience: configuration["JWT:ValidAudience"],
                 claims: claims,
                 notBefore: now,
-                expires: now.Add(TimeSpan.FromHours(configExpires)),
+                expires: now.Add(TimeSpan.FromDays(configExpires)),
                 signingCredentials: new SigningCredentials(signKey, SecurityAlgorithms.HmacSha256Signature)
             );
 
@@ -152,5 +155,68 @@ WHERE
             return claims;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public MResult PasswordRecovery(string email)
+        {
+            MCommand cmd = connector.PopCommand();
+            cmd.CommandText("select * from tbluser where email = @email");
+            cmd.AddParam("@email", DbType.String, email, ParameterDirection.Input);
+            MResult result = connector.Execute(ref cmd, false);
+            if (result.rettype != 0)
+                return result;
+
+            using DataTable data = result.retdata as DataTable ?? new DataTable();
+            if (data.Rows.Count > 0)
+            {
+                Guid guid = Guid.NewGuid();
+                string pass = guid.ToString().Substring(0, 4);
+                string encryptpass = Systems.Models.Utility.EncryptPass(pass);
+                cmd.CommandText("update tbluser set password = @password, updated = current_timestamp where userid = @userid");
+                cmd.AddParam("@userid", DbType.Int64, data.Rows[0]["userid"], ParameterDirection.Input);
+                cmd.AddParam("@password", DbType.String, encryptpass, ParameterDirection.Input);
+                result = connector.Execute(ref cmd, false);
+                if (result.rettype != 0)
+                    return result;
+
+                return SendEmail(email, "IMS Password", string.Format("Hi\nNew login password for {0} user is {1}", data.Rows[0]["username"], pass)).Result;
+            }
+            else
+            {
+                return new MResult { rettype = -1, retmsg = "Хэрэглэгчийн мэдээлэл олдсонгүй." };
+            }
+        }
+
+        private async Task<MResult> SendEmail(string recepient, string Subject, string Body)
+        {
+            using var message = new MailMessage();
+
+            message.To.Add(new MailAddress(recepient, recepient));
+            message.From = new MailAddress(configuration["email:username"] ?? "ims@redcross.mn", "IMS");
+            message.Subject = Subject;
+            message.Body = Body;
+            message.IsBodyHtml = false; // change to true if body msg is in html
+
+            using var client = new SmtpClient("smtp.gmail.com");
+
+            client.UseDefaultCredentials = false;
+            client.Port = 587;
+            client.Credentials = new NetworkCredential(configuration["email:username"], configuration["email:password"]);
+            client.EnableSsl = true;
+
+            try
+            {
+                await client.SendMailAsync(message); // Email sent
+            }
+            catch (Exception ex)
+            {
+                return new MResult { rettype = -1, retdata = ex, retmsg = ex.Message };
+            }
+
+            return new MResult { };
+        }
     }
 }

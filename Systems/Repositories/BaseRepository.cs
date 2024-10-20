@@ -80,8 +80,9 @@ where id = @id", type));
                 cmd.CommandText(string.Format(@"select coalesce(max(id),0)+1 newid from {0}", request.type));
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
-                    return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                    return result; 
+                using DataTable data = result.retdata as DataTable ?? new DataTable();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -271,7 +272,8 @@ where id = @id");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }
@@ -420,7 +422,8 @@ where id = @id");
                 result = connector.Execute(ref cmd, false);
                 if (result.rettype != 0)
                     return result;
-                if (result.retdata is DataTable data && data.Rows.Count > 0)
+                using DataTable data = result.retdata as DataTable ?? new();
+                if (data.Rows.Count > 0)
                 {
                     request.id = Convert.ToInt32(data.Rows[0]["newid"]);
                 }

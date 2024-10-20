@@ -15,5 +15,12 @@ namespace Systems.Repositories
         /// <returns></returns>
         MResult GetUserInfo(Authbody request);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        MResult PasswordRecovery(string email);
+
     }
 }

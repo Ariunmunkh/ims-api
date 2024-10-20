@@ -42,6 +42,11 @@ cd D:/projects/ims-ui
 docker-compose build
 docker-compose up -d
 
+ougq xseh ptlt bagt
+
+ims.redcross@gmail.com
+r@dcr0ss
+
 redcross.ims2024@gmail.com
 IS11D2024
 

@@ -45,5 +45,14 @@ namespace Systems.Controllers
                 return Unauthorized(result);
             }
         }
+
+        /// <summary>Нэвтрэх.</summary>
+        /// <param name="email">Хэрэглэгчийн имэйл.</param>
+        /// <returns></returns>
+        [HttpPost("password_recovery")]
+        public IActionResult PasswordRecovery([FromBody] string email)
+        {
+            return Ok(_SystemsRepository.PasswordRecovery(email));
+        }
     }
 }
