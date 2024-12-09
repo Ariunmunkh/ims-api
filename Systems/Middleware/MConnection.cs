@@ -31,7 +31,7 @@ namespace Systems.Middleware
         {
             con.RequestHeaderInfo = GetInfo(context.Request.Headers);
 
-            string connectionString = "Server=167.172.94.246;" +
+            string connectionString = "Server=185.170.198.36;" +
                 "Port=3333;" +
                 "Database=mysql;" +
                 "Uid=root;" +
